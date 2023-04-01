@@ -13,7 +13,7 @@ int main(void){
 void programBegin(void){
 	printf("[DeustoCar V0.0]\n");
 	printf("[Cliente de Admin. Local]\n");
-	printf("[PULSAR CUALQUIER TECLA PARA CONTINUAR]\n");
+	printf("ASDFGH\n");
 	getch();
 	system("CLS");
 	//BD Check, if(exists =! TRUE) -> inicializa, else -> menu
