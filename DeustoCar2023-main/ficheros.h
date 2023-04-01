@@ -3,6 +3,8 @@
 #ifndef FICHEROS_H_
 #define FICHEROS_H_
 
-Admin readConfigFile();
+Admin leerfichero();
 
 #endif /* FICHEROS_H_ */
+
+
