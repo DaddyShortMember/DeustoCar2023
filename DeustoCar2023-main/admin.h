@@ -10,10 +10,10 @@ typedef struct{
 	char *contrasenya;
 }Admin;
 
-void crearAutomóvil();
-Coche modificarAutomóvil();
-void visualizarAutomóvil();
-void eliminarAutomóvil();
+void crearAutomovil();
+Coche modificarAutomovil();
+void visualizarAutomovil();
+void eliminarAutomovil();
 void crearUsuario();
 Usuario modificarUsuario();
 void visualizarUsuario();

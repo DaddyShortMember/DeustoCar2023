@@ -5,7 +5,7 @@
 
 int main(void){
 	programBegin();
-	
+
 
 	return 0;
 };

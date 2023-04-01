@@ -1,12 +1,12 @@
 #ifndef _USUARIO_H_
 #define _USUARIO_H_
 
-typedef Struct{
-	int idUsuario
-	char* nombre
-	char* mail
-	char* pass
-	int saldo
+typedef struct{
+	int idUsuario;
+	char* nombre;
+	char* mail;
+	char* pass;
+	int saldo;
 }Usuario;
 
 //Obtienen los datos de la BD

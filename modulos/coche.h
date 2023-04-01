@@ -1,11 +1,11 @@
 #ifndef _COCHE_H_
 #define _COCHE_H_
 
-typedef Struct{
-	int idCoche
-	char* marca
-	char* modelo
-}coche;
+typedef struct{
+	int idCoche;
+	char* marca;
+	char* modelo;
+}Coche;
 
 //Obtienen los datos de la BD
 int getCarid(void);
