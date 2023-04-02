@@ -2,7 +2,7 @@
 #include "coche.h"
 #include <stdio.h>
 #include <stdlib.h>
-
+/*
 #define MAX_NUM 10
 #define MAX_LINE 10
 
@@ -127,3 +127,4 @@ int main(void)
 
 	return 0;
 }
+*/
