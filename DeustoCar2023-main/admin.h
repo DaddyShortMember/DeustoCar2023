@@ -10,7 +10,7 @@ typedef struct{
 	char *contrasenya;
 }Admin;
 
-void crearAutomovil();
+Coche crearAutomovil();
 Coche modificarAutomovil();
 void visualizarAutomovil();
 void eliminarAutomovil();

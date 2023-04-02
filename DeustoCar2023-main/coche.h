@@ -5,8 +5,8 @@
 
 typedef struct{
 	int id;
-	char* marca;
-	char* modelo;
+	char marca[30];
+	char modelo[30];
 }Coche;
 
 #endif /* COCHE_H_ */

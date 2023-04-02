@@ -13,7 +13,11 @@ int main(void){
 void programBegin(void){
 	printf("[DeustoCar V0.0]\n");
 	printf("[Cliente de Admin. Local]\n");
-	printf("ASDFGH\n");
+	printf("Bienvenido a Deusto Car.\n");
+	printf("Introduce el nombre de usuario Admin.\n");
+	printf("Introduce la contrasena.\n");
+	printf("Escoge una de las siguiuentes funciones\n");
+
 	getch();
 	system("CLS");
 	//BD Check, if(exists =! TRUE) -> inicializa, else -> menu
