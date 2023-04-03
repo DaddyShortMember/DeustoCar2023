@@ -162,7 +162,7 @@ void visualizarUsuario(){
 void eliminarUsuario(){
 
 };
-
+/*
 int main(void)
 {
 
@@ -188,3 +188,4 @@ int main(void)
 
 	return 0;
 }
+*/
