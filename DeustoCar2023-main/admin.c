@@ -99,7 +99,7 @@ void visualizarAutomovil(){
 	        return;
 	    }
 	    char sql[100];
-	    sprintf(sql, "SELECT * FROM coche WHERE id=%d;", id);
+	    sprintf(sql, "SELECT * FROM Coche WHERE id=%d;", id);
 	    char *error_msg;
 	    Coche coche = {0};
 	int (*callback)(void*, int, char**, char**);
@@ -130,7 +130,26 @@ void visualizarAutomovil(){
 
 void eliminarAutomovil(){
 
-};
+	    // Pedimos al usuario que introduzca el id del automóvil a eliminar
+	    printf("Introduce el id del automóvil que quieres eliminar: ");
+	    int id;
+	    scanf("%d", &id);
+
+	    // Eliminamos el automóvil de la base de datos
+	    sqlite3 *db;
+	    int rc = sqlite3_open("base_de_datos.db", &db);
+	    if (rc) {
+	        fprintf(stderr, "No se pudo abrir la base de datos: %s\n", sqlite3_errmsg(db));
+	        sqlite3_close(db);
+	        return;
+	    }
+	    char sql[100];
+	    sprintf(sql, "DELETE FROM Coche WHERE id=%d;", id);
+	    execute_sql(db, sql);
+	    printf("Se ha eliminado el automóvil con id %d.\n", id);
+	    sqlite3_close(db);
+	}
+
 void crearUsuario(){
 
 };
