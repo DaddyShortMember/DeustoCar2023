@@ -8,6 +8,7 @@ typedef struct{
 	char contrasenya[30];
 }Admin;
 
+int verificarAdmin(Admin a);
 Coche crearAutomovil();
 Coche modificarAutomovil();
 void visualizarAutomovil();
