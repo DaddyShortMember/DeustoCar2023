@@ -1,3 +1,4 @@
+#include "sqlite3.h"
 
 #ifndef USUARIO_H_
 #define USUARIO_H_

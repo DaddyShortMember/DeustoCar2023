@@ -1,4 +1,4 @@
-
+#include"sqlite3.h"
 
 #ifndef COCHE_H_
 #define COCHE_H_

@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include "sqlite3.h"
 #include "BD.h"
-#include "Usuario.h"
-#include "Coche.h"
-#include "Admin.h"
+#include "usuario.h"
+#include "coche.h"
+#include "admin.h"
 #include <string.h>
 #include <stdlib.h>
 
@@ -535,6 +535,4 @@ int isAdmin(sqlite3 *db, Admin admin) {
 
 	return 0;
 }
-
-
 

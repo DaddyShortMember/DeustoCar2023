@@ -1,4 +1,6 @@
 #include "usuario.h"
+#include "sqlite3.h"
+#include <stdio.h>
 
 void anyadirUsuario(sqlite3 *db, int result, Usuario usuario){
 
@@ -19,5 +21,3 @@ void eliminarUsuarios(sqlite3 *db, int result){
 void imprimirUsuario(sqlite3 *db, int result, Usuario usuario){
 
 };
-
-
