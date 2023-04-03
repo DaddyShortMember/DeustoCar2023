@@ -85,8 +85,49 @@ Coche crearAutomovil(){
 
 
 void visualizarAutomovil(){
+	    // Pedir al usuario que introduzca el ID del automóvil que quiere visualizar
+	    printf("Introduce el ID del automóvil que quieres visualizar: ");
+	    int id;
+	    scanf("%d", &id);
 
-};
+	    // Buscar el automóvil en la base de datos y mostrar sus detalles
+	    sqlite3 *db;
+	    int rc = sqlite3_open("base_de_datos.db", &db);
+	    if (rc) {
+	        fprintf(stderr, "No se pudo abrir la base de datos: %s\n", sqlite3_errmsg(db));
+	        sqlite3_close(db);
+	        return;
+	    }
+	    char sql[100];
+	    sprintf(sql, "SELECT * FROM coche WHERE id=%d;", id);
+	    char *error_msg;
+	    Coche coche = {0};
+	int (*callback)(void*, int, char**, char**);
+	    rc = sqlite3_exec(db, sql, callback, &coche, &error_msg);
+	    if (rc != SQLITE_OK) {
+	        fprintf(stderr, "Error al ejecutar la consulta: %s\n", error_msg);
+	        sqlite3_free(error_msg);
+	        sqlite3_close(db);
+	        return;
+	    }
+
+	    // Si no se encontró el automóvil con el ID indicado, mostrar un mensaje de error
+	    if (coche.id == 0) {
+	        printf("No se encontró ningún automóvil con el ID %d.\n", id);
+	        sqlite3_close(db);
+	        return;
+	    }
+
+	    // Mostrar los detalles del automóvil
+	    printf("Detalles del automóvil con ID %d:\n", id);
+	    printf("Marca: %s\n", coche.marca);
+	    printf("Modelo: %s\n", coche.modelo);
+
+	    // Aquí puedes mostrar otros detalles del automóvil, como el año, el precio, etc.
+
+	    sqlite3_close(db);
+	}
+
 void eliminarAutomovil(){
 
 };
