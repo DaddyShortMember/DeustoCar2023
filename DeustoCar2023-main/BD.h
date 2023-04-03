@@ -8,6 +8,7 @@
 int insertUsuario(sqlite3 *db, char nombre[], char email[], char contrasenya[], int saldo);
 int insertCoche(sqlite3 *db, char marca[], char modelo[]);
 int insertAdmin(sqlite3 *db, char nombre[], char contrasenya[]);
+Usuario getUsuario(sqlite3 *db, char codigo[50]);
 Coche getCoche(sqlite3 *db, char codigo[50]);
 int imprimirUsuarios(sqlite3 *db);
 int imprimirCoches(sqlite3 *db);

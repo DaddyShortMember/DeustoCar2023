@@ -6,15 +6,15 @@
 
 typedef struct{
 	int idAdmin;
-	char *nombre;
-	char *contrasenya;
+	char nombre[30];
+	char contrasenya[30];
 }Admin;
 
 Coche crearAutomovil();
 Coche modificarAutomovil();
 void visualizarAutomovil();
 void eliminarAutomovil();
-void crearUsuario();
+Usuario crearUsuario();
 Usuario modificarUsuario();
 void visualizarUsuario();
 void eliminarUsuario();
