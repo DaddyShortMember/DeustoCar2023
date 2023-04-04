@@ -1,27 +1,27 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include"coche.h"
-#include"usuario.h"
-
-int main(void){
-#include <stdio.h>
-#include <stdlib.h>
-#include"coche.h"
-#include"usuario.h"
+#include "coche.h"
+#include "usuario.h"
 #include "admin.h"
+#include "sqlite3.h"
+#include "BD.h"
 
+/*
 void login(void);
 void menuPrincip(void);
 void menuVis(void);
 void menuAdd(void);
 void menuDel(void);
 void menuMod(void);
+*/
 
 int main(void){
-	login();
+	//login();
+
 	return 0;
 };
 
+/*
 void login(void){
 	system("CLS");
 	int tick = 99;
@@ -128,5 +128,6 @@ void menuMod(void){
 
 	return 0;
 };
+*/
 
 //gcc admin.c coche.c BD.c DeustoCarMain.c usuario.c sqlite3.c -o DeustoCar.exe
