@@ -6,6 +6,8 @@
 #include "sqlite3.h"
 #include "BD.h"
 
+//gcc coche.c BD.c DeustoCarMain.c usuario.c sqlite3.c -o DeustoCar.exe
+
 /*
 void login(void);
 void menuPrincip(void);
@@ -129,5 +131,3 @@ void menuMod(void){
 	return 0;
 };
 */
-
-//gcc admin.c coche.c BD.c DeustoCarMain.c usuario.c sqlite3.c -o DeustoCar.exe
