@@ -1,4 +1,4 @@
-/*BORRRAR ESTOS 2 CARACTERES
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,7 +7,6 @@
 #include "admin.h"
 #include "BD.h"
 #include "sqlite3.h"
-#include "ficheros.h"
 #include <winsock2.h>
 #include <math.h>
 
@@ -58,206 +57,195 @@ int main(void)
 
 	if (n) {
 		int codigoUsuarioPorDefecto = 0;
-		int codigoVueloPorDefecto = 0;
+		int codigoCochePorDefecto = 0;
 
 		//Usuario de prueba
 		Usuario usuario;
-		usuario.cUsuario = codigoUsuarioPorDefecto;
+		usuario.id = codigoUsuarioPorDefecto;
 		strcpy(usuario.email, "correoUsuario@gmail.com");
-		strcpy(usuario.dni, "56957653D");
-		strcpy(usuario.password, "lac0ntrasenya");
+		strcpy(usuario.saldo, "500");
+		strcpy(usuario.contrasenya, "lac0ntrasenya");
 		strcpy(usuario.nombre, "Nombre");
-		strcpy(usuario.apellido, "Prueba");
+
 
 		//Usuario de prueba 2
 		Usuario usuario2;
 
-		usuario2.cUsuario = codigoUsuarioPorDefecto;
+		usuario2.id = codigoUsuarioPorDefecto;
 		strcpy(usuario2.email, "correoUsuario2@gmail.com");
-		strcpy(usuario2.dni, "23467893Z");
-		strcpy(usuario2.password, "contrasenya2");
+		strcpy(usuario2.saldo, "1000");
+		strcpy(usuario2.contrasenya, "contrasenya2");
 		strcpy(usuario2.nombre, "Jon");
-		strcpy(usuario2.apellido, "Goikoetxea");
+
 
 		//Usuario de prueba 3
 		Usuario usuario3;
 
-		usuario3.cUsuario = codigoUsuarioPorDefecto;
+		usuario3.id = codigoUsuarioPorDefecto;
 		strcpy(usuario3.email, "correoUsuario3@gmail.com");
-		strcpy(usuario3.dni, "94571388H");
-		strcpy(usuario3.password, "XXXasdfXXX3451");
+		strcpy(usuario3.saldo, "300");
+		strcpy(usuario3.contrasenya, "XXXasdfXXX3451");
 		strcpy(usuario3.nombre, "Alvaro");
-		strcpy(usuario3.apellido, "Garcia");
+
 
 		//Usuario de prueba 4
 		Usuario usuario4;
 
-		usuario4.cUsuario = codigoUsuarioPorDefecto;
+		usuario4.id = codigoUsuarioPorDefecto;
 		strcpy(usuario4.email, "correoUsuario4@gmail.com");
-		strcpy(usuario4.dni, "87262155Y");
-		strcpy(usuario4.password, "1234Alba1234");
+		strcpy(usuario4.saldo, "1500");
+		strcpy(usuario4.contrasenya, "1234Alba1234");
 		strcpy(usuario4.nombre, "Alba");
-		strcpy(usuario4.apellido, "Rosales");
+
 
 		//Usuario de prueba 5
 		Usuario usuario5;
 
-		usuario5.cUsuario = codigoUsuarioPorDefecto;
+		usuario5.id = codigoUsuarioPorDefecto;
 		strcpy(usuario5.email, "correoUsuario5@gmail.com");
-		strcpy(usuario5.dni, "78906532Q");
-		strcpy(usuario5.password, "87329Lpow65");
+		strcpy(usuario5.saldo, "360");
+		strcpy(usuario5.contrasenya, "87329Lpow65");
 		strcpy(usuario5.nombre, "Luis");
-		strcpy(usuario5.apellido, "Power");
+
 
 		//Usuario de prueba 6
 		Usuario usuario6;
 
-		usuario6.cUsuario = codigoUsuarioPorDefecto;
+		usuario6.id = codigoUsuarioPorDefecto;
 		strcpy(usuario6.email, "correoUsuario6@gmail.com");
-		strcpy(usuario6.dni, "37528831N");
-		strcpy(usuario6.password, "NoTengoContrasenya");
+		strcpy(usuario6.saldo, "700");
+		strcpy(usuario6.contrasenya, "NoTengoContrasenya");
 		strcpy(usuario6.nombre, "Patricia");
-		strcpy(usuario6.apellido, "Quintana");
+
 
 		//Usuario de prueba 7
 		Usuario usuario7;
 
-		usuario7.cUsuario = codigoUsuarioPorDefecto;
+		usuario7.id = codigoUsuarioPorDefecto;
 		strcpy(usuario7.email, "correoUsuario7@gmail.com");
-		strcpy(usuario7.dni, "65411378J");
-		strcpy(usuario7.password, "contrasenya1");
+		strcpy(usuario7.saldo, "950");
+		strcpy(usuario7.contrasenya, "contrasenya1");
 		strcpy(usuario7.nombre, "Diego");
-		strcpy(usuario7.apellido, "De La Fuente");
+
 
 		//Usuario de prueba 8
 		Usuario usuario8;
 
-		usuario8.cUsuario = codigoUsuarioPorDefecto;
+		usuario8.id = codigoUsuarioPorDefecto;
 		strcpy(usuario8.email, "correoUsuario8@gmail.com");
-		strcpy(usuario8.dni, "22557788C");
-		strcpy(usuario8.password, "NeretxU99");
+		strcpy(usuario8.saldo, "200");
+		strcpy(usuario8.contrasenya, "NeretxU99");
 		strcpy(usuario8.nombre, "Nerea");
-		strcpy(usuario8.apellido, "Garcia");
+
 
 		//Usuario de prueba 9
 		Usuario usuario9;
 
-		usuario9.cUsuario = codigoUsuarioPorDefecto;
+		usuario9.id = codigoUsuarioPorDefecto;
 		strcpy(usuario9.email, "correoUsuario9@gmail.com");
-		strcpy(usuario9.dni, "99776644P");
-		strcpy(usuario9.password, "lac0ntrasenya");
+		strcpy(usuario9.saldo, "560");
+		strcpy(usuario9.contrasenya, "lac0ntrasenya");
 		strcpy(usuario9.nombre, "Alvaro");
-		strcpy(usuario9.apellido, "Penya");
+
 
 		//Vuelo de prueba
-		Vuelo vuelo;
+		Coche coche;
 
-		vuelo.cVuelo = codigoVueloPorDefecto;
-		vuelo.plazas = 400;
-		vuelo.precio = 50;
-		strcpy(vuelo.aeropuertoSalida, "Aeropuerto de Bilbao");
-		strcpy(vuelo.aeropuertoLlegada, "Aeropuerto de Madrid");
-		strcpy(vuelo.fechaSalida, "14/03/22");
-		strcpy(vuelo.fechaLlegada, "15/03/22");
+		coche.id = codigoCochePorDefecto;
+		coche.marca = 20;
+		coche.modelo = 10;
+		strcpy(coche.marca, "Seat");
+		strcpy(coche.modelo, "Ibiza");
+
 
 		//Vuelo de prueba 2
-		Vuelo vuelo2;
+		Coche coche2;
 
-		vuelo2.cVuelo = codigoVueloPorDefecto;
-		vuelo2.plazas = 100;
-		vuelo2.precio = 100;
-		strcpy(vuelo2.aeropuertoSalida, "Aeropuerto de Munich");
-		strcpy(vuelo2.aeropuertoLlegada, "Aeropuerto de Roma");
-		strcpy(vuelo2.fechaSalida, "22/05/22");
-		strcpy(vuelo2.fechaLlegada, "22/05/22");
+		coche2.id = codigoCochePorDefecto;
+		coche2.marca = 2;
+		coche2.modelo = 5;
+		strcpy(coche2.marca, "Audi");
+		strcpy(coche2.modelo, "R8");
+
 
 		//Vuelo de prueba 3
-		Vuelo vuelo3;
+		Coche coche3;
 
-		vuelo3.cVuelo = codigoVueloPorDefecto;
-		vuelo3.plazas = 250;
-		vuelo3.precio = 75;
-		strcpy(vuelo3.aeropuertoSalida, "Aeropuerto de Madrid");
-		strcpy(vuelo3.aeropuertoLlegada, "Aeropuerto de Barcelona");
-		strcpy(vuelo3.fechaSalida, "07/11/22");
-		strcpy(vuelo3.fechaLlegada, "07/11/22");
+		coche3.id = codigoCochePorDefecto;
+		coche3.marca = 250;
+		coche3.modelo = 75;
+		strcpy(coche3.marca, "Bmw");
+		strcpy(coche3.modelo, "E46");
+
 
 		//Vuelo de prueba 4
-		Vuelo vuelo4;
+		Coche coche4;
 
-		vuelo4.cVuelo = codigoVueloPorDefecto;
-		vuelo4.plazas = 400;
-		vuelo4.precio = 250;
-		strcpy(vuelo4.aeropuertoSalida, "Aeropuerto de Londres");
-		strcpy(vuelo4.aeropuertoLlegada, "Aeropuerto de Los Angeles");
-		strcpy(vuelo4.fechaSalida, "2/04/22");
-		strcpy(vuelo4.fechaLlegada, "3/04/22");
+		coche4.id = codigoCochePorDefecto;
+		coche4.marca = 400;
+		coche4.modelo = 250;
+		strcpy(coche4.marca, "Audi");
+		strcpy(coche4.modelo, "TT");
+
 
 		//Vuelo de prueba 5
-		Vuelo vuelo5;
+		Coche coche5;
 
-		vuelo5.cVuelo = codigoVueloPorDefecto;
-		vuelo5.plazas = 50;
-		vuelo5.precio = 50;
-		strcpy(vuelo5.aeropuertoSalida, "Aeropuerto de Antananaribo");
-		strcpy(vuelo5.aeropuertoLlegada, "Aeropuerto de Madawi");
-		strcpy(vuelo5.fechaSalida, "2/12/22");
-		strcpy(vuelo5.fechaLlegada, "3/12/22");
+		coche5.id = codigoCochePorDefecto;
+		coche5.marca = 50;
+		coche5.modelo = 50;
+		strcpy(coche5.marca, "Seat");
+		strcpy(coche5.modelo, "Leon");
+
 
 		//Vuelo de prueba 6
-		Vuelo vuelo6;
+		Coche coche6;
 
-		vuelo6.cVuelo = codigoVueloPorDefecto;
-		vuelo6.plazas = 500;
-		vuelo6.precio = 150;
-		strcpy(vuelo6.aeropuertoSalida, "Aeropuerto de Praga");
-		strcpy(vuelo6.aeropuertoLlegada, "Aeropuerto de Munich");
-		strcpy(vuelo6.fechaSalida, "7/07/22");
-		strcpy(vuelo6.fechaLlegada, "8/07/22");
+		coche6.id = codigoCochePorDefecto;
+		coche6.marca = 5;
+		coche6.modelo = 4;
+		strcpy(coche6.marca, "Bmw");
+		strcpy(coche6.modelo, "E36");
+
 
 		//Vuelo de prueba 7
-		Vuelo vuelo7;
+		Coche coche7;
 
-		vuelo7.cVuelo = codigoVueloPorDefecto;
-		vuelo7.plazas = 125;
-		vuelo7.precio = 100;
-		strcpy(vuelo7.aeropuertoSalida, "Aeropuerto de Egipto");
-		strcpy(vuelo7.aeropuertoLlegada, "Aeropuerto de Budapest");
-		strcpy(vuelo7.fechaSalida, "27/11/22");
-		strcpy(vuelo7.fechaLlegada, "27/11/22");
+		coche7.id = codigoCochePorDefecto;
+		coche7.marca = 2;
+		coche7.modelo = 4;
+		strcpy(coche7.marca, "Seat");
+		strcpy(coche7.modelo, "Cupra");
+
 
 		//Vuelo de prueba 8
-		Vuelo vuelo8;
+		Coche coche8;
 
-		vuelo8.cVuelo = codigoVueloPorDefecto;
-		vuelo8.plazas = 400;
-		vuelo8.precio = 300;
-		strcpy(vuelo8.aeropuertoSalida, "Aeropuerto de Atenas");
-		strcpy(vuelo8.aeropuertoLlegada, "Aeropuerto de Los Sicilia");
-		strcpy(vuelo8.fechaSalida, "13/08/22");
-		strcpy(vuelo8.fechaLlegada, "13/08/22");
+		coche8.id = codigoCochePorDefecto;
+		coche8.marca = 4;
+		coche8.modelo = 3;
+		strcpy(coche8.marca, "Audi");
+		strcpy(coche8.modelo, " A3");
+
 
 		//Vuelo de prueba 9
-		Vuelo vuelo9;
+		Coche coche9;
 
-		vuelo9.cVuelo = codigoVueloPorDefecto;
-		vuelo9.plazas = 500;
-		vuelo9.precio = 500;
-		strcpy(vuelo9.aeropuertoSalida, "Aeropuerto de Roma");
-		strcpy(vuelo9.aeropuertoLlegada, "Aeropuerto de Paris");
-		strcpy(vuelo9.fechaSalida, "22/03/22");
-		strcpy(vuelo9.fechaLlegada, "23/03/22");
+		coche9.id = codigoCochePorDefecto;
+		coche9.marca = 3;
+		coche9.modelo = 5;
+		strcpy(coche9.marca, "Audi");
+		strcpy(coche9.modelo, "A1");
 
 		//Vuelo de prueba 10
-		Vuelo vuelo10;
+		Coche coche10;
 
-		vuelo10.cVuelo = codigoVueloPorDefecto;
-		vuelo10.plazas = 100;
-		vuelo10.precio = 1000;
-		strcpy(vuelo10.aeropuertoSalida, "Aeropuerto de Dublin");
-		strcpy(vuelo10.aeropuertoLlegada, "Aeropuerto de Dubai");
-		strcpy(vuelo10.fechaSalida, "2/05/22");
-		strcpy(vuelo10.fechaLlegada, "2/05/22");
+		coche10.id = codigoCochePorDefecto;
+		coche10.marca = 6;
+		coche10.modelo = 10;
+		strcpy(coche10.marca, "GOLF");
+		strcpy(coche10.modelo, "GTI");
+
 
 		eliminarUsuarios(db, result);
 		eliminarVuelos(db, result);
@@ -270,21 +258,20 @@ int main(void)
 		anyadirUsuario(db, result, usuario7);
 		anyadirUsuario(db, result, usuario8);
 		anyadirUsuario(db, result, usuario9);
-		anyadirVuelo(db, result, vuelo);
-		anyadirVuelo(db, result, vuelo2);
-		anyadirVuelo(db, result, vuelo3);
-		anyadirVuelo(db, result, vuelo4);
-		anyadirVuelo(db, result, vuelo5);
-		anyadirVuelo(db, result, vuelo6);
-		anyadirVuelo(db, result, vuelo7);
-		anyadirVuelo(db, result, vuelo8);
-		anyadirVuelo(db, result, vuelo9);
-		anyadirVuelo(db, result, vuelo10);
-*///BORRRAR ESTOS 2 CARACTERES
+		anyadirVuelo(db, result, coche);
+		anyadirVuelo(db, result, coche2);
+		anyadirVuelo(db, result, coche3);
+		anyadirVuelo(db, result, coche4);
+		anyadirVuelo(db, result, coche5);
+		anyadirVuelo(db, result, coche6);
+		anyadirVuelo(db, result, coche7);
+		anyadirVuelo(db, result, coche8);
+		anyadirVuelo(db, result, coche9);
+		anyadirVuelo(db, result, coche10);
 		/*//Para probar si los datos entran como deben en la BD
 		imprimirUsuarios(db);
-		imprimirVuelos(db);*/
-/*BORRRAR ESTOS 2 CARACTERES
+		imprimirCoches(db);*/
+
 		WSADATA wsaData;
 		SOCKET conn_socket;
 		SOCKET comm_socket;
@@ -469,7 +456,7 @@ int main(void)
 
 			//printf("Command received: %s \n", recvBuff);
 
-			Usuario u; Reserva r;
+			Usuario u; Coche c;
 
 			if (strcmp(recvBuff, "ANYADIRUSUARIO") == 0)
 			{
@@ -488,7 +475,7 @@ int main(void)
 				{
 					contador++;
 					if (contador == 1) {
-						u.cUsuario = atoi(recvBuff);
+						u.id = atoi(recvBuff);
 
 						f = fopen("log.txt", "a");
 						if (fopen("log.txt", "a") == NULL) {
@@ -510,28 +497,6 @@ int main(void)
 						fclose(f);
 					}
 					if (contador == 3) {
-						strcpy(u.dni, recvBuff);
-
-						f = fopen("log.txt", "a");
-						if (fopen("log.txt", "a") == NULL) {
-							printf("Error al abrir el fichero de log\n");
-						} else {
-							fprintf(f, "Anyadido dni al nuevo usuario\n");
-						}
-						fclose(f);
-					}
-					if (contador == 4) {
-						strcpy(u.password, recvBuff);
-
-						f = fopen("log.txt", "a");
-						if (fopen("log.txt", "a") == NULL) {
-							printf("Error al abrir el fichero de log\n");
-						} else {
-							fprintf(f, "Anyadida contrasenya al nuevo usuario\n");
-						}
-						fclose(f);
-					}
-					if (contador == 5) {
 						strcpy(u.nombre, recvBuff);
 
 						f = fopen("log.txt", "a");
@@ -542,14 +507,26 @@ int main(void)
 						}
 						fclose(f);
 					}
-					if (contador == 6) {
-						strcpy(u.apellido, recvBuff);
+					if (contador == 4) {
+						strcpy(u.contrasenya, recvBuff);
 
 						f = fopen("log.txt", "a");
 						if (fopen("log.txt", "a") == NULL) {
 							printf("Error al abrir el fichero de log\n");
 						} else {
-							fprintf(f, "Anyadido apellido al nuevo usuario\n");
+							fprintf(f, "Anyadida contrasenya al nuevo usuario\n");
+						}
+						fclose(f);
+					}
+
+					if (contador == 5) {
+						strcpy(u.saldo, recvBuff);
+
+						f = fopen("log.txt", "a");
+						if (fopen("log.txt", "a") == NULL) {
+							printf("Error al abrir el fichero de log\n");
+						} else {
+							fprintf(f, "Anyadido saldo al nuevo usuario\n");
 						}
 						fclose(f);
 					}
@@ -569,57 +546,57 @@ int main(void)
 				imprimirUsuarios(db);
 			}
 
-			if (strcmp(recvBuff, "ANYADIRRESERVA") == 0)
+			if (strcmp(recvBuff, "ANYADIRCOCHE") == 0)
 			{
 				f = fopen("log.txt", "a");
 				if (fopen("log.txt", "a") == NULL) {
 					printf("Error al abrir el fichero de log\n");
 				} else {
-					fprintf(f, "Anyadiendo reserva\n");
+					fprintf(f, "Anyadiendo coche\n");
 				}
 				fclose(f);
 
 				int contador = 0;
 				recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
-				while (strcmp(recvBuff, "ANYADIRRESERVA-END") != 0)
+				while (strcmp(recvBuff, "ANYADIRCOCHE-END") != 0)
 				{
 					contador++;
 
 					if (contador == 1) {
-						r.cReserva = atoi(recvBuff);
+						c.id = atoi(recvBuff);
 
 						f = fopen("log.txt", "a");
 						if (fopen("log.txt", "a") == NULL) {
 							printf("Error al abrir el fichero de log\n");
 						} else {
-							fprintf(f, "Anyadiendo codigo de reserva a la nueva reserva\n");
+							fprintf(f, "Anyadiendo codigo de coche a el nuevo coche\n");
 						}
 						fclose(f);
 					}
 					if (contador == 2) {
-						r.cUsuario = atoi(recvBuff);
+						c.id = atoi(recvBuff);
 
 						f = fopen("log.txt", "a");
 						if (fopen("log.txt", "a") == NULL) {
 							printf("Error al abrir el fichero de log\n");
 						} else {
-							fprintf(f, "Anyadiendo codigo de usuario a la nueva reserva\n");
+							fprintf(f, "Anyadiendo codigo de coche a el nuevo coche\n");
 						}
 						fclose(f);
 					}
 					if (contador == 3) {
-						r.cVuelo = atoi(recvBuff);
+						c.id = atoi(recvBuff);
 
 						f = fopen("log.txt", "a");
 						if (fopen("log.txt", "a") == NULL) {
 							printf("Error al abrir el fichero de log\n");
 						} else {
-							fprintf(f, "Anyadiendo codigo de vuelo a la nueva reserva\n");
+							fprintf(f, "Anyadiendo codigo de coche a el nuevo coche\n");
 						}
 						fclose(f);
 					}
 					if (contador == 4) {
-						r.importeTotal = atoi(recvBuff);
+						c.importeTotal = atoi(recvBuff);
 
 						f = fopen("log.txt", "a");
 						if (fopen("log.txt", "a") == NULL) {
@@ -671,23 +648,23 @@ int main(void)
 
 				int i = 0;
 				for (i = 0; i < 50; i++) {
-					if (usuarios[i].cUsuario != 0) {
-						sprintf(sendBuff, "%d", usuarios[i].cUsuario);
+					if (usuarios[i].id != 0) {
+						sprintf(sendBuff, "%d", usuarios[i].id);
 						send(comm_socket, sendBuff, sizeof(sendBuff), 0);
 						printf("Response sent: %s \n", sendBuff);
 						sprintf(sendBuff, "%s", usuarios[i].email);
 						send(comm_socket, sendBuff, sizeof(sendBuff), 0);
 						printf("Response sent: %s \n", sendBuff);
-						sprintf(sendBuff, "%s", usuarios[i].dni);
+						sprintf(sendBuff, "%s", usuarios[i].nombre);
 						send(comm_socket, sendBuff, sizeof(sendBuff), 0);
 						printf("Response sent: %s \n", sendBuff);
-						sprintf(sendBuff, "%s", usuarios[i].password);
+						sprintf(sendBuff, "%s", usuarios[i].contrasenya);
 						send(comm_socket, sendBuff, sizeof(sendBuff), 0);
 						printf("Response sent: %s \n", sendBuff);
 						sprintf(sendBuff, "%s", usuarios[i].nombre);
 						send(comm_socket, sendBuff, sizeof(sendBuff), 0);
 						printf("Response sent: %s \n", sendBuff);
-						sprintf(sendBuff, "%s", usuarios[i].apellido);
+						sprintf(sendBuff, "%s", usuarios[i].saldo);
 						send(comm_socket, sendBuff, sizeof(sendBuff), 0);
 						printf("Response sent: %s \n", sendBuff);
 					} else {
@@ -784,19 +761,19 @@ int main(void)
 				}
 				fclose(f);
 
-				Vuelo *vuelos = (Vuelo*) malloc(50 * sizeof(Vuelo));
-				vuelos = getVuelos(db);
+				Coche *coches = (Coche*) malloc(50 * sizeof(Coche));
+				coches = getVuelos(db);
 
 				int i = 0;
 				for (i = 0; i < 50; i++) {
-					if (vuelos[i].cVuelo != 0) {
-						sprintf(sendBuff, "%d", vuelos[i].cVuelo);
+					if (coches[i].id != 0) {
+						sprintf(sendBuff, "%d", coches[i].id);
 						send(comm_socket, sendBuff, sizeof(sendBuff), 0);
 						printf("Response sent: %s \n", sendBuff);
-						sprintf(sendBuff, "%d", vuelos[i].plazas);
+						sprintf(sendBuff, "%d", coches[i].marca);
 						send(comm_socket, sendBuff, sizeof(sendBuff), 0);
 						printf("Response sent: %s \n", sendBuff);
-						sprintf(sendBuff, "%d", vuelos[i].precio);
+						sprintf(sendBuff, "%d", coches[i].modelo);
 						send(comm_socket, sendBuff, sizeof(sendBuff), 0);
 						printf("Response sent: %s \n", sendBuff);
 						sprintf(sendBuff, "%s", vuelos[i].aeropuertoSalida);
@@ -822,7 +799,7 @@ int main(void)
 				if (fopen("log.txt", "a") == NULL) {
 					printf("Error al abrir el fichero de log\n");
 				} else {
-					fprintf(f, "Vuelos cargados correctamente\n");
+					fprintf(f, "Coches cargados correctamente\n");
 				}
 				fclose(f);
 
@@ -879,4 +856,4 @@ int main(void)
 		return 0;
 	}
 }
-*///BORRRAR ESTOS 2 CARACTERES
+
