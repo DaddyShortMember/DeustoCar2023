@@ -1,13 +1,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include "usuario.h"
 #include "coche.h"
 #include "admin.h"
 #include "BD.h"
 #include "sqlite3.h"
-#include <winsock2.h>
 #include <math.h>
 
 #define SERVER_IP "127.0.0.1"
@@ -42,14 +40,14 @@ int main(void)
 
 	Admin admin;
 	//Para insertar el admin en la BD la primera vez:
-	//strcpy(admin.nUsuario, "admin");
-	//strcpy(admin.password, "admin");
-	//insertAdmin(db, admin.nUsuario, admin.password);
+	//strcpy(admin.nombre, "admin");
+	//strcpy(admin.contrasenya, "admin");
+	//insertAdmin(db, admin.nombre, admin.contrasenya);
 
 	admin = readConfigFile();
 	//printfs para pruebas
-	//printf("Usuario: %s\n", admin.nUsuario);
-	//printf("Contrasena: %s\n", admin.password);
+	//printf("Usuario: %s\n", admin.nombre);
+	//printf("Contrasena: %s\n", admin.contrasenya);
 	//Si n = 0, no se han encontrado los datos de Admin en la BD y no se puede acceder al administrador local
 	//Si n = 1, se permite el acceso al administrador local
 	int n = isAdmin(db, admin);
