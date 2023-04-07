@@ -148,7 +148,7 @@ int main(void)
 		strcpy(usuario9.nombre, "Alvaro");
 
 
-		//Vuelo de prueba
+		//Coche de prueba
 		Coche coche;
 
 		coche.id = codigoCochePorDefecto;
@@ -158,7 +158,7 @@ int main(void)
 		strcpy(coche.modelo, "Ibiza");
 
 
-		//Vuelo de prueba 2
+		//Coche de prueba 2
 		Coche coche2;
 
 		coche2.id = codigoCochePorDefecto;
@@ -168,7 +168,7 @@ int main(void)
 		strcpy(coche2.modelo, "R8");
 
 
-		//Vuelo de prueba 3
+		//Coche de prueba 3
 		Coche coche3;
 
 		coche3.id = codigoCochePorDefecto;
@@ -178,7 +178,7 @@ int main(void)
 		strcpy(coche3.modelo, "E46");
 
 
-		//Vuelo de prueba 4
+		//Coche de prueba 4
 		Coche coche4;
 
 		coche4.id = codigoCochePorDefecto;
@@ -188,7 +188,7 @@ int main(void)
 		strcpy(coche4.modelo, "TT");
 
 
-		//Vuelo de prueba 5
+		//Coche de prueba 5
 		Coche coche5;
 
 		coche5.id = codigoCochePorDefecto;
@@ -198,7 +198,7 @@ int main(void)
 		strcpy(coche5.modelo, "Leon");
 
 
-		//Vuelo de prueba 6
+		//Coche de prueba 6
 		Coche coche6;
 
 		coche6.id = codigoCochePorDefecto;
@@ -208,7 +208,7 @@ int main(void)
 		strcpy(coche6.modelo, "E36");
 
 
-		//Vuelo de prueba 7
+		//Coche de prueba 7
 		Coche coche7;
 
 		coche7.id = codigoCochePorDefecto;
@@ -218,7 +218,7 @@ int main(void)
 		strcpy(coche7.modelo, "Cupra");
 
 
-		//Vuelo de prueba 8
+		//Coche de prueba 8
 		Coche coche8;
 
 		coche8.id = codigoCochePorDefecto;
@@ -228,7 +228,7 @@ int main(void)
 		strcpy(coche8.modelo, " A3");
 
 
-		//Vuelo de prueba 9
+		//Coche de prueba 9
 		Coche coche9;
 
 		coche9.id = codigoCochePorDefecto;
@@ -237,7 +237,7 @@ int main(void)
 		strcpy(coche9.marca, "Audi");
 		strcpy(coche9.modelo, "A1");
 
-		//Vuelo de prueba 10
+		//Coche de prueba 10
 		Coche coche10;
 
 		coche10.id = codigoCochePorDefecto;
@@ -248,7 +248,7 @@ int main(void)
 
 
 		eliminarUsuarios(db, result);
-		eliminarVuelos(db, result);
+		eliminarCoches(db, result);
 		anyadirUsuario(db, result, usuario);
 		anyadirUsuario(db, result, usuario2);
 		anyadirUsuario(db, result, usuario3);
@@ -258,16 +258,16 @@ int main(void)
 		anyadirUsuario(db, result, usuario7);
 		anyadirUsuario(db, result, usuario8);
 		anyadirUsuario(db, result, usuario9);
-		anyadirVuelo(db, result, coche);
-		anyadirVuelo(db, result, coche2);
-		anyadirVuelo(db, result, coche3);
-		anyadirVuelo(db, result, coche4);
-		anyadirVuelo(db, result, coche5);
-		anyadirVuelo(db, result, coche6);
-		anyadirVuelo(db, result, coche7);
-		anyadirVuelo(db, result, coche8);
-		anyadirVuelo(db, result, coche9);
-		anyadirVuelo(db, result, coche10);
+		anyadirCoches(db, result, coche);
+		anyadirCoches(db, result, coche2);
+		anyadirCoches(db, result, coche3);
+		anyadirCoches(db, result, coche4);
+		anyadirCoches(db, result, coche5);
+		anyadirCoches(db, result, coche6);
+		anyadirCoches(db, result, coche7);
+		anyadirCoches(db, result, coche8);
+		anyadirCoches(db, result, coche9);
+		anyadirCoches(db, result, coche10);
 		/*//Para probar si los datos entran como deben en la BD
 		imprimirUsuarios(db);
 		imprimirCoches(db);*/
@@ -602,24 +602,24 @@ int main(void)
 						if (fopen("log.txt", "a") == NULL) {
 							printf("Error al abrir el fichero de log\n");
 						} else {
-							fprintf(f, "Anyadiendo importe total a la nueva reserva\n");
+							fprintf(f, "Anyadiendo precio total al coche nuevo\n");
 						}
 						fclose(f);
 					}
 
 					recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
 				}
-				insertReserva(db, r.cUsuario, r.cVuelo, r.importeTotal);
+				insertCoche(db, c.id, c.modelo, c.marca);
 
 				f = fopen("log.txt", "a");
 				if (fopen("log.txt", "a") == NULL) {
 					printf("Error al abrir el fichero de log\n");
 				} else {
-					fprintf(f, "Anyadida nueva reserva\n");
+					fprintf(f, "Anyadido nuevo coche\n");
 				}
 				fclose(f);
 
-				imprimirReservas(db);
+				imprimirCoches(db);
 			}
 
 			if (strcmp(recvBuff, "GETUSUARIOS") == 0)
@@ -684,85 +684,29 @@ int main(void)
 
 			}
 
-			if (strcmp(recvBuff, "GETRESERVAS") == 0)
+			if (strcmp(recvBuff, "GETCOCHES") == 0)
 			{
 				f = fopen("log.txt", "a");
 				if (fopen("log.txt", "a") == NULL) {
 					printf("Error al abrir el fichero de log\n");
 				} else {
-					fprintf(f, "Cargando reservas\n");
+					fprintf(f, "Cargando coches\n");
 				}
 				fclose(f);
 
 				recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
-				if (strcmp(recvBuff, "GETRESERVAS-END") == 0);
+				if (strcmp(recvBuff, "GETCOCHES-END") == 0);
 
 				f = fopen("log.txt", "a");
 				if (fopen("log.txt", "a") == NULL) {
 					printf("Error al abrir el fichero de log\n");
 				} else {
-					fprintf(f, "Error al cargar reservas\n");
-				}
-				fclose(f);
-
-				Reserva *reservas = (Reserva*) malloc(50 * sizeof(Reserva));
-				reservas = getReservas(db);
-
-				int i = 0;
-				for (i = 0; i < 50; i++) {
-					if (reservas[i].cReserva != 0) {
-						sprintf(sendBuff, "%d", reservas[i].cReserva);
-						send(comm_socket, sendBuff, sizeof(sendBuff), 0);
-						printf("Response sent: %s \n", sendBuff);
-						sprintf(sendBuff, "%d", reservas[i].cUsuario);
-						send(comm_socket, sendBuff, sizeof(sendBuff), 0);
-						printf("Response sent: %s \n", sendBuff);
-						sprintf(sendBuff, "%d", reservas[i].cVuelo);
-						send(comm_socket, sendBuff, sizeof(sendBuff), 0);
-						printf("Response sent: %s \n", sendBuff);
-						sprintf(sendBuff, "%d", reservas[i].importeTotal);
-						send(comm_socket, sendBuff, sizeof(sendBuff), 0);
-						printf("Response sent: %s \n", sendBuff);
-					} else {
-						i = 50;
-						sprintf(sendBuff, "%s", "FINBUCLE");
-						send(comm_socket, sendBuff, sizeof(sendBuff), 0);
-					}
-				}
-
-				f = fopen("log.txt", "a");
-				if (fopen("log.txt", "a") == NULL) {
-					printf("Error al abrir el fichero de log\n");
-				} else {
-					fprintf(f, "Reservas cargadas correctamente\n");
-				}
-				fclose(f);
-
-			}
-
-			if (strcmp(recvBuff, "GETVUELOS") == 0)
-			{
-				f = fopen("log.txt", "a");
-				if (fopen("log.txt", "a") == NULL) {
-					printf("Error al abrir el fichero de log\n");
-				} else {
-					fprintf(f, "Cargando vuelos\n");
-				}
-				fclose(f);
-
-				recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
-				if (strcmp(recvBuff, "GETVUELOS-END") == 0);
-
-				f = fopen("log.txt", "a");
-				if (fopen("log.txt", "a") == NULL) {
-					printf("Error al abrir el fichero de log\n");
-				} else {
-					fprintf(f, "Error al cargar vuelos\n");
+					fprintf(f, "Error al cargar coches\n");
 				}
 				fclose(f);
 
 				Coche *coches = (Coche*) malloc(50 * sizeof(Coche));
-				coches = getVuelos(db);
+				//coches = getCoches(db); NO EXISTE ESTA FUNCION AUN
 
 				int i = 0;
 				for (i = 0; i < 50; i++) {
@@ -770,22 +714,10 @@ int main(void)
 						sprintf(sendBuff, "%d", coches[i].id);
 						send(comm_socket, sendBuff, sizeof(sendBuff), 0);
 						printf("Response sent: %s \n", sendBuff);
-						sprintf(sendBuff, "%d", coches[i].marca);
+						sprintf(sendBuff, "%s", coches[i].modelo);
 						send(comm_socket, sendBuff, sizeof(sendBuff), 0);
 						printf("Response sent: %s \n", sendBuff);
-						sprintf(sendBuff, "%d", coches[i].modelo);
-						send(comm_socket, sendBuff, sizeof(sendBuff), 0);
-						printf("Response sent: %s \n", sendBuff);
-						sprintf(sendBuff, "%s", vuelos[i].aeropuertoSalida);
-						send(comm_socket, sendBuff, sizeof(sendBuff), 0);
-						printf("Response sent: %s \n", sendBuff);
-						sprintf(sendBuff, "%s", vuelos[i].aeropuertoLlegada);
-						send(comm_socket, sendBuff, sizeof(sendBuff), 0);
-						printf("Response sent: %s \n", sendBuff);
-						sprintf(sendBuff, "%s", vuelos[i].fechaSalida);
-						send(comm_socket, sendBuff, sizeof(sendBuff), 0);
-						printf("Response sent: %s \n", sendBuff);
-						sprintf(sendBuff, "%s", vuelos[i].fechaLlegada);
+						sprintf(sendBuff, "%s", coches[i].marca);
 						send(comm_socket, sendBuff, sizeof(sendBuff), 0);
 						printf("Response sent: %s \n", sendBuff);
 					} else {
@@ -794,6 +726,16 @@ int main(void)
 						send(comm_socket, sendBuff, sizeof(sendBuff), 0);
 					}
 				}
+
+				f = fopen("log.txt", "a");
+				if (fopen("log.txt", "a") == NULL) {
+					printf("Error al abrir el fichero de log\n");
+				} else {
+					fprintf(f, "Coches cargadas correctamente\n");
+				}
+				fclose(f);
+
+			}
 
 				f = fopen("log.txt", "a");
 				if (fopen("log.txt", "a") == NULL) {
@@ -805,24 +747,24 @@ int main(void)
 
 			}
 
-			if (strcmp(recvBuff, "DELETERESERVA") == 0)
+			if (strcmp(recvBuff, "DELETECOCHE") == 0)
 			{
 				f = fopen("log.txt", "a");
 				if (fopen("log.txt", "a") == NULL) {
 					printf("Error al abrir el fichero de log\n");
 				} else {
-					fprintf(f, "Eliminando reserva\n");
+					fprintf(f, "Eliminando coche\n");
 				}
 				fclose(f);
 
 				recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
-				deleteReserva(db, recvBuff);
+				//deleteCoche(db, recvBuff);
 
 				f = fopen("log.txt", "a");
 				if (fopen("log.txt", "a") == NULL) {
 					printf("Error al abrir el fichero de log\n");
 				} else {
-					fprintf(f, "Reserva eliminada\n");
+					fprintf(f, "Coche eliminado\n");
 				}
 				fclose(f);
 			}
