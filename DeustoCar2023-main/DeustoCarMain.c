@@ -8,9 +8,6 @@
 #include "sqlite3.h"
 #include <math.h>
 
-#define SERVER_IP "127.0.0.1"
-#define SERVER_PORT 6000
-
 int main(void)
 {
 	FILE *f;
@@ -150,8 +147,6 @@ int main(void)
 		Coche coche;
 
 		coche.id = codigoCochePorDefecto;
-		coche.marca = 20;
-		coche.modelo = 10;
 		strcpy(coche.marca, "Seat");
 		strcpy(coche.modelo, "Ibiza");
 
@@ -160,8 +155,6 @@ int main(void)
 		Coche coche2;
 
 		coche2.id = codigoCochePorDefecto;
-		coche2.marca = 2;
-		coche2.modelo = 5;
 		strcpy(coche2.marca, "Audi");
 		strcpy(coche2.modelo, "R8");
 
@@ -170,9 +163,7 @@ int main(void)
 		Coche coche3;
 
 		coche3.id = codigoCochePorDefecto;
-		coche3.marca = 250;
-		coche3.modelo = 75;
-		strcpy(coche3.marca, "Bmw");
+		strcpy(coche3.marca, "BMW");
 		strcpy(coche3.modelo, "E46");
 
 
@@ -180,8 +171,6 @@ int main(void)
 		Coche coche4;
 
 		coche4.id = codigoCochePorDefecto;
-		coche4.marca = 400;
-		coche4.modelo = 250;
 		strcpy(coche4.marca, "Audi");
 		strcpy(coche4.modelo, "TT");
 
@@ -190,8 +179,6 @@ int main(void)
 		Coche coche5;
 
 		coche5.id = codigoCochePorDefecto;
-		coche5.marca = 50;
-		coche5.modelo = 50;
 		strcpy(coche5.marca, "Seat");
 		strcpy(coche5.modelo, "Leon");
 
@@ -200,9 +187,7 @@ int main(void)
 		Coche coche6;
 
 		coche6.id = codigoCochePorDefecto;
-		coche6.marca = 5;
-		coche6.modelo = 4;
-		strcpy(coche6.marca, "Bmw");
+		strcpy(coche6.marca, "BMW");
 		strcpy(coche6.modelo, "E36");
 
 
@@ -210,8 +195,6 @@ int main(void)
 		Coche coche7;
 
 		coche7.id = codigoCochePorDefecto;
-		coche7.marca = 2;
-		coche7.modelo = 4;
 		strcpy(coche7.marca, "Seat");
 		strcpy(coche7.modelo, "Cupra");
 
@@ -221,7 +204,6 @@ int main(void)
 
 		coche8.id = codigoCochePorDefecto;
 		coche8.marca = 4;
-		coche8.modelo = 3;
 		strcpy(coche8.marca, "Audi");
 		strcpy(coche8.modelo, " A3");
 
@@ -230,8 +212,6 @@ int main(void)
 		Coche coche9;
 
 		coche9.id = codigoCochePorDefecto;
-		coche9.marca = 3;
-		coche9.modelo = 5;
 		strcpy(coche9.marca, "Audi");
 		strcpy(coche9.modelo, "A1");
 
@@ -239,10 +219,8 @@ int main(void)
 		Coche coche10;
 
 		coche10.id = codigoCochePorDefecto;
-		coche10.marca = 6;
-		coche10.modelo = 10;
-		strcpy(coche10.marca, "GOLF");
-		strcpy(coche10.modelo, "GTI");
+		strcpy(coche10.marca, "Volkswaggen");
+		strcpy(coche10.modelo, "GOLF GTI");
 
 
 		eliminarUsuarios(db, result);
