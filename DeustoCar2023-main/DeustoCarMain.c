@@ -1,254 +1,310 @@
-
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
+#include <string.h>
+/*
 #include "usuario.h"
 #include "coche.h"
 #include "admin.h"
+#include "venta.h"
+#include "compra.h"
 #include "BD.h"
 #include "sqlite3.h"
-#include <math.h>
+*/
+
+
+
+void lgscr(void); //menu de inicio de sesion
+void mmenu(void); //menu principal
+void carscr(void);//menu de visualizacion/modificacion sobre: coche
+void prcscr(void);//menu de visualizacion/modificacion sobre: compra
+void slsscr(void);//menu de visualizacion/modificacion sobre: venta
+void usrscr(void);//menu de visualizacion/modificacion sobre: usuario
+void cfgscr(void);//menu de configuracion; permite modificar ciertos parametros
+/* Ideas de parametros:
+[para mas libertad de configuracion]
+-extension de fichero de log (si se guarda como .txt, o como .log, o como el admin prefiera
+[para gestion de memoria fisica]
+-control de impresion de log (que se guarda, si todos los pasos, o lo mas importante, o solo errores)
+ */
+ 
+ 
+ //TODO:
+ //*Arreglar parte de menus (esta hecho el martes)
+ //*Guardar en un fichero .bin o lo que sea las IDs (que concuerden con la BD) de los admins.
+ //*Realizar las funciones sobre la BD en la .h y la .c de su respectivo modulo
 
 int main(void)
 {
-	FILE *f;
 
-	f = fopen("log.txt", "a");
-	if (fopen("log.txt", "a") == NULL) {
-		printf("Error al abrir el fichero de log\n");
-	} else {
-		fprintf(f, "------------------------------------------------------------------------------\n\n");
+	lgscr();
+
+	
+}
+
+void lgscr(void){
+	int flg = 0;
+	int flg2 = 1;
+	int sec = 0;
+	char usi[31];
+	//RD
+	while(flg < 1){
+		if(sec == 3)
+			exit(1);
+	system("CLS");
+	printf("Cliente de Admin. Local\n\n\n\n");
+	printf("Introduzca su usuario:\n");
+	fgets(usi,31,stdin);
+	if(usi[0] == '0'){
+		sec++;
+		fflush(stdin);
 	}
-	fclose(f);
-
-	sqlite3 *db;
-
-	int result = sqlite3_open("DB.db", &db);
-	if (result != SQLITE_OK) {
-		printf("Error opening database\n");
+	else{
+		printf("%s",usi);
+		fflush(stdin);
+		getch();
+		flg++;
 	}
-
-	f = fopen("log.txt", "a");
-	if (fopen("log.txt", "a") == NULL) {
-		printf("Error al abrir el fichero de log\n");
-	} else {
-		fprintf(f, "Abriendo la base de datos\n");
+	//if usuario no existe: advertencia, else flg2-- && flg3 = 0
+	//do-while(flg3 < 1)
 	}
-	fclose(f);
+	while(flg2 > 0){
+		if(sec == 3)
+			exit(1);
+	system("CLS");
+	printf("Cliente de Admin. Local\n\n\n\n");
+	printf("Introduzca su contrasenya:\n");
+	fgets(usi,31,stdin);
+	if(usi[0] == '0'){
+		fflush(stdin);
+		sec++;
+	}
+	else{
+		printf("%s",usi);
+		fflush(stdin);
+		flg2--;
+		getch();
+		mmenu();
+	}
+	}
+	//if usuario.id =! adminID.bin(!!GUARDADO EN FICHERO LOCAL):  advertencia, flg2 = 1 && sec++, else mmenu(); 
+	//if sec == 3 (o numero de intentos maximos cualquiera): exit
+	exit(1);
+}
 
-	Admin admin;
-	//Para insertar el admin en la BD la primera vez:
-	//strcpy(admin.nombre, "admin");
-	//strcpy(admin.contrasenya, "admin");
-	//insertAdmin(db, admin.nombre, admin.contrasenya);
+void mmenu(void){
+	int flg = 0;
+	char buffer[3]; 
+	int usi;
+	while(flg == 0){//while flg == 0;
+	system("CLS");
+	printf("Cliente de Admin. Local\n");
+	printf("[MENU PRINCIPAL]\n");
+	printf("[1] Usuarios\n");
+	printf("[2] Coches\n");
+	printf("[3] Ventas\n");
+	printf("[4] Compras\n");
+	printf("[0] Salida\n");
+	fgets(buffer,3,stdin);
+	sscanf(buffer, "%d" &usi);
+	switch(usi){
+		case 0: exit(10);
+		case 1: usrscr();
+				flg++;
+				break;
+		case 2: carscr();
+				flg++;
+				break;
+		case 3: slsscr();
+				flg++;
+				break;
+		case 4: prcscr();
+				flg++;
+				break;
+		default: printf("");
+		
+		
+	}
+	
+	//switch(usi):
+	
+	}
+	//if usi > 4 || < 0: pedir al usuario que vuelva a intentar, else llamar a la funcion correspondiente
+	
+}
 
-	admin = readConfigFile();
-	//printfs para pruebas
-	//printf("Usuario: %s\n", admin.nombre);
-	//printf("Contrasena: %s\n", admin.contrasenya);
-	//Si n = 0, no se han encontrado los datos de Admin en la BD y no se puede acceder al administrador local
-	//Si n = 1, se permite el acceso al administrador local
-	int n = isAdmin(db, admin);
-	//printf("%d", n);
+void carscr(void){
+	int flg = 0;
+	int usi;
+	char buffer[3];
+	while(flg == 0){
+	system("CLS");
+	printf("Cliente de Admin. Local\n");
+	printf("[MENU COCHES]\n");
+	printf("[1] Visualizar\n");
+	printf("[2] Exportar\n");
+	printf("[3] Importar\n");
+	printf("[4] Modificar\n");
+	printf("[5] Eliminar\n");
+	printf("[0] Vuelta\n");
+	fgets(buffer,3,stdin);
+	sscanf(buffer, "%d" &usi);
+	switch(usi){
+		case 0: exit(10);
+		case 1: usrscr();
+				flg++;
+				break;
+		case 2: carscr();
+				flg++;
+				break;
+		case 3: slsscr();
+				flg++;
+				break;
+		case 4: prcscr();
+				flg++;
+				break;
+		default: printf("");
+	
+	}
+	//if usi > 5 || < 0: pedir al usuario que vuelva a intentar, else realizar operacion indicada
+}
 
-	if (n) {
-		int codigoUsuarioPorDefecto = 0;
-		int codigoCochePorDefecto = 0;
+void prcscr(void){
+	int flg = 0;
+	char buffer[3];
+	int usi;
+	//while flg == 0;
+	while(flg == 0){
+	system("CLS");
+	printf("Cliente de Admin. Local\n");
+	printf("[MENU COMPRAS]\n");
+	printf("[1] Visualizar\n");
+	printf("[2] Imprimir\n");
+	printf("[3] Importar\n"); //?? Posible, posible (Rollback)
+	printf("[4] Modificar\n"); //quitar esta opcion
+	printf("[5] Eliminar\n"); //quitar esta opcion
+	printf("[0] Vuelta\n");
+	fgets(buffer,3,stdin);
+	sscanf(buffer, "%d" &usi);
+	switch(usi){
+		case 0: exit(10);
+		case 1: usrscr();
+				flg++;
+				break;
+		case 2: carscr();
+				flg++;
+				break;
+		case 3: slsscr();
+				flg++;
+				break;
+		case 4: prcscr();
+				flg++;
+				break;
+		default: printf("");
+	}
+	//if usi > 3?? || < 0: pedir al usuario que vuelva a intentar, else realizar operacion indicada
+}
 
-		//Usuario de prueba
-		Usuario usuario;
-		usuario.id = codigoUsuarioPorDefecto;
-		strcpy(usuario.email, "correoUsuario@gmail.com");
-		strcpy(usuario.saldo, "500");
-		strcpy(usuario.contrasenya, "lac0ntrasenya");
-		strcpy(usuario.nombre, "Nombre");
+void slsscr(void){
+	int flg = 0;
+	char buffer[3];
+	int usi;
+	//while flg == 0;
+	while(flg == 0){
+	system("CLS");
+	printf("Cliente de Admin. Local\n");
+	printf("[MENU VENTAS]\n");
+	printf("[1] Visualizar\n");
+	printf("[2] Exportar\n");
+	printf("[3] Importar\n");
+	printf("[4] Modificar\n");
+	printf("[5] Eliminar\n");
+	printf("[0] Vuelta\n");
+	fgets(buffer,3,stdin);
+	sscanf(buffer, "%d" &usi);
+	switch(usi){
+		case 0: exit(10);
+		case 1: usrscr();
+				flg++;
+				break;
+		case 2: carscr();
+				flg++;
+				break;
+		case 3: slsscr();
+				flg++;
+				break;
+		case 4: prcscr();
+				flg++;
+				break;
+		default: printf("");
+	}
+	//if usi > 5 || < 0: pedir al usuario que vuelva a intentar, else realizar operacion indicada
+}
 
+void usrscr(void){
+	int flg = 0;
+	char buffer[3];
+	int usi;
+	//while flg == 0;
+	while(flg == 0){
+	system("CLS");
+	printf("Cliente de Admin. Local\n");
+	printf("[MENU COCHES]\n");
+	printf("[1] Visualizar\n");
+	printf("[2] Imprimir\n");
+	printf("[3] Exportar\n");
+	printf("[4] Modificar\n");
+	printf("[5] Eliminar\n");
+	printf("[0] Vuelta\n");
+	fgets(buffer,3,stdin);
+	sscanf(buffer, "%d" &usi);
+	switch(usi){
+		case 0: exit(10);
+		case 1: usrscr();
+				flg++;
+				break;
+		case 2: carscr();
+				flg++;
+				break;
+		case 3: slsscr();
+				flg++;
+				break;
+		case 4: prcscr();
+				flg++;
+				break;
+		default: printf("");
+	}
+	//if usi > 5 || < 0: pedir al usuario que vuelva a intentar, else realizar operacion indicada
+}
 
-		//Usuario de prueba 2
-		Usuario usuario2;
-
-		usuario2.id = codigoUsuarioPorDefecto;
-		strcpy(usuario2.email, "correoUsuario2@gmail.com");
-		strcpy(usuario2.saldo, "1000");
-		strcpy(usuario2.contrasenya, "contrasenya2");
-		strcpy(usuario2.nombre, "Jon");
-
-
-		//Usuario de prueba 3
-		Usuario usuario3;
-
-		usuario3.id = codigoUsuarioPorDefecto;
-		strcpy(usuario3.email, "correoUsuario3@gmail.com");
-		strcpy(usuario3.saldo, "300");
-		strcpy(usuario3.contrasenya, "XXXasdfXXX3451");
-		strcpy(usuario3.nombre, "Alvaro");
-
-
-		//Usuario de prueba 4
-		Usuario usuario4;
-
-		usuario4.id = codigoUsuarioPorDefecto;
-		strcpy(usuario4.email, "correoUsuario4@gmail.com");
-		strcpy(usuario4.saldo, "1500");
-		strcpy(usuario4.contrasenya, "1234Alba1234");
-		strcpy(usuario4.nombre, "Alba");
-
-
-		//Usuario de prueba 5
-		Usuario usuario5;
-
-		usuario5.id = codigoUsuarioPorDefecto;
-		strcpy(usuario5.email, "correoUsuario5@gmail.com");
-		strcpy(usuario5.saldo, "360");
-		strcpy(usuario5.contrasenya, "87329Lpow65");
-		strcpy(usuario5.nombre, "Luis");
-
-
-		//Usuario de prueba 6
-		Usuario usuario6;
-
-		usuario6.id = codigoUsuarioPorDefecto;
-		strcpy(usuario6.email, "correoUsuario6@gmail.com");
-		strcpy(usuario6.saldo, "700");
-		strcpy(usuario6.contrasenya, "NoTengoContrasenya");
-		strcpy(usuario6.nombre, "Patricia");
-
-
-		//Usuario de prueba 7
-		Usuario usuario7;
-
-		usuario7.id = codigoUsuarioPorDefecto;
-		strcpy(usuario7.email, "correoUsuario7@gmail.com");
-		strcpy(usuario7.saldo, "950");
-		strcpy(usuario7.contrasenya, "contrasenya1");
-		strcpy(usuario7.nombre, "Diego");
-
-
-		//Usuario de prueba 8
-		Usuario usuario8;
-
-		usuario8.id = codigoUsuarioPorDefecto;
-		strcpy(usuario8.email, "correoUsuario8@gmail.com");
-		strcpy(usuario8.saldo, "200");
-		strcpy(usuario8.contrasenya, "NeretxU99");
-		strcpy(usuario8.nombre, "Nerea");
-
-
-		//Usuario de prueba 9
-		Usuario usuario9;
-
-		usuario9.id = codigoUsuarioPorDefecto;
-		strcpy(usuario9.email, "correoUsuario9@gmail.com");
-		strcpy(usuario9.saldo, "560");
-		strcpy(usuario9.contrasenya, "lac0ntrasenya");
-		strcpy(usuario9.nombre, "Alvaro");
-
-
-		//Coche de prueba
-		Coche coche;
-
-		coche.id = codigoCochePorDefecto;
-		strcpy(coche.marca, "Seat");
-		strcpy(coche.modelo, "Ibiza");
-
-
-		//Coche de prueba 2
-		Coche coche2;
-
-		coche2.id = codigoCochePorDefecto;
-		strcpy(coche2.marca, "Audi");
-		strcpy(coche2.modelo, "R8");
-
-
-		//Coche de prueba 3
-		Coche coche3;
-
-		coche3.id = codigoCochePorDefecto;
-		strcpy(coche3.marca, "BMW");
-		strcpy(coche3.modelo, "E46");
-
-
-		//Coche de prueba 4
-		Coche coche4;
-
-		coche4.id = codigoCochePorDefecto;
-		strcpy(coche4.marca, "Audi");
-		strcpy(coche4.modelo, "TT");
-
-
-		//Coche de prueba 5
-		Coche coche5;
-
-		coche5.id = codigoCochePorDefecto;
-		strcpy(coche5.marca, "Seat");
-		strcpy(coche5.modelo, "Leon");
-
-
-		//Coche de prueba 6
-		Coche coche6;
-
-		coche6.id = codigoCochePorDefecto;
-		strcpy(coche6.marca, "BMW");
-		strcpy(coche6.modelo, "E36");
-
-
-		//Coche de prueba 7
-		Coche coche7;
-
-		coche7.id = codigoCochePorDefecto;
-		strcpy(coche7.marca, "Seat");
-		strcpy(coche7.modelo, "Cupra");
-
-
-		//Coche de prueba 8
-		Coche coche8;
-
-		coche8.id = codigoCochePorDefecto;
-		coche8.marca = 4;
-		strcpy(coche8.marca, "Audi");
-		strcpy(coche8.modelo, " A3");
-
-
-		//Coche de prueba 9
-		Coche coche9;
-
-		coche9.id = codigoCochePorDefecto;
-		strcpy(coche9.marca, "Audi");
-		strcpy(coche9.modelo, "A1");
-
-		//Coche de prueba 10
-		Coche coche10;
-
-		coche10.id = codigoCochePorDefecto;
-		strcpy(coche10.marca, "Volkswaggen");
-		strcpy(coche10.modelo, "GOLF GTI");
-
-
-		eliminarUsuarios(db, result);
-		eliminarCoches(db, result);
-		anyadirUsuario(db, result, usuario);
-		anyadirUsuario(db, result, usuario2);
-		anyadirUsuario(db, result, usuario3);
-		anyadirUsuario(db, result, usuario4);
-		anyadirUsuario(db, result, usuario5);
-		anyadirUsuario(db, result, usuario6);
-		anyadirUsuario(db, result, usuario7);
-		anyadirUsuario(db, result, usuario8);
-		anyadirUsuario(db, result, usuario9);
-		anyadirCoches(db, result, coche);
-		anyadirCoches(db, result, coche2);
-		anyadirCoches(db, result, coche3);
-		anyadirCoches(db, result, coche4);
-		anyadirCoches(db, result, coche5);
-		anyadirCoches(db, result, coche6);
-		anyadirCoches(db, result, coche7);
-		anyadirCoches(db, result, coche8);
-		anyadirCoches(db, result, coche9);
-		anyadirCoches(db, result, coche10);
-		/*//Para probar si los datos entran como deben en la BD
-		imprimirUsuarios(db);
-		imprimirCoches(db);*/
-
-
-
+void cfgscr(void){
+	int flg = 0;
+	char buffer[3];
+	int usi;
+	while(flg == 0){
+	//while flg == 0;
+	system("CLS");
+	printf("Cliente de Admin. Local\n");
+	printf("[CONFIG]\n");
+	printf("[1] Control de Extension de Fichero (PARAMETRO ACTUAL: )\n");
+	printf("[2] Control de Nivel de Log (PARAMETRO ACTUAL: )\n");
+	printf("[0] Vuelta\n");
+	fgets(buffer,3,stdin);
+	sscanf(buffer, "%d" &usi);
+	switch(usi){
+		case 0: exit(10);
+		case 1: usrscr();
+				flg++;
+				break;
+		case 2: carscr();
+				flg++;
+				break;
+		case 3: slsscr();
+				flg++;
+				break;
+		case 4: prcscr();
+				flg++;
+				break;
+		default: printf("");
 	}
 }
