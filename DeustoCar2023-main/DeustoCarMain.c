@@ -2,15 +2,13 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-/*
 #include "usuario.h"
 #include "coche.h"
-#include "admin.h"
 #include "venta.h"
 #include "compra.h"
-#include "BD.h"
+//#include "BD.h"
 #include "sqlite3.h"
-*/
+
 
 
 
@@ -47,10 +45,12 @@ void lgscr(void){
 	int flg2 = 1;
 	int sec = 0;
 	char usi[31];
-	//RD
 	while(flg < 1){
-		if(sec == 3)
+	fflush(stdin);
+		if(sec == 3){
+			system("CLS");
 			exit(1);
+		}
 	system("CLS");
 	printf("Cliente de Admin. Local\n\n\n\n");
 	printf("Introduzca su usuario:\n");
@@ -58,30 +58,38 @@ void lgscr(void){
 	if(usi[0] == '0'){ //Reemplazar por funcion adminCheck (o equivalente) de usuario.h
 		sec++;
 		fflush(stdin);
+		if(sec < 3)
+			printf("Usuario Invalido;\nPor favor, introduzca un usuario valido\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
+		else
+			printf("Usuario Invalido;\nCerrando Programa\n[PRESIONE CUALQUIER TECLA PARA SALIR]\n");
+		getch();
 	}
 	else{
-		printf("%s",usi); //DEBUG: BORRAR
 		fflush(stdin);
-		getch();
 		flg++;
 	}
 	}
 	while(flg2 > 0){
-		if(sec == 3)
+		if(sec == 3){
+			system("CLS");
 			exit(1);
+		}
 	system("CLS");
 	printf("Cliente de Admin. Local\n\n\n\n");
 	printf("Introduzca su contrasenya:\n");
 	fgets(usi,31,stdin);
 	if(usi[0] == '0'){
-		fflush(stdin);
 		sec++;
+		fflush(stdin);
+		if(sec < 3)
+			printf("Contrasenya Incorrecta;\nPor favor, introduzca la contrasenya correcta\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
+		else
+			printf("Contrasenya Incorrecta Invalido;\nCerrando Programa\n[PRESIONE CUALQUIER TECLA PARA SALIR]\n");
+		getch();
 	}
 	else{
-		printf("%s",usi); //DEBUG: BORRAR
 		fflush(stdin);
 		flg2--;
-		getch();
 		mmenu();
 	}
 	}
@@ -90,6 +98,7 @@ void lgscr(void){
 }
 
 void mmenu(void){
+	fflush(stdin);
 	int flg = 0;
 	char buffer[3]; 
 	int usi;
@@ -101,6 +110,7 @@ void mmenu(void){
 	printf("[2] Coches\n");
 	printf("[3] Ventas\n");
 	printf("[4] Compras\n");
+	printf("[5] Configurar Programa\n");
 	printf("[0] Salida\n");
 	printf("Introduzca su seleccion:\n");
 	fflush(stdin);
@@ -124,7 +134,12 @@ void mmenu(void){
 				prcscr();
 				flg++;
 				break;
-		default: printf("Opcion Invalida;\nPor favor, introduzca un numero que aparezca en el menu\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
+		case 5: fflush(stdin);
+				cfgscr();
+				flg++;
+				break;
+		default: system("CLS");
+				printf("Opcion Invalida;\nPor favor, introduzca un numero que aparezca en el menu\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
 				getch();
 	}
 	
@@ -137,11 +152,12 @@ void carscr(void){
 	int usi;
 	char buffer[3];
 	while(flg == 0){
+	fflush(stdin);
 	system("CLS");
 	printf("Cliente de Admin. Local\n");
 	printf("[MENU COCHES]\n");
-	printf("[1] Visualizar\n");
-	printf("[2] Exportar\n");
+	printf("[1] Visualizar\n"); //25 mas recientes
+	printf("[2] Imprimir\n"); //Lista entetera de coches [id,marca,modelo] a fichero coche.txt
 	printf("[3] Importar\n");
 	printf("[4] Modificar\n");
 	printf("[5] Eliminar\n");
@@ -162,7 +178,8 @@ void carscr(void){
 				break;
 		case 5: 
 				break;
-		default: printf("Opcion Invalida;\nPor favor, introduzca un numero que aparezca en el menu\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
+		default: system("CLS");
+				printf("Opcion Invalida;\nPor favor, introduzca un numero que aparezca en el menu\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
 				getch();
 	}
 }}
@@ -172,14 +189,13 @@ void prcscr(void){
 	char buffer[3];
 	int usi;
 	while(flg == 0){
+	fflush(stdin);
 	system("CLS");
 	printf("Cliente de Admin. Local\n");
 	printf("[MENU COMPRAS]\n");
-	printf("[1] Visualizar\n");
-	printf("[2] Imprimir\n");
+	printf("[1] Visualizar\n"); //25 mas recientes
+	printf("[2] Imprimir\n"); //Lista entera de compras [id,idUC,idUV,idC,fecha,precio]
 	printf("[3] Importar\n"); //?? Posible, posible (Rollback)
-	printf("[4] Modificar\n"); //quitar esta opcion
-	printf("[5] Eliminar\n"); //quitar esta opcion
 	printf("[0] Vuelta\n");
 	printf("Introduzca su seleccion:\n");
 	fgets(buffer,3,stdin);
@@ -187,17 +203,13 @@ void prcscr(void){
 	switch(usi){
 		case 0: mmenu();
 		case 1: 
-				
 				break;
 		case 2: 
 				break;
 		case 3: 
 				break;
-		case 4: 
-				break;
-		case 5: 
-				break;
-		default: printf("Opcion Invalida;\nPor favor, introduzca un numero que aparezca en el menu\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
+		default: system("CLS");
+				printf("Opcion Invalida;\nPor favor, introduzca un numero que aparezca en el menu\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
 				getch();
 	}
 }}
@@ -206,13 +218,13 @@ void slsscr(void){
 	int flg = 0;
 	char buffer[3];
 	int usi;
-	//while flg == 0;
 	while(flg == 0){
+	fflush(stdin);
 	system("CLS");
 	printf("Cliente de Admin. Local\n");
 	printf("[MENU VENTAS]\n");
-	printf("[1] Visualizar\n");
-	printf("[2] Exportar\n");
+	printf("[1] Visualizar\n"); //25 mas recientes
+	printf("[2] Imprimir\n"); //Lista entera de compras [id,idUC,idUV,idC,fecha,precio]
 	printf("[3] Importar\n");
 	printf("[4] Modificar\n");
 	printf("[5] Eliminar\n");
@@ -232,26 +244,26 @@ void slsscr(void){
 				break;
 		case 5: 
 				break;
-		default: printf("Opcion Invalida;\nPor favor, introduzca un numero que aparezca en el menu\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
+		default: system("CLS");
+				printf("Opcion Invalida;\nPor favor, introduzca un numero que aparezca en el menu\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
 				getch();
 	}
-	//if usi > 5 || < 0: pedir al usuario que vuelva a intentar, else realizar operacion indicada
+
 }}
 
 void usrscr(void){
 	int flg = 0;
 	char buffer[3];
 	int usi;
-	//while flg == 0;
 	while(flg == 0){
+	fflush(stdin);
 	system("CLS");
 	printf("Cliente de Admin. Local\n");
 	printf("[MENU COCHES]\n");
-	printf("[1] Visualizar\n");
-	printf("[2] Imprimir\n");
-	printf("[3] Exportar\n");
-	printf("[4] Modificar\n");
-	printf("[5] Eliminar\n");
+	printf("[1] Visualizar\n"); //25 mas recientes
+	printf("[2] Imprimir\n"); //Lista entera de usuarios [id,nombre,email]
+	printf("[3] Modificar\n");
+	printf("[4] Eliminar\n");
 	printf("[0] Vuelta\n");
 	printf("Introduzca su seleccion:\n");
 	fgets(buffer,3,stdin);
@@ -266,12 +278,11 @@ void usrscr(void){
 				break;
 		case 4: 
 				break;
-		case 5: 
-				break;
-		default: printf("Opcion Invalida;\nPor favor, introduzca un numero que aparezca en el menu\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
+		default: system("CLS");
+				printf("Opcion Invalida;\nPor favor, introduzca un numero que aparezca en el menu\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
 				getch();
 	}
-	//if usi > 5 || < 0: pedir al usuario que vuelva a intentar, else realizar operacion indicada
+
 }
 }
 
@@ -280,7 +291,7 @@ void cfgscr(void){
 	char buffer[3];
 	int usi;
 	while(flg == 0){
-	//while flg == 0;
+	fflush(stdin);
 	system("CLS");
 	printf("Cliente de Admin. Local\n");
 	printf("[CONFIG]\n");
@@ -296,7 +307,8 @@ void cfgscr(void){
 				break;
 		case 2: 
 				break;
-		default: printf("Opcion Invalida;\nPor favor, introduzca un numero que aparezca en el menu\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
+		default: system("CLS");
+				printf("Opcion Invalida;\nPor favor, introduzca un numero que aparezca en el menu\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
 				getch();
 	}
 }
