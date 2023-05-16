@@ -1,7 +1,5 @@
 #include "usuario.h"
-#include "sqlite3.h"
-#include <stdio.h>
-#include <stdlib.h>
+
 
 int usmodscr(sqlite3 *db){
 	//Opciones para modificar aspectos del usuario [nombre,email,contrasenya,saldo, y permisos de admin. local]
@@ -42,7 +40,7 @@ int usrcrtscr(sqlite3 *db){
 	system("CLS");
 	printf("[Creacion de Usuario]\n\nIntroduzca un correo electronico valido\n\n");
 	fgets(qEma,30,stdin);
-	if(strlen(qEma) > 30 || exists(db) == 1){
+	if(strlen(qEma) > 30 || exists(db, qEma) == 1){
 		fflush(stdin);
 		printf("Email Invalido o repetido;\nPor favor, introduzca un email valido\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
 		getch();
@@ -57,7 +55,7 @@ int usrcrtscr(sqlite3 *db){
 	system("CLS");
 	printf("[Creacion de Usuario]\n\nIntroduzca un nombre de contrasenya valida\n\n");
 	fgets(qNom,30,stdin);
-	if(strlen(qCon> 30){ 
+	if(strlen(qCon> 30)){ 
 		fflush(stdin);
 		printf("Contrasenya Invalida;\nPor favor, introduzca una contrasenya valida\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
 		getch();
@@ -85,7 +83,7 @@ int usrcrtscr(sqlite3 *db){
 	}
 	qUsua = creaUsuario(qNom,qEma,qCon,qSal);
 	anyadirUsuario(db,qUsua);
-	printf("[Creacion de Usuario]\n\nFuncion Finalizada\nPulse cualquier tecla para continuar\n"
+	printf("[Creacion de Usuario]\n\nFuncion Finalizada\nPulse cualquier tecla para continuar\n");
 	getch();
 	while(flg == 0){
 		system("CLS");
@@ -95,7 +93,7 @@ int usrcrtscr(sqlite3 *db){
 		if(res == 1 || res == 0)
 			flg++;
 		else{
-			printf("[Creacion de Usuario]\n\nFuncion Finalizada\nPulse cualquier tecla para continuar\n"
+			printf("[Creacion de Usuario]\n\nFuncion Finalizada\nPulse cualquier tecla para continuar\n");
 			getch();
 		}
 	}
@@ -116,8 +114,8 @@ Usuario getUser(sqlite3 *db, char* email){
 	sqlite3_bind_text(stmt, 1, email, strlen(email), SQLITE_STATIC);
 	result = sqlite3_step(stmt);
 	if (result == SQLITE_ROW) { //Si existe el email en la BD:
-	qUsua.email = (char*) sqlite3_column_text(stmt, 0));
-		sqlite3_prepare_v2(db, geno, strlen(geno), &stmt, NULL);
+	strcpy(qUsua.email, (char*) sqlite3_column_text(stmt, 0));
+	sqlite3_prepare_v2(db, geno, strlen(geno), &stmt, NULL);
 	sqlite3_bind_text(stmt, 1, email, strlen(email), SQLITE_STATIC);
 	result = sqlite3_step(stmt);
 	if (result == SQLITE_ROW) {
@@ -133,17 +131,18 @@ Usuario getUser(sqlite3 *db, char* email){
 	sqlite3_bind_text(stmt, 1, email, strlen(email), SQLITE_STATIC);
 	result = sqlite3_step(stmt);
 	if (result == SQLITE_ROW) {
-			qUsua.id = (int) sqlite3_column_text(stmt, 0));
+			qUsua.id = (int) sqlite3_column_text(stmt, 0);
 		}
 	sqlite3_prepare_v2(db, gesa, strlen(gesa), &stmt, NULL);
 	sqlite3_bind_text(stmt, 1, email, strlen(email), SQLITE_STATIC);
 	result = sqlite3_step(stmt);
 	if (result == SQLITE_ROW) {
-			qUsua.saldo = (int) sqlite3_column_text(stmt, 0));
+			qUsua.saldo = (int) sqlite3_column_text(stmt, 0);
 		}
 		}else{
 			system("CLS");
-			qUsua = NULL;
+			qUsua.id = NULL;
+			qUsua.saldo = NULL;
 			printf("Usuario no existe.");
 			getch();
 		}
@@ -153,9 +152,9 @@ Usuario getUser(sqlite3 *db, char* email){
 
 Usuario creaUsuario(char nombre[30],char email[30],char contrasenya[30],int saldo){
 	Usuario qUsua;
-	qUsua.nombre = nombre;
-	qUsua.email = email;
-	qUsua.contrasenya = contrasenya;
+	strcpy(qUsua.nombre, nombre);
+	strcpy(qUsua.email, email);
+	strcpy(qUsua.contrasenya, contrasenya);
 	qUsua.saldo = saldo;
 	return qUsua;
 }
@@ -167,7 +166,7 @@ void anyadirUsuario(sqlite3 *db,  Usuario usuario){
 	sqlite3_prepare_v2(db, sql1, strlen(sql1) + 1, &stmt, NULL) ;
 	sqlite3_bind_text(stmt, 1, usuario.nombre, strlen(usuario.nombre), SQLITE_STATIC);
 	sqlite3_bind_text(stmt, 2, usuario.email, strlen(usuario.email), SQLITE_STATIC);
-	sqlite3_bind_text(stmt, 3, usuario.contrasenya, strlen(usuario.contrasena), SQLITE_STATIC);
+	sqlite3_bind_text(stmt, 3, usuario.contrasenya, strlen(usuario.contrasenya), SQLITE_STATIC);
 	sqlite3_bind_int(stmt, 4, usuario.saldo);
 	
 	result = sqlite3_step(stmt);
@@ -177,17 +176,53 @@ void anyadirUsuario(sqlite3 *db,  Usuario usuario){
 		printf("Usuario %s introducido\n", usuario.email);
 	}
 }
-void grantAdmin(sqlite3 *db, FILE *f, char* email){
+void grantAdmin(sqlite3 *db, char* email){
 	//Fichero de texto, por favor.
-	Usuario qUsua = getUser(db,email);
-	fprintf(f, "%d\n",qUsua.id);
+	int id;
+	int result;
+	sqlite3_stmt *stmt;
+	char* geid = "select id from Usuario where email=?";
+	sqlite3_prepare_v2(db, geid, strlen(geid), &stmt, NULL);
+	sqlite3_bind_text(stmt, 1, email, strlen(email), SQLITE_STATIC);
+	result = sqlite3_step(stmt);
+	id = (int) sqlite3_column_text(stmt, 0);
+	if(result == SQLITE_ROW){
+		FILE* f;
+		f = fopen("ad.min", "a");
+		fprintf(f, "%d\n",id);
+		fclose(f);
+		
+	}else{
+		
+	}
+	
 	//log report
+}
+
+int isAdmin(sqlite3 *db, char* email){
+	int id;
+	int result;
+	sqlite3_stmt *stmt;
+	char* geid = "select id from Usuario where email=?";
+	sqlite3_prepare_v2(db, geid, strlen(geid), &stmt, NULL);
+	sqlite3_bind_text(stmt, 1, email, strlen(email), SQLITE_STATIC);
+	result = sqlite3_step(stmt);
+	id = (int) sqlite3_column_text(stmt, 0);
+	if(result == SQLITE_ROW){
+	FILE* f;
+	f = fopen("ad.min", "a");
+		
+	}else{
+		
+	}
+	return 0;
 }
 int exists(sqlite3 *db, char* email){
 	int result;
+	sqlite3_stmt *stmt;
 	char* geid = "select id from Usuario where email=?";
 	sqlite3_prepare_v2(db, geid, strlen(geid), &stmt, NULL);
-	sqlite3_bind_text(stmt, 1, mail, strlen(email), SQLITE_STATIC);
+	sqlite3_bind_text(stmt, 1, email, strlen(email), SQLITE_STATIC);
 	result = sqlite3_step(stmt);
 	if(result == SQLITE_ROW){
 		result = 1;
@@ -206,25 +241,29 @@ void modificarUsuario(sqlite3 *db, Usuario usuario, int sel){
 		break;
 		case(1):
 		//Cambiar nombre
+			
 		break;
 		case(2):
 		//Cambiar saldo
+			
 		break;
 		case(3):
 		//Cambiar contrasenya
+			
 		break;
 		case(4):
 		//Dar Admin
+			grantAdmin(db,
 		break;
 	}
 }
 void eliminarUsuario(sqlite3 *db, Usuario usuario){
 	char* sql1 = "delete from usuario where id=?";
+	int result;
 	sqlite3_stmt *stmt;
 	sqlite3_prepare_v2(db, sql1, strlen(sql1), &stmt, NULL);
 	sqlite3_bind_text(stmt, 1, usuario.id, strlen(usuario.id), SQLITE_STATIC);
 	result = sqlite3_step(stmt);
-	int result;
 }
 
 //Funciones Visuales

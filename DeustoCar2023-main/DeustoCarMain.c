@@ -33,20 +33,19 @@ void cfgscr(void);//menu de configuracion; permite modificar ciertos parametros
 
 int main(void)
 {
-	sqlite3 *db;
-	sqlite3_stmt *stmt;
-	int result;
-	sqlite3_open("DB.db", &db);
 	lgscr();
 
 	
 }
 
 void lgscr(void){
+	sqlite3 *db;
+	sqlite3_open("DB.db", &db);
+	int check1 = 0;
 	int flg = 0;
 	int flg2 = 1;
 	int sec = 0;
-	char usi[30];
+	char usi[31];
 	while(flg < 1){
 	fflush(stdin);
 		if(sec == 3){
@@ -55,15 +54,16 @@ void lgscr(void){
 		}
 	system("CLS");
 	printf("Cliente de Admin. Local\n\n\n\n");
-	printf("Introduzca su usuario:\n");
-	fgets(usi,30,stdin);
-	if(usi[0] == '0'){ //Reemplazar por funcion adminCheck (o equivalente) de usuario.h
+	printf("Introduzca su email:\n");
+	fgets(usi,31,stdin);
+	check1 = exists(db,usi);
+	if(check1 == 1){ //Reemplazar por funcion adminCheck (o equivalente) de usuario.h
 		sec++;
 		fflush(stdin);
 		if(sec < 3)
-			printf("Usuario Invalido;\nPor favor, introduzca un usuario valido\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
+			printf("Email Invalido;\nPor favor, introduzca un email valido\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
 		else
-			printf("Usuario Invalido;\nCerrando Programa\n[PRESIONE CUALQUIER TECLA PARA SALIR]\n");
+			printf("Email Invalido;\nCerrando Programa\n[PRESIONE CUALQUIER TECLA PARA SALIR]\n");
 		getch();
 	}
 	else{
@@ -79,7 +79,7 @@ void lgscr(void){
 	system("CLS");
 	printf("Cliente de Admin. Local\n\n\n\n");
 	printf("Introduzca su contrasenya:\n");
-	fgets(usi,30,stdin);
+	fgets(usi,31,stdin);
 	if(usi[0] == '0'){
 		sec++;
 		fflush(stdin);
@@ -119,7 +119,8 @@ void mmenu(void){
 	fgets(buffer,3,stdin);
 	sscanf(buffer, "%d", &usi);
 	switch(usi){
-		case 0: exit(10);
+		case 0: system("CLS");
+				exit(10);
 		case 1: fflush(stdin);
 				usrscr();
 				flg++;
