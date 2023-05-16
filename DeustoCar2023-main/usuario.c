@@ -55,12 +55,11 @@ int usrcrtscr(sqlite3 *db){
 	system("CLS");
 	printf("[Creacion de Usuario]\n\nIntroduzca un nombre de contrasenya valida\n\n");
 	fgets(qNom,30,stdin);
-	if(strlen(qCon> 30)){ 
+	if(strlen(qCon) > 30){ 
 		fflush(stdin);
 		printf("Contrasenya Invalida;\nPor favor, introduzca una contrasenya valida\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
 		getch();
-	}
-	else{
+	}else{
 		fflush(stdin);
 		flg3++;
 	}
@@ -69,7 +68,7 @@ int usrcrtscr(sqlite3 *db){
 	fflush(stdin);
 	system("CLS");
 	printf("[Creacion de Usuario]\n\nIntroduzca un saldo valido\n\n");
-	fgets(qSal,31,stdin);
+	fgets((char*)qSal,31,stdin);
 	if(qSal < 0){ 
 		fflush(stdin);
 		printf("Saldo Invalido;\nPor favor, introduzca un saldo valido\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
@@ -141,8 +140,7 @@ Usuario getUser(sqlite3 *db, char* email){
 		}
 		}else{
 			system("CLS");
-			qUsua.id = NULL;
-			qUsua.saldo = NULL;
+			qUsua.id = 0;
 			printf("Usuario no existe.");
 			getch();
 		}
@@ -202,6 +200,8 @@ void grantAdmin(sqlite3 *db, char* email){
 int isAdmin(sqlite3 *db, char* email){
 	int id;
 	int result;
+	int ret = 0;
+	int qId;
 	sqlite3_stmt *stmt;
 	char* geid = "select id from Usuario where email=?";
 	sqlite3_prepare_v2(db, geid, strlen(geid), &stmt, NULL);
@@ -209,26 +209,35 @@ int isAdmin(sqlite3 *db, char* email){
 	result = sqlite3_step(stmt);
 	id = (int) sqlite3_column_text(stmt, 0);
 	if(result == SQLITE_ROW){
-	FILE* f;
-	f = fopen("ad.min", "a");
-		
+		FILE* f;
+		f = fopen("ad.min", "r");
+		while (fgets((char*) id, sizeof(id), f) != NULL)
+		{
+			fscanf(f, "%d", qId);
+			if (qId == id)
+				ret = 1;
+			
+		}
+		fclose(f);
 	}else{
-		
+		return ret;
 	}
-	return 0;
+	
 }
 int exists(sqlite3 *db, char* email){
 	int result;
+	int ret;
 	sqlite3_stmt *stmt;
 	char* geid = "select id from Usuario where email=?";
 	sqlite3_prepare_v2(db, geid, strlen(geid), &stmt, NULL);
 	sqlite3_bind_text(stmt, 1, email, strlen(email), SQLITE_STATIC);
 	result = sqlite3_step(stmt);
 	if(result == SQLITE_ROW){
-		result = 1;
+		ret = 1;
 	}else{
-		result = 0;
+		ret = 0;
 	}
+	return ret;
 }
 void modificarUsuario(sqlite3 *db, Usuario usuario, int sel){
 	
@@ -253,7 +262,7 @@ void modificarUsuario(sqlite3 *db, Usuario usuario, int sel){
 		break;
 		case(4):
 		//Dar Admin
-			grantAdmin(db,
+			//grantAdmin(db,
 		break;
 	}
 }

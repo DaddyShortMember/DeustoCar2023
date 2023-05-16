@@ -41,7 +41,6 @@ int main(void)
 void lgscr(void){
 	sqlite3 *db;
 	sqlite3_open("DB.db", &db);
-	int check1 = 0;
 	int flg = 0;
 	int flg2 = 1;
 	int sec = 0;
@@ -56,8 +55,7 @@ void lgscr(void){
 	printf("Cliente de Admin. Local\n\n\n\n");
 	printf("Introduzca su email:\n");
 	fgets(usi,31,stdin);
-	check1 = exists(db,usi);
-	if(check1 == 1){ //Reemplazar por funcion adminCheck (o equivalente) de usuario.h
+	if(exists(db,usi) == 0){ //Reemplazar por funcion adminCheck (o equivalente) de usuario.h
 		sec++;
 		fflush(stdin);
 		if(sec < 3)
