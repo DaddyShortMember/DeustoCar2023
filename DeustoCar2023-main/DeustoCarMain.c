@@ -6,7 +6,6 @@
 #include "coche.h"
 #include "venta.h"
 #include "compra.h"
-//#include "BD.h"
 #include "sqlite3.h"
 
 
@@ -34,7 +33,10 @@ void cfgscr(void);//menu de configuracion; permite modificar ciertos parametros
 
 int main(void)
 {
-
+	sqlite3 *db;
+	sqlite3_stmt *stmt;
+	int result;
+	sqlite3_open("DB.db", &db);
 	lgscr();
 
 	
@@ -44,7 +46,7 @@ void lgscr(void){
 	int flg = 0;
 	int flg2 = 1;
 	int sec = 0;
-	char usi[31];
+	char usi[30];
 	while(flg < 1){
 	fflush(stdin);
 		if(sec == 3){
@@ -54,7 +56,7 @@ void lgscr(void){
 	system("CLS");
 	printf("Cliente de Admin. Local\n\n\n\n");
 	printf("Introduzca su usuario:\n");
-	fgets(usi,31,stdin);
+	fgets(usi,30,stdin);
 	if(usi[0] == '0'){ //Reemplazar por funcion adminCheck (o equivalente) de usuario.h
 		sec++;
 		fflush(stdin);
@@ -77,7 +79,7 @@ void lgscr(void){
 	system("CLS");
 	printf("Cliente de Admin. Local\n\n\n\n");
 	printf("Introduzca su contrasenya:\n");
-	fgets(usi,31,stdin);
+	fgets(usi,30,stdin);
 	if(usi[0] == '0'){
 		sec++;
 		fflush(stdin);
