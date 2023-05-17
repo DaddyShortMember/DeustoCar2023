@@ -4,7 +4,9 @@
 int usmodscr(sqlite3 *db){
 	//Opciones para modificar aspectos del usuario [nombre,email,contrasenya,saldo, y permisos de admin. local]
 	int res = 0;
-	Usuario* qUsua; //Dinamico para permitir mas flexibilidad y no ocupar mucho espacio
+	char qEmail[30]; //Dinamico para permitir mas flexibilidad y no ocupar mucho espacio
+	char qVar[30];
+	int qSal;
 	return res;
 } 
 int usrcrtscr(sqlite3 *db){
@@ -13,6 +15,7 @@ int usrcrtscr(sqlite3 *db){
 	char qEma[30];
 	char qCon[30];
 	char buffer[2];
+	char salB[11];
 	int qSal;
 	int res = 0;
 	Usuario qUsua;
@@ -68,7 +71,8 @@ int usrcrtscr(sqlite3 *db){
 	fflush(stdin);
 	system("CLS");
 	printf("[Creacion de Usuario]\n\nIntroduzca un saldo valido\n\n");
-	fgets((char*)qSal,31,stdin);
+	fgets(salB,11,stdin);
+	sscanf(salB, "%d", &qSal);
 	if(qSal < 0){ 
 		fflush(stdin);
 		printf("Saldo Invalido;\nPor favor, introduzca un saldo valido\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
@@ -104,11 +108,11 @@ Usuario getUser(sqlite3 *db, char* email){
 	sqlite3_stmt *stmt;
 	Usuario qUsua;
 	int result;
-	char* geno = "select nombre from Usuario where email=?";
-	char* geco = "select contrasenya from Usuario where email=?";
-	char* geid = "select id from Usuario where email=?";
-	char* gesa = "select saldo from Usuario where email=?";
-	char* gema = "select email from Usuario where email=?";
+	char* geno = "select nombre from Usuario where mail=?";
+	char* geco = "select contrasenya from Usuario where mail=?";
+	char* geid = "select id from Usuario where mail=?";
+	char* gesa = "select saldo from Usuario where mail=?";
+	char* gema = "select mail from Usuario where mail=?";
 	sqlite3_prepare_v2(db, gema, strlen(gema), &stmt, NULL);
 	sqlite3_bind_text(stmt, 1, email, strlen(email), SQLITE_STATIC);
 	result = sqlite3_step(stmt);
@@ -158,15 +162,14 @@ Usuario creaUsuario(char nombre[30],char email[30],char contrasenya[30],int sald
 }
 
 void anyadirUsuario(sqlite3 *db,  Usuario usuario){
-	char* sql1 = "insert into usuario (id, nombre, email, contrasenya, saldo) values (NULL,?, ?, ?, ?)";
+	char* sql1 = "insert into usuario (id, nombre, mail, contrasenya, saldo) values (NULL,?, ?, ?, ?)";
 	sqlite3_stmt *stmt;
 	int result;
-	sqlite3_prepare_v2(db, sql1, strlen(sql1) + 1, &stmt, NULL) ;
+	sqlite3_prepare_v2(db, sql1, strlen(sql1) + 1, &stmt, NULL);
 	sqlite3_bind_text(stmt, 1, usuario.nombre, strlen(usuario.nombre), SQLITE_STATIC);
 	sqlite3_bind_text(stmt, 2, usuario.email, strlen(usuario.email), SQLITE_STATIC);
 	sqlite3_bind_text(stmt, 3, usuario.contrasenya, strlen(usuario.contrasenya), SQLITE_STATIC);
 	sqlite3_bind_int(stmt, 4, usuario.saldo);
-	
 	result = sqlite3_step(stmt);
 	if (result != SQLITE_DONE) {
 		printf("Error al introducir usuario\n");
@@ -179,7 +182,7 @@ void grantAdmin(sqlite3 *db, char* email){
 	int id;
 	int result;
 	sqlite3_stmt *stmt;
-	char* geid = "select id from Usuario where email=?";
+	char* geid = "select id from Usuario where mail=?";
 	sqlite3_prepare_v2(db, geid, strlen(geid), &stmt, NULL);
 	sqlite3_bind_text(stmt, 1, email, strlen(email), SQLITE_STATIC);
 	result = sqlite3_step(stmt);
@@ -191,7 +194,7 @@ void grantAdmin(sqlite3 *db, char* email){
 		fclose(f);
 		
 	}else{
-		
+		printf("Usuario no existe.");
 	}
 	
 	//log report
@@ -203,7 +206,7 @@ int isAdmin(sqlite3 *db, char* email){
 	int ret = 0;
 	int qId;
 	sqlite3_stmt *stmt;
-	char* geid = "select id from Usuario where email=?";
+	char* geid = "select id from Usuario where mail=?";
 	sqlite3_prepare_v2(db, geid, strlen(geid), &stmt, NULL);
 	sqlite3_bind_text(stmt, 1, email, strlen(email), SQLITE_STATIC);
 	result = sqlite3_step(stmt);
@@ -228,7 +231,7 @@ int exists(sqlite3 *db, char* email){
 	int result;
 	int ret;
 	sqlite3_stmt *stmt;
-	char* geid = "select id from Usuario where email=?";
+	char* geid = "select id from Usuario where mail=?";
 	sqlite3_prepare_v2(db, geid, strlen(geid), &stmt, NULL);
 	sqlite3_bind_text(stmt, 1, email, strlen(email), SQLITE_STATIC);
 	result = sqlite3_step(stmt);
@@ -239,33 +242,39 @@ int exists(sqlite3 *db, char* email){
 	}
 	return ret;
 }
-void modificarUsuario(sqlite3 *db, Usuario usuario, int sel){
-	
-	
-	//UPDATE usuario SET x = %y WHERE z
-	switch(sel){
-		case(0):
-		//Cambiar todo
-			
-		break;
-		case(1):
-		//Cambiar nombre
-			
-		break;
-		case(2):
-		//Cambiar saldo
-			
-		break;
-		case(3):
-		//Cambiar contrasenya
-			
-		break;
-		case(4):
-		//Dar Admin
-			//grantAdmin(db,
-		break;
+
+int passCheck(sqlite3 *db, char* email, char* contrasenya){
+	int result;
+	int ret;
+	sqlite3_stmt *stmt;
+	char* geid = "select contrasenya from Usuario where mail=?";
+	sqlite3_prepare_v2(db, geid, strlen(geid), &stmt, NULL);
+	sqlite3_bind_text(stmt, 1, email, strlen(email), SQLITE_STATIC);
+	result = sqlite3_step(stmt);
+	if(result == SQLITE_ROW){
+		char* qCon = sqlite3_column_text(stmt, 0);
+		if(strcmp(qCon,contrasenya) == 0)
+			ret = 1;
+		else
+			ret = 0;
+	}else{
+		ret = 0;
 	}
+	return ret;
 }
+
+void modificarSaldo(sqlite3 *db, char* email, int saldo){
+	char* query = "UPDATE usuario SET saldo = ? WHERE mail = ?";
+}
+
+void modificarContrasenya(sqlite3 *db, char* email, char* contrasenya){
+	char* query = "UPDATE usuario SET contrasenya = ? WHERE mail = ?";
+}
+
+void modificarNombre(sqlite3 *db, char* email, char* nombre){
+	char* query = "UPDATE usuario SET nombre = ? WHERE mail = ?";
+}
+
 void eliminarUsuario(sqlite3 *db, Usuario usuario){
 	char* sql1 = "delete from usuario where id=?";
 	int result;
@@ -279,8 +288,8 @@ void eliminarUsuario(sqlite3 *db, Usuario usuario){
 
 //Perfectas para malloc??:
 void visualizarUsuarios(sqlite3 *db){
-	
+	//Truco: SELECT Count(*) FROM tblName
 }
 void imprimirUsuarios(sqlite3 *db){
-	
+	//Truco: SELECT Count(*) FROM tblName
 }

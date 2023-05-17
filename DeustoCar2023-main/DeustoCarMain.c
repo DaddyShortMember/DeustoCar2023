@@ -41,10 +41,13 @@ int main(void)
 void lgscr(void){
 	sqlite3 *db;
 	sqlite3_open("DB.db", &db);
+	int zz = usrcrtscr(db);
+	//El problema surge al crear un dato en la BD. Se incluye el \n dentro del query, y la contrasenya sale como un @, por lo que algo raro pasa con ella
 	int flg = 0;
 	int flg2 = 1;
 	int sec = 0;
 	char usi[31];
+	char mail[31];
 	while(flg < 1){
 	fflush(stdin);
 		if(sec == 3){
@@ -66,6 +69,7 @@ void lgscr(void){
 	}
 	else{
 		fflush(stdin);
+		strcpy(mail, usi);
 		flg++;
 	}
 	}
@@ -78,7 +82,7 @@ void lgscr(void){
 	printf("Cliente de Admin. Local\n\n\n\n");
 	printf("Introduzca su contrasenya:\n");
 	fgets(usi,31,stdin);
-	if(usi[0] == '0'){
+	if(passCheck(db,mail,usi) == 0){
 		sec++;
 		fflush(stdin);
 		if(sec < 3)
