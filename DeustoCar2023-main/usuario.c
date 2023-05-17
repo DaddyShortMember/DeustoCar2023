@@ -15,6 +15,7 @@ int usrcrtscr(sqlite3 *db){
 	char qEma[30];
 	char qCon[30];
 	char buffer[2];
+	char qBuf[30];
 	char salB[11];
 	int qSal;
 	int res = 0;
@@ -27,7 +28,8 @@ int usrcrtscr(sqlite3 *db){
 	fflush(stdin);
 	system("CLS");
 	printf("[Creacion de Usuario]\n\nIntroduzca un nombre de usuario valido\n\n");
-	fgets(qNom,30,stdin);
+	fgets(qBuf,30,stdin);
+	sscanf(qBuf, "%s", &qNom);
 	if(strlen(qNom) > 30){ 
 		fflush(stdin);
 		printf("Usuario Invalido;\nPor favor, introduzca un usuario valido\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
@@ -42,7 +44,8 @@ int usrcrtscr(sqlite3 *db){
 	fflush(stdin);
 	system("CLS");
 	printf("[Creacion de Usuario]\n\nIntroduzca un correo electronico valido\n\n");
-	fgets(qEma,30,stdin);
+	fgets(qBuf,30,stdin);
+	sscanf(qBuf, "%s", &qEma);
 	if(strlen(qEma) > 30 || exists(db, qEma) == 1){
 		fflush(stdin);
 		printf("Email Invalido o repetido;\nPor favor, introduzca un email valido\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
@@ -56,8 +59,9 @@ int usrcrtscr(sqlite3 *db){
 	while(flg3 < 1){
 	fflush(stdin);
 	system("CLS");
-	printf("[Creacion de Usuario]\n\nIntroduzca un nombre de contrasenya valida\n\n");
-	fgets(qNom,30,stdin);
+	printf("[Creacion de Usuario]\n\nIntroduzca una contrasenya valida\n\n");
+	fgets(qBuf,30,stdin);
+	sscanf(qBuf, "%s", &qCon);
 	if(strlen(qCon) > 30){ 
 		fflush(stdin);
 		printf("Contrasenya Invalida;\nPor favor, introduzca una contrasenya valida\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
@@ -134,13 +138,13 @@ Usuario getUser(sqlite3 *db, char* email){
 	sqlite3_bind_text(stmt, 1, email, strlen(email), SQLITE_STATIC);
 	result = sqlite3_step(stmt);
 	if (result == SQLITE_ROW) {
-			qUsua.id = (int) sqlite3_column_text(stmt, 0);
+			qUsua.id = sqlite3_column_int(stmt, 0);
 		}
 	sqlite3_prepare_v2(db, gesa, strlen(gesa), &stmt, NULL);
 	sqlite3_bind_text(stmt, 1, email, strlen(email), SQLITE_STATIC);
 	result = sqlite3_step(stmt);
 	if (result == SQLITE_ROW) {
-			qUsua.saldo = (int) sqlite3_column_text(stmt, 0);
+			qUsua.saldo = sqlite3_column_int(stmt, 0);
 		}
 		}else{
 			system("CLS");
@@ -186,13 +190,12 @@ void grantAdmin(sqlite3 *db, char* email){
 	sqlite3_prepare_v2(db, geid, strlen(geid), &stmt, NULL);
 	sqlite3_bind_text(stmt, 1, email, strlen(email), SQLITE_STATIC);
 	result = sqlite3_step(stmt);
-	id = (int) sqlite3_column_text(stmt, 0);
+	id = sqlite3_column_int(stmt, 0);
 	if(result == SQLITE_ROW){
 		FILE* f;
 		f = fopen("ad.min", "a");
 		fprintf(f, "%d\n",id);
 		fclose(f);
-		
 	}else{
 		printf("Usuario no existe.");
 	}
@@ -207,22 +210,31 @@ int isAdmin(sqlite3 *db, char* email){
 	int qId;
 	sqlite3_stmt *stmt;
 	char* geid = "select id from Usuario where mail=?";
+	printf("3\n");
 	sqlite3_prepare_v2(db, geid, strlen(geid), &stmt, NULL);
 	sqlite3_bind_text(stmt, 1, email, strlen(email), SQLITE_STATIC);
+	printf("4\n");
 	result = sqlite3_step(stmt);
-	id = (int) sqlite3_column_text(stmt, 0);
+	printf("5\n");
+	id = sqlite3_column_int(stmt, 0);
 	if(result == SQLITE_ROW){
 		FILE* f;
+		printf("6\n");
 		f = fopen("ad.min", "r");
-		while (fgets((char*) id, sizeof(id), f) != NULL)
+		printf("6.1\n");
+		while (fgets((id, sizeof(id), f) != NULL)
 		{
+			printf("7\n");
 			fscanf(f, "%d", qId);
-			if (qId == id)
+			if (qId == id){
+				printf("8\n");
 				ret = 1;
-			
+			}
 		}
 		fclose(f);
+		printf("9\n");
 	}else{
+		printf("00\n");
 		return ret;
 	}
 	

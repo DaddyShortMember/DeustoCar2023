@@ -28,7 +28,10 @@ void anyadirUsuario(sqlite3 *db, Usuario usuario);
 void grantAdmin(sqlite3 *db, char* email);
 int isAdmin(sqlite3 *db, char* email);
 int exists(sqlite3 *db, char* email);
+int passCheck(sqlite3 *db, char* email, char* contrasenya);
 void modificarUsuario(sqlite3 *db, Usuario usuario, int sel);
+void modificarSaldo(sqlite3 *db, char* email, int saldo);
+void modificarContrasenya(sqlite3 *db, char* email, char* contrasenya);
 void eliminarUsuario(sqlite3 *db, Usuario usuario);
 
 //Funciones Visuales
