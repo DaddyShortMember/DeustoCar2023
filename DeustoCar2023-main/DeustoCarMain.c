@@ -17,18 +17,9 @@ void carscr(void);//menu de visualizacion/modificacion sobre: coche
 void prcscr(void);//menu de visualizacion/modificacion sobre: compra
 void slsscr(void);//menu de visualizacion/modificacion sobre: venta
 void usrscr(void);//menu de visualizacion/modificacion sobre: usuario
-void cfgscr(void);//menu de configuracion; permite modificar ciertos parametros
-/* Ideas de parametros:
-[para mas libertad de configuracion]
--extension de fichero de log (si se guarda como .txt, o como .log, o como el admin prefiera
-[para gestion de memoria fisica]
--control de impresion de log (que se guarda, si todos los pasos, o lo mas importante, o solo errores)
- */
  
  
  //TODO:
- //*Arreglar parte de menus (esta hecho el martes)
- //*Guardar en un fichero .bin o lo que sea las IDs (que concuerden con la BD) de los admins.
  //*Realizar las funciones sobre la BD en la .h y la .c de su respectivo modulo
 
 int main(void)
@@ -41,15 +32,13 @@ int main(void)
 void lgscr(void){
 	sqlite3 *db;
 	sqlite3_open("DB.db", &db);
-	
-	//int zz = usrcrtscr(db);
-	//El problema surge al crear un dato en la BD. Se incluye el \n dentro del query, y la contrasenya sale como un @, por lo que algo raro pasa con ella
 	int flg = 0;
 	int flg2 = 1;
 	int sec = 0;
 	char usi[31];
 	char buf[30];
 	char mail[31];
+	int zz = 1;
 	while(flg < 1){
 	fflush(stdin);
 		if(sec == 3){
@@ -92,7 +81,7 @@ void lgscr(void){
 		if(sec < 3)
 			printf("Contrasenya Incorrecta;\nPor favor, introduzca la contrasenya correcta\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
 		else
-			printf("Contrasenya Incorrecta Invalido;\nCerrando Programa\n[PRESIONE CUALQUIER TECLA PARA SALIR]\n");
+			printf("Contrasenya Incorrecta;\nCerrando Programa\n[PRESIONE CUALQUIER TECLA PARA SALIR]\n");
 		getch();
 	}
 	else{
@@ -102,8 +91,6 @@ void lgscr(void){
 		mmenu();
 	}
 	}
-	//if usuario.id =! adminID.bin(!!GUARDADO EN FICHERO LOCAL):  advertencia, flg2 = 1 && sec++, else mmenu(); 
-	//if sec == 3 (o numero de intentos maximos cualquiera): exit
 }
 
 void mmenu(void){
@@ -163,7 +150,7 @@ void carscr(void){
 	printf("[MENU COCHES]\n");
 	printf("[1] Visualizar\n"); 
 	printf("[2] Imprimir\n"); //Lista entetera de coches [id,marca,modelo] a fichero coche.txt
-	printf("[3] Importar\n");
+	printf("[3] Anyadir\n");
 	printf("[4] Modificar\n");
 	printf("[5] Eliminar\n");
 	printf("[0] Vuelta\n");
@@ -200,7 +187,6 @@ void prcscr(void){
 	printf("[MENU COMPRAS]\n");
 	printf("[1] Visualizar\n"); //25 mas recientes
 	printf("[2] Imprimir\n"); //Lista entera de compras [id,idUC,idUV,idC,fecha,precio]
-	printf("[3] Importar\n"); //?? Posible, posible (Rollback)
 	printf("[0] Vuelta\n");
 	printf("Introduzca su seleccion:\n");
 	fgets(buffer,3,stdin);
@@ -265,8 +251,8 @@ void usrscr(void){
 	int usi;
 	while(flg == 0){
 	fflush(stdin);
-	flg2 = 0;
 	system("CLS");
+	flg2 = 1;
 	printf("Cliente de Admin. Local\n");
 	printf("[MENU USUARIOS]\n");
 	printf("[1] Visualizar\n"); //25 mas recientes
@@ -280,14 +266,17 @@ void usrscr(void){
 	sscanf(buffer, "%d", &usi);
 	switch(usi){
 		case 0: sqlite3_close(db);
+				fflush(stdin);
+				flg++;
 				mmenu();
-		case 1: //visualizar
 				break;
-		case 2: //imprimir a fichero
+		case 1: visualizarUsuarios(db);
+				break;
+		case 2: imprimirUsuarios(db);
 				break;
 		case 3: while(flg2 == 1){
 					flg2 = usrcrtscr(db);
-		}
+				}
 				break;
 		case 4: 
 				break;
@@ -297,6 +286,5 @@ void usrscr(void){
 				printf("Opcion Invalida;\nPor favor, introduzca un numero que aparezca en el menu\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
 				getch();
 	}
-
 }
 }

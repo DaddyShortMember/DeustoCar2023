@@ -232,11 +232,11 @@ int isAdmin(sqlite3 *db, char* email){
 		}
 		fclose(f);
 		if(ret == 1)
-			printf("ID found");
+			printf("MATCH");
 		else
-			printf("No ID found\n");
+			printf("NO MATCH\n");
 	}else{
-		printf("What the hell is even that?\n");
+		printf("Usuario no existe en el sistema\n");
 		return ret;
 	}
 	
@@ -312,7 +312,7 @@ void eliminarUsuario(sqlite3 *db, Usuario usuario){
 	int result;
 	sqlite3_stmt *stmt;
 	sqlite3_prepare_v2(db, sql1, strlen(sql1), &stmt, NULL);
-	sqlite3_bind_text(stmt, 1, usuario.id, strlen(usuario.id), SQLITE_STATIC);
+	sqlite3_bind_int(stmt, 1, usuario.id);
 	result = sqlite3_step(stmt);
 }
 
@@ -322,23 +322,80 @@ void eliminarUsuario(sqlite3 *db, Usuario usuario){
 void visualizarUsuarios(sqlite3 *db){
 	int numR; //Numero de filas. Truco: SELECT Count(*) FROM tblName
 	int result;
-	char* vis;
-	char* query = "SELECT Count(*) FROM usuario";
+	char* query = "SELECT MAX(id) FROM usuario";
 	char* query2;
+	//atrib. usuario
+	char* qNom;
 	char* qEma;
+	char* qCon;
+	int qSal;
+	int qId;
 	sqlite3_stmt *stmt;
 	sqlite3_prepare_v2(db, query, strlen(query), &stmt, NULL);
 	result = sqlite3_step(stmt);
-	numR = sqlite3_column_int(stmt, 0);
+	numR = sqlite3_column_int(stmt, 0); //Numero de usuarios: perfecto
+	system("CLS");
+	printf("[LISTA DE USUARIOS]\n\n");
 	for(int i = 0; i <= numR; i++){
-		qEma = malloc(sizeof(char)*30));
-		vis = malloc(sizeof(char)*500));
-		query2 = malloc(sizeof(char)*128));
-	
+		qEma = malloc(sizeof(char)*30);
+		qNom = malloc(sizeof(char)*30);
+		qCon = malloc(sizeof(char)*30);
+		query2 = malloc(sizeof(char)*128);
+		sprintf(query2, "SELECT * FROM usuario where id = %d", i);
+		sqlite3_prepare_v2(db, query2, strlen(query2), &stmt, NULL);
+		result = sqlite3_step(stmt);
+		if(result == SQLITE_ROW){
+			qId = sqlite3_column_int(stmt, 0);
+			strcpy(qNom,sqlite3_column_text(stmt, 1));
+			strcpy(qEma,sqlite3_column_text(stmt, 2));
+			strcpy(qCon,sqlite3_column_text(stmt, 3));
+			qSal = sqlite3_column_int(stmt, 4);
+			printf("[ID] %d [Nombre] %s [E-Mail] %s [Contrasenya] %s [Saldo] %d \n", qId, qNom, qEma, qCon, qSal);
+		}
+		free(qEma);
+		free(qNom);
+		free(qCon);
+		free(query2);
 	}
-	free(vis);
+	printf("\n\n[PRESIONAR CUALQUIER TECLA PARA CONTINUAR]");
+	getch();
 	
 }
 void imprimirUsuarios(sqlite3 *db){
-	int numR; //Truco: SELECT Count(*) FROM tblName
+	int numR; //Numero de filas. Truco: SELECT Count(*) FROM tblName
+	FILE* f;
+	f = fopen("usuarios.export", "w");
+	int result;
+	char* query = "SELECT MAX(id) FROM usuario";
+	char* query2;
+	//atrib. usuario
+	char* qNom;
+	char* qEma;
+	int qSal;
+	sqlite3_stmt *stmt;
+	sqlite3_prepare_v2(db, query, strlen(query), &stmt, NULL);
+	result = sqlite3_step(stmt);
+	numR = sqlite3_column_int(stmt, 0); //Numero de usuarios: perfecto
+	system("CLS");
+	printf("[IMPRIMIENDO USUARIOS]\n\n");
+	for(int i = 0; i <= numR; i++){
+		qEma = malloc(sizeof(char)*30);
+		qNom = malloc(sizeof(char)*30);
+		query2 = malloc(sizeof(char)*128);
+		sprintf(query2, "SELECT * FROM usuario where id = %d", i);
+		sqlite3_prepare_v2(db, query2, strlen(query2), &stmt, NULL);
+		result = sqlite3_step(stmt);
+		if(result == SQLITE_ROW){
+			strcpy(qNom,sqlite3_column_text(stmt, 1));
+			strcpy(qEma,sqlite3_column_text(stmt, 2));
+			qSal = sqlite3_column_int(stmt, 4);
+			fprintf(f, "[Nombre] %s [E-Mail] %s [Saldo] %d \n", qNom, qEma, qSal);
+		}
+		free(qEma);
+		free(qNom);
+		free(query2);
+	}
+	fclose(f);
+	printf("\n\n[USUARIOS IMPRESOS, PULSE CUALQUIER TECLA PARA CONTINUAR]");
+	getch();
 }
