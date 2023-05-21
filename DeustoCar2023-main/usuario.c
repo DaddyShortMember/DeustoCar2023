@@ -378,7 +378,7 @@ void imprimirUsuarios(sqlite3 *db){
 	numR = sqlite3_column_int(stmt, 0); //Numero de usuarios: perfecto
 	system("CLS");
 	printf("[IMPRIMIENDO USUARIOS]\n\n");
-	for(int i = 0; i <= numR; i++){
+	for(int i = numR; i > 0; i--){
 		qEma = malloc(sizeof(char)*30);
 		qNom = malloc(sizeof(char)*30);
 		query2 = malloc(sizeof(char)*128);
