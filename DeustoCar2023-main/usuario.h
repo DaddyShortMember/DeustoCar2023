@@ -19,7 +19,7 @@ typedef struct{
 //Menus extras
 int usmodscr(sqlite3 *db); //Opciones para modificar aspectos del usuario [nombre,email,contrasenya,saldo, y permisos de admin. local]
 int usrcrtscr(sqlite3 *db); //Menu de creacion de usuario
-int usrdltscr(); //Para borrar usuario
+int usrdltscr(sqlite3 *db); //Para borrar usuario
 
 //Funciones
 Usuario getUser(sqlite3 *db, char* email);
@@ -29,10 +29,10 @@ void grantAdmin(sqlite3 *db, char* email);
 int isAdmin(sqlite3 *db, char* email);
 int exists(sqlite3 *db, char* email);
 int passCheck(sqlite3 *db, char* email, char* contrasenya);
-void modificarUsuario(sqlite3 *db, Usuario usuario, int sel);
+void modificarNombre(sqlite3 *db, char* email, char* nombre);
 void modificarSaldo(sqlite3 *db, char* email, int saldo);
 void modificarContrasenya(sqlite3 *db, char* email, char* contrasenya);
-void eliminarUsuario(sqlite3 *db, Usuario usuario);
+void eliminarUsuario(sqlite3 *db, char* email);
 
 //Funciones Visuales
 //Perfectas para malloc??:

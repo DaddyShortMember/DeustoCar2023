@@ -10,7 +10,7 @@
 
 
 
-
+//sqlite3 *db
 void lgscr(void); //menu de inicio de sesion
 void mmenu(void); //menu principal
 void carscr(void);//menu de visualizacion/modificacion sobre: coche
@@ -25,11 +25,10 @@ void usrscr(void);//menu de visualizacion/modificacion sobre: usuario
 int main(void)
 {
 	lgscr();
-
 	
 }
 
-void lgscr(void){
+void lgscr(void){ //DB + return int?
 	sqlite3 *db;
 	sqlite3_open("DB.db", &db);
 	int flg = 0;
@@ -50,7 +49,7 @@ void lgscr(void){
 	printf("Introduzca su email:\n");
 	fgets(buf,30,stdin);;
 	sscanf(buf, "%s", &usi);
-	if(isAdmin(db,usi) == 0){ //Al parecer, no lee bien. Arreglar la lectura del documento, pls?
+	if(isAdmin(db,usi) == 0){
 		sec++;
 		fflush(stdin);
 		if(sec < 3)
@@ -87,10 +86,10 @@ void lgscr(void){
 	else{
 		fflush(stdin);
 		flg2--;
-		sqlite3_close(db);
-		mmenu();
 	}
 	}
+	sqlite3_close(db);  //!!
+	mmenu(); //!!
 }
 
 void mmenu(void){
@@ -139,7 +138,7 @@ void mmenu(void){
 	
 }
 
-void carscr(void){
+void carscr(void){ //DB
 	int flg = 0;
 	int usi;
 	char buffer[3];
@@ -176,7 +175,7 @@ void carscr(void){
 	}
 }}
 
-void prcscr(void){
+void prcscr(void){ //DB
 	int flg = 0;
 	char buffer[3];
 	int usi;
@@ -205,7 +204,7 @@ void prcscr(void){
 	}
 }}
 
-void slsscr(void){
+void slsscr(void){ //DB
 	int flg = 0;
 	char buffer[3];
 	int usi;
@@ -242,7 +241,7 @@ void slsscr(void){
 
 }}
 
-void usrscr(void){
+void usrscr(void){ //DB
 	sqlite3 *db;
 	sqlite3_open("DB.db", &db);
 	int flg = 0;
@@ -278,9 +277,13 @@ void usrscr(void){
 					flg2 = usrcrtscr(db);
 				}
 				break;
-		case 4: 
+		case 4: while(flg2 == 1){
+					flg2 = usmodscr(db);
+				}
 				break;
-		case 5: 
+		case 5: while(flg2 == 1){
+					flg2 = usrdltscr(db);
+				}
 				break;
 		default: system("CLS");
 				printf("Opcion Invalida;\nPor favor, introduzca un numero que aparezca en el menu\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");

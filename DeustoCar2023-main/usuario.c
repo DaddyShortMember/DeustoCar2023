@@ -4,20 +4,137 @@
 int usmodscr(sqlite3 *db){
 	//Opciones para modificar aspectos del usuario [nombre,email,contrasenya,saldo, y permisos de admin. local]
 	int res = 0;
-	char qEmail[30];
-	char qVar[30];
-	int qSal;
+	int flg = 0;
+	char* qEma = malloc(sizeof(char)*30);
+	char* qVar = malloc(sizeof(char)*30);
+	char* qBuf = malloc(sizeof(char)*30);
+	char* buffer = malloc(sizeof(char)*3);
+	char* salB = malloc(sizeof(int)*10);
+	int* qSal = malloc(sizeof(int));
+	int choice;
+	while(flg < 1){
+		fflush(stdin);
+		system("CLS");
+		printf("[Modificacion de Usuario]\n\nIntroduzca un correo electronico valido\n\n");
+		fgets(qBuf,30,stdin);
+		sscanf(qBuf, "%s", qEma);
+		if(strlen(qEma) > 30 || exists(db, qEma) == 0){
+			fflush(stdin);
+			printf("Email Invalido o no existente;\nPor favor, introduzca un email valido\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
+			getch();
+		}
+		else{
+		fflush(stdin);
+		flg++;
+		}
+	}
+	free(qBuf);
+	qBuf = malloc(sizeof(char)*30);
+	flg--;
+	while(flg == 0){
+	fflush(stdin);
+	system("CLS");
+	printf("[MODIFICAR ATRIBUTO DE USUARIO]\n");
+	printf("[1] Contrasenya\n"); 
+	printf("[2] Nombre\n"); 
+	printf("[3] Saldo\n");
+	printf("Introduzca su seleccion:\n");
+	fgets(buffer,3,stdin);
+	sscanf(buffer, "%d", &choice);
+	switch(choice){
+		case 1: //Mod. Contrasenya
+				while(flg < 1){
+					fflush(stdin);
+					system("CLS");
+					printf("[Modificacion de Usuario]\n\nIntroduzca una contrasenya valida\n\n");
+					fgets(qBuf,30,stdin);
+					sscanf(qBuf, "%s", qVar);
+					if(strlen(qVar) > 30){ 
+						fflush(stdin);
+						printf("Contrasenya Invalida;\nPor favor, introduzca una contrasenya valida\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
+						getch();
+					}else{
+						fflush(stdin);
+						flg++;
+					}
+				}
+				modificarContrasenya(db, qEma, qVar);
+				break;
+		case 2: //Mod. Nombre
+				while(flg < 1){
+					fflush(stdin);
+					system("CLS");
+					printf("[Modificacion de Usuario]\n\nIntroduzca un nombre valido\n\n");
+					fgets(qBuf,30,stdin);
+					sscanf(qBuf, "%s", qVar);
+					if(strlen(qVar) > 30){ 
+						fflush(stdin);
+						printf("Nombre Invalido;\nPor favor, introduzca un nombre valido\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
+						getch();
+					}else{
+						fflush(stdin);
+						flg++;
+					}
+				}
+				modificarNombre(db, qEma, qVar);
+				break;
+		case 3: //Mod. Saldo
+				while(flg < 1){
+					fflush(stdin);
+					system("CLS");
+					printf("[Modificacion de Usuario]\n\nIntroduzca un saldo valido\n\n");
+					fgets(salB,11,stdin);
+					sscanf(salB, "%d", qSal);
+					if(qSal < 0){ 
+						fflush(stdin);
+						printf("Saldo Invalido;\nPor favor, introduzca un saldo valido\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
+						getch();
+					}
+					else{
+						fflush(stdin);
+						flg++;
+					}
+				}
+				modificarSaldo(db, qEma,(int)&qSal);
+				break;
+		default: 
+				system("CLS");
+				printf("Opcion Invalida;\nPor favor, introduzca un numero que aparezca en el menu\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
+				getch();
+				break;
+		}
+	}
+	flg--;
+	while(flg == 0){
+		system("CLS");
+		printf("Quiere modificar otro usuario? (1/0)\n");
+		fgets(buffer,2,stdin);
+		sscanf(buffer, "%d", &res);
+		if(res == 1 || res == 0)
+			flg++;
+		else{
+			printf("[Modificacion de Usuario]\n\nFuncion Finalizada\nPulse cualquier tecla para continuar\n");
+			getch();
+		}
+	}
+	free(qEma);
+	free(qVar);
+	free(qBuf);
+	free(buffer);
+	free(salB);
+	free(qSal);
 	return res;
 } 
 int usrcrtscr(sqlite3 *db){
 	//Menu de creacion de usuario
-	char qNom[30];
-	char qEma[30];
-	char qCon[30];
-	char buffer[2];
-	char qBuf[30];
-	char salB[11];
-	int qSal;
+	char* qNom = malloc(sizeof(char)*30);
+	char* qEma = malloc(sizeof(char)*30);
+	char* qCon = malloc(sizeof(char)*30);
+	//char buffer[2];
+	char* buffer = malloc(sizeof(char)*2);
+	char* qBuf = malloc(sizeof(char)*30);
+	char* salB = malloc(sizeof(char)*10);
+	int* qSal = malloc(sizeof(int));
 	int res = 0;
 	Usuario qUsua;
 	int flg = 0;
@@ -29,7 +146,7 @@ int usrcrtscr(sqlite3 *db){
 	system("CLS");
 	printf("[Creacion de Usuario]\n\nIntroduzca un nombre de usuario valido\n\n");
 	fgets(qBuf,30,stdin);
-	sscanf(qBuf, "%s", &qNom);
+	sscanf(qBuf, "%s", qNom);
 	if(strlen(qNom) > 30){ 
 		fflush(stdin);
 		printf("Usuario Invalido;\nPor favor, introduzca un usuario valido\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
@@ -45,7 +162,7 @@ int usrcrtscr(sqlite3 *db){
 	system("CLS");
 	printf("[Creacion de Usuario]\n\nIntroduzca un correo electronico valido\n\n");
 	fgets(qBuf,30,stdin);
-	sscanf(qBuf, "%s", &qEma);
+	sscanf(qBuf, "%s", qEma);
 	if(strlen(qEma) > 30 || exists(db, qEma) == 1){
 		fflush(stdin);
 		printf("Email Invalido o repetido;\nPor favor, introduzca un email valido\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
@@ -61,7 +178,7 @@ int usrcrtscr(sqlite3 *db){
 	system("CLS");
 	printf("[Creacion de Usuario]\n\nIntroduzca una contrasenya valida\n\n");
 	fgets(qBuf,30,stdin);
-	sscanf(qBuf, "%s", &qCon);
+	sscanf(qBuf, "%s", qCon);
 	if(strlen(qCon) > 30){ 
 		fflush(stdin);
 		printf("Contrasenya Invalida;\nPor favor, introduzca una contrasenya valida\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
@@ -76,7 +193,7 @@ int usrcrtscr(sqlite3 *db){
 	system("CLS");
 	printf("[Creacion de Usuario]\n\nIntroduzca un saldo valido\n\n");
 	fgets(salB,11,stdin);
-	sscanf(salB, "%d", &qSal);
+	sscanf(salB, "%d", qSal);
 	if(qSal < 0){ 
 		fflush(stdin);
 		printf("Saldo Invalido;\nPor favor, introduzca un saldo valido\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
@@ -88,7 +205,7 @@ int usrcrtscr(sqlite3 *db){
 		flg--;
 	}
 	}
-	qUsua = creaUsuario(qNom,qEma,qCon,qSal);
+	qUsua = creaUsuario(qNom,qEma,qCon,(int)&qSal);
 	anyadirUsuario(db,qUsua);
 	printf("[Creacion de Usuario]\n\nFuncion Finalizada\nPulse cualquier tecla para continuar\n");
 	getch();
@@ -104,8 +221,57 @@ int usrcrtscr(sqlite3 *db){
 			getch();
 		}
 	}
+	free(qNom);
+	free(qCon);
+	free(qEma);
+	free(buffer);
+	free(qBuf);
+	free(salB);
+	free(qSal);
 	return res;
 }
+
+int usrdltscr(sqlite3 *db){
+	int res = 0;
+	int flg = 0;
+	char* buffer = malloc(sizeof(char)*2);
+	char* qEma = malloc(sizeof(char)*30);
+	char* qBuf = malloc(sizeof(char)*30);
+	while(flg < 1){
+		fflush(stdin);
+		system("CLS");
+		printf("[Modificacion de Usuario]\n\nIntroduzca un correo electronico valido\n\n");
+		fgets(qBuf,30,stdin);
+		sscanf(qBuf, "%s", qEma);
+		if(strlen(qEma) > 30 || exists(db, qEma) == 0){
+			fflush(stdin);
+			printf("Email Invalido o no existente;\nPor favor, introduzca un email valido\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
+			getch();
+		}
+		else{
+		fflush(stdin);
+		flg++;
+		eliminarUsuario(db, qEma);
+		}
+	}
+	flg--;
+	while(flg == 0){
+		system("CLS");
+		printf("Quiere anyadir otro usuario? (1/0)\n");
+		fgets(buffer,2,stdin);
+		sscanf(buffer, "%d", &res);
+		if(res == 1 || res == 0)
+			flg++;
+		else{
+			printf("[Creacion de Usuario]\n\nFuncion Finalizada\nPulse cualquier tecla para continuar\n");
+			getch();
+		}
+	}
+	free(buffer);
+	free(qBuf);
+	free(qEma);
+	return res;
+	}
 
 //Funciones
 Usuario getUser(sqlite3 *db, char* email){
@@ -166,14 +332,16 @@ Usuario creaUsuario(char nombre[30],char email[30],char contrasenya[30],int sald
 }
 
 void anyadirUsuario(sqlite3 *db,  Usuario usuario){
-	char* sql1 = "insert into usuario (id, nombre, mail, contrasenya, saldo) values (NULL,?, ?, ?, ?)";
+	//char* sql1 = "insert into usuario (id, nombre, mail, contrasenya, saldo) values (NULL,?, ?, ?, ?)";
+	char* query = malloc(sizeof(char)*256);
+	sprintf(query, "insert into usuario (id, nombre, mail, contrasenya, saldo) values (NULL,%s, %s, %s, %d)", usuario.nombre, usuario.email, usuario.contrasenya, usuario.saldo);
 	sqlite3_stmt *stmt;
 	int result;
-	sqlite3_prepare_v2(db, sql1, strlen(sql1) + 1, &stmt, NULL);
-	sqlite3_bind_text(stmt, 1, usuario.nombre, strlen(usuario.nombre), SQLITE_STATIC);
-	sqlite3_bind_text(stmt, 2, usuario.email, strlen(usuario.email), SQLITE_STATIC);
-	sqlite3_bind_text(stmt, 3, usuario.contrasenya, strlen(usuario.contrasenya), SQLITE_STATIC);
-	sqlite3_bind_int(stmt, 4, usuario.saldo);
+	sqlite3_prepare_v2(db, query, strlen(query) + 1, &stmt, NULL);
+	//sqlite3_bind_text(stmt, 1, usuario.nombre, strlen(usuario.nombre), SQLITE_STATIC);
+	//sqlite3_bind_text(stmt, 2, usuario.email, strlen(usuario.email), SQLITE_STATIC);
+	//sqlite3_bind_text(stmt, 3, usuario.contrasenya, strlen(usuario.contrasenya), SQLITE_STATIC);
+	//sqlite3_bind_int(stmt, 4, usuario.saldo);
 	result = sqlite3_step(stmt);
 	if (result != SQLITE_DONE) {
 		printf("Error al introducir usuario\n");
@@ -210,23 +378,16 @@ int isAdmin(sqlite3 *db, char* email){
 	int qId;
 	sqlite3_stmt *stmt;
 	char* geid = "select id from Usuario where mail=?";
-	//LOG??printf("select declarado\n");
 	sqlite3_prepare_v2(db, geid, strlen(geid), &stmt, NULL);
 	sqlite3_bind_text(stmt, 1, email, strlen(email), SQLITE_STATIC);
-	//printf("select preparado\n");
 	result = sqlite3_step(stmt);
-	//printf("select hecho\n");
 	id = sqlite3_column_int(stmt, 0);
 	if(result == SQLITE_ROW){
 		FILE* f;
-		//printf("id del select: %d\n",id);
 		f = fopen("ad.min", "r");
-		//printf("archivo abierto\n");
 		while (fscanf(f, "%d\n", &qId)!= EOF)
 		{
-			//printf("qId:%d\n",qId);
 			if (qId == id){
-				//printf("MATCH\n");
 				ret = 1;
 			}
 		}
@@ -307,12 +468,12 @@ void modificarNombre(sqlite3 *db, char* email, char* nombre){
 	result = sqlite3_step(stmt);
 }
 
-void eliminarUsuario(sqlite3 *db, Usuario usuario){
-	char* sql1 = "delete from usuario where id=?";
+void eliminarUsuario(sqlite3 *db, char* email){
+	char* sql1 = "delete from usuario where mail=?";
 	int result;
 	sqlite3_stmt *stmt;
 	sqlite3_prepare_v2(db, sql1, strlen(sql1), &stmt, NULL);
-	sqlite3_bind_int(stmt, 1, usuario.id);
+	sqlite3_bind_text(stmt, 1, email, strlen(email), SQLITE_STATIC);
 	result = sqlite3_step(stmt);
 }
 
