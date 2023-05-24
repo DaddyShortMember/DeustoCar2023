@@ -38,10 +38,15 @@ int usmodscr(sqlite3 *db){
 	printf("[1] Contrasenya\n"); 
 	printf("[2] Nombre\n"); 
 	printf("[3] Saldo\n");
+	if(isAdmin(db, qEma) == 0)
+	printf("[4] Dar Permiso de Administrador\n");
+	printf("[0] Volver\n");
 	printf("Introduzca su seleccion:\n");
 	fgets(buffer,3,stdin);
 	sscanf(buffer, "%d", &choice);
 	switch(choice){
+		case 0: flg++;
+				break;
 		case 1: //Mod. Contrasenya
 				while(flg < 1){
 					fflush(stdin);
@@ -96,6 +101,9 @@ int usmodscr(sqlite3 *db){
 					}
 				}
 				modificarSaldo(db, qEma,qSal);
+				break;
+		case 4: //Dar Admin
+				grantAdmin(db, qEma);
 				break;
 		default: 
 				system("CLS");
@@ -382,17 +390,10 @@ int isAdmin(sqlite3 *db, char* email){
 		f = fopen("ad.min", "r");
 		while (fscanf(f, "%d\n", &qId)!= EOF)
 		{
-			if (qId == id){
+			if (qId == id)
 				ret = 1;
-			}
 		}
 		fclose(f);
-		if(ret == 1)
-			printf("MATCH");
-		else
-			printf("NO MATCH\n");
-	}else{
-		printf("Usuario no existe en el sistema\n");
 	}
 	sqlite3_finalize(stmt);
 	return ret;
