@@ -318,7 +318,7 @@ Usuario getUser(sqlite3 *db, char* email){
 			printf("Usuario no existe.");
 			getch();
 		}
-	
+	sqlite3_finalize(stmt);
 	return qUsua;
 }
 
@@ -348,6 +348,7 @@ void anyadirUsuario(sqlite3 *db,  Usuario usuario){
 	}else{
 		printf("Usuario %s introducido\n", usuario.email);
 	}
+	sqlite3_finalize(stmt);
 }
 void grantAdmin(sqlite3 *db, char* email){
 	//Fichero de texto, por favor.
@@ -368,7 +369,7 @@ void grantAdmin(sqlite3 *db, char* email){
 		printf("Usuario no existe.");
 	}
 	
-	//log report
+	sqlite3_finalize(stmt);
 }
 
 int isAdmin(sqlite3 *db, char* email){
@@ -398,9 +399,9 @@ int isAdmin(sqlite3 *db, char* email){
 			printf("NO MATCH\n");
 	}else{
 		printf("Usuario no existe en el sistema\n");
-		return ret;
 	}
-	
+	sqlite3_finalize(stmt);
+	return ret;
 }
 int exists(sqlite3 *db, char* email){
 	int result;
@@ -415,6 +416,7 @@ int exists(sqlite3 *db, char* email){
 	}else{
 		ret = 0;
 	}
+	sqlite3_finalize(stmt);
 	return ret;
 }
 
@@ -435,6 +437,7 @@ int passCheck(sqlite3 *db, char* email, char* contrasenya){
 	}else{
 		ret = 0;
 	}
+	sqlite3_finalize(stmt);
 	return ret;
 }
 
@@ -446,6 +449,7 @@ void modificarSaldo(sqlite3 *db, char* email, int saldo){
 	sqlite3_bind_int(stmt, 1, saldo);
 	sqlite3_bind_text(stmt, 2, email, strlen(email), SQLITE_STATIC);
 	result = sqlite3_step(stmt);
+	sqlite3_finalize(stmt);
 }
 
 void modificarContrasenya(sqlite3 *db, char* email, char* contrasenya){
@@ -456,6 +460,7 @@ void modificarContrasenya(sqlite3 *db, char* email, char* contrasenya){
 	sqlite3_bind_text(stmt, 1, contrasenya, strlen(contrasenya), SQLITE_STATIC);
 	sqlite3_bind_text(stmt, 2, email, strlen(email), SQLITE_STATIC);
 	result = sqlite3_step(stmt);
+	sqlite3_finalize(stmt);
 }
 
 void modificarNombre(sqlite3 *db, char* email, char* nombre){
@@ -466,6 +471,7 @@ void modificarNombre(sqlite3 *db, char* email, char* nombre){
 	sqlite3_bind_text(stmt, 1, nombre, strlen(nombre), SQLITE_STATIC);
 	sqlite3_bind_text(stmt, 2, email, strlen(email), SQLITE_STATIC);
 	result = sqlite3_step(stmt);
+	sqlite3_finalize(stmt);
 }
 
 void eliminarUsuario(sqlite3 *db, char* email){
@@ -475,6 +481,7 @@ void eliminarUsuario(sqlite3 *db, char* email){
 	sqlite3_prepare_v2(db, sql1, strlen(sql1), &stmt, NULL);
 	sqlite3_bind_text(stmt, 1, email, strlen(email), SQLITE_STATIC);
 	result = sqlite3_step(stmt);
+	sqlite3_finalize(stmt);
 }
 
 //Funciones Visuales
@@ -518,6 +525,7 @@ void visualizarUsuarios(sqlite3 *db){
 		free(qCon);
 		free(query2);
 	}
+	sqlite3_finalize(stmt);
 	printf("\n\n[PRESIONAR CUALQUIER TECLA PARA CONTINUAR]");
 	getch();
 	
@@ -557,6 +565,7 @@ void imprimirUsuarios(sqlite3 *db){
 		free(query2);
 	}
 	fclose(f);
+	sqlite3_finalize(stmt);
 	printf("\n\n[USUARIOS IMPRESOS, PULSE CUALQUIER TECLA PARA CONTINUAR]");
 	getch();
 }

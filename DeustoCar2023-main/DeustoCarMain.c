@@ -24,13 +24,26 @@ void usrscr(void);//menu de visualizacion/modificacion sobre: usuario
 
 int main(void)
 {
-	lgscr();
+	int mmn = 1; //Return de Main Menu
+	int lg; //Return de Log-in Screen
+	int usr; // Return de sub-menus
+	int usi; //User Input
+	sqlite3 *db;
+	sqlite3_open("DB.db", &db);
+	lg = lgscr(db);
+	if(lg = 1){
+		while(mmn =! 0){
+		mmn = mmenu();
+		}
+	}
+	else{
+		sqlite3_close(db);
+	}
 	
 }
 
-void lgscr(void){ //DB + return int?
-	sqlite3 *db;
-	sqlite3_open("DB.db", &db);
+int lgscr(sqlite3* db){ //DB + return int?
+	int ret;
 	int flg = 0;
 	int flg2 = 1;
 	int sec = 0;
@@ -42,7 +55,8 @@ void lgscr(void){ //DB + return int?
 	fflush(stdin);
 		if(sec == 3){
 			system("CLS");
-			exit(1);
+			flg++;
+			ret = 0;
 		}
 	system("CLS");
 	printf("Cliente de Admin. Local\n\n\n\n");
@@ -67,7 +81,8 @@ void lgscr(void){ //DB + return int?
 	while(flg2 > 0){
 		if(sec == 3){
 			system("CLS");
-			exit(1);
+			flg2--;
+			ret = 0;
 		}
 	system("CLS");
 	printf("Cliente de Admin. Local\n\n\n\n");
@@ -88,12 +103,12 @@ void lgscr(void){ //DB + return int?
 		flg2--;
 	}
 	}
-	sqlite3_close(db);  //!!
-	mmenu(); //!!
+	return ret;
 }
 
-void mmenu(void){
+int mmenu(void){ //Int
 	fflush(stdin);
+	int ret = 1;
 	int flg = 0;
 	char buffer[3]; 
 	int usi;
@@ -112,21 +127,27 @@ void mmenu(void){
 	sscanf(buffer, "%d", &usi);
 	switch(usi){
 		case 0: system("CLS");
-				exit(10);
+				ret = usi;
+				flg++;
+				break;
 		case 1: fflush(stdin);
-				usrscr();
+				system("CLS");
+				ret = usi;
 				flg++;
 				break;
 		case 2: fflush(stdin);
-				carscr();
+				system("CLS");
+				ret = usi;
 				flg++;
 				break;
 		case 3: fflush(stdin);
-				slsscr();
+				system("CLS");
+				ret = usi;
 				flg++;
 				break;
 		case 4: fflush(stdin);
-				prcscr();
+				system("CLS");
+				ret = usi;
 				flg++;
 				break;
 		default: system("CLS");
@@ -135,12 +156,13 @@ void mmenu(void){
 	}
 	
 	}
-	
+	return ret;
 }
 
-void carscr(void){ //DB
+int carscr(sqlite3* db){ //DB + int
 	int flg = 0;
 	int usi;
+	int ret = 1;
 	char buffer[3];
 	while(flg == 0){
 	fflush(stdin);
@@ -157,7 +179,11 @@ void carscr(void){ //DB
 	fgets(buffer,3,stdin);
 	sscanf(buffer, "%d", &usi);
 	switch(usi){
-		case 0: mmenu();
+		case 0: fflush(stdin);
+				system("CLS");
+				ret = usi;
+				flg++;
+				break;
 		case 1: 
 				
 				break;
@@ -173,10 +199,13 @@ void carscr(void){ //DB
 				printf("Opcion Invalida;\nPor favor, introduzca un numero que aparezca en el menu\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
 				getch();
 	}
-}}
+}
+	return ret;
+}
 
-void prcscr(void){ //DB
+int prcscr(sqlite3* db){ //DB + int
 	int flg = 0;
+	int ret = 1;
 	char buffer[3];
 	int usi;
 	while(flg == 0){
@@ -191,7 +220,11 @@ void prcscr(void){ //DB
 	fgets(buffer,3,stdin);
 	sscanf(buffer, "%d", &usi);
 	switch(usi){
-		case 0: mmenu();
+		case 0: fflush(stdin);
+				system("CLS");
+				ret = usi;
+				flg++;
+				break;
 		case 1: 
 				break;
 		case 2: 
@@ -202,10 +235,12 @@ void prcscr(void){ //DB
 				printf("Opcion Invalida;\nPor favor, introduzca un numero que aparezca en el menu\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
 				getch();
 	}
+	return ret;
 }}
 
-void slsscr(void){ //DB
+int slsscr(sqlite3* db){ //DB + int
 	int flg = 0;
+	int ret = 1;
 	char buffer[3];
 	int usi;
 	while(flg == 0){
@@ -223,7 +258,11 @@ void slsscr(void){ //DB
 	fgets(buffer,3,stdin);
 	sscanf(buffer, "%d", &usi);
 	switch(usi){
-		case 0: mmenu();
+		case 0: fflush(stdin);
+				system("CLS");
+				ret = usi;
+				flg++;
+				break;
 		case 1: 
 				break;
 		case 2: 
@@ -238,56 +277,56 @@ void slsscr(void){ //DB
 				printf("Opcion Invalida;\nPor favor, introduzca un numero que aparezca en el menu\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
 				getch();
 	}
-
+	return ret;
 }}
 
-void usrscr(void){ //DB
-	sqlite3 *db;
-	sqlite3_open("DB.db", &db);
+int usrscr(sqlite3* db){ //DB + int
+	int ret;
 	int flg = 0;
 	int flg2 = 1;
 	char buffer[3];
 	int usi;
 	while(flg == 0){
-	fflush(stdin);
-	system("CLS");
-	flg2 = 1;
-	printf("Cliente de Admin. Local\n");
-	printf("[MENU USUARIOS]\n");
-	printf("[1] Visualizar\n"); //25 mas recientes
-	printf("[2] Imprimir\n"); //Lista entera de usuarios [id,nombre,email]
-	printf("[3] Anyadir\n");
-	printf("[4] Modificar\n");
-	printf("[5] Eliminar\n");
-	printf("[0] Vuelta\n");
-	printf("Introduzca su seleccion:\n");
-	fgets(buffer,3,stdin);
-	sscanf(buffer, "%d", &usi);
-	switch(usi){
-		case 0: sqlite3_close(db);
-				fflush(stdin);
-				flg++;
-				mmenu();
-				break;
-		case 1: visualizarUsuarios(db);
-				break;
-		case 2: imprimirUsuarios(db);
-				break;
-		case 3: while(flg2 == 1){
+		fflush(stdin);
+		system("CLS");
+		flg2 = 1;
+		printf("Cliente de Admin. Local\n");
+		printf("[MENU USUARIOS]\n");
+		printf("[1] Visualizar\n"); //25 mas recientes
+		printf("[2] Imprimir\n"); //Lista entera de usuarios [id,nombre,email]
+		printf("[3] Anyadir\n");
+		printf("[4] Modificar\n");
+		printf("[5] Eliminar\n");
+		printf("[0] Vuelta\n");
+		printf("Introduzca su seleccion:\n");
+		fgets(buffer,3,stdin);
+		sscanf(buffer, "%d", &usi);
+		switch(usi){
+			case 0:	fflush(stdin);
+					system("CLS");
+					ret = usi;
+					flg++;
+					break;
+			case 1: visualizarUsuarios(db);
+					break;
+			case 2: imprimirUsuarios(db);
+					break;
+			case 3: while(flg2 == 1){
 					flg2 = usrcrtscr(db);
-				}
-				break;
-		case 4: while(flg2 == 1){
-					flg2 = usmodscr(db);
-				}
-				break;
-		case 5: while(flg2 == 1){
-					flg2 = usrdltscr(db);
-				}
-				break;
-		default: system("CLS");
-				printf("Opcion Invalida;\nPor favor, introduzca un numero que aparezca en el menu\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
-				getch();
+					}
+					break;
+			case 4: while(flg2 == 1){
+						flg2 = usmodscr(db);
+					}
+					break;
+			case 5: while(flg2 == 1){
+						flg2 = usrdltscr(db);
+					}
+					break;
+			default: system("CLS");
+					printf("Opcion Invalida;\nPor favor, introduzca un numero que aparezca en el menu\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
+					getch();
+		}
 	}
-}
+	return ret;
 }
