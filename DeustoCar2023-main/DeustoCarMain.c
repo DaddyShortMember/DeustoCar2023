@@ -11,12 +11,12 @@
 
 
 //sqlite3 *db
-void lgscr(void); //menu de inicio de sesion
-void mmenu(void); //menu principal
-void carscr(void);//menu de visualizacion/modificacion sobre: coche
-void prcscr(void);//menu de visualizacion/modificacion sobre: compra
-void slsscr(void);//menu de visualizacion/modificacion sobre: venta
-void usrscr(void);//menu de visualizacion/modificacion sobre: usuario
+int lgscr(sqlite3* db); //menu de inicio de sesion
+int mmenu(void); //menu principal
+int carscr(sqlite3* db);//menu de visualizacion/modificacion sobre: coche
+int prcscr(sqlite3* db);//menu de visualizacion/modificacion sobre: compra
+int slsscr(sqlite3* db);//menu de visualizacion/modificacion sobre: venta
+int usrscr(sqlite3* db);//menu de visualizacion/modificacion sobre: usuario
  
  
  //TODO:
@@ -32,12 +32,35 @@ int main(void)
 	sqlite3_open("DB.db", &db);
 	lg = lgscr(db);
 	if(lg = 1){
-		while(mmn =! 0){
+		while(mmn != 0){
 		mmn = mmenu();
+		usi = 1;
+		switch(mmn){
+		case 0: system("CLS");
+				exit(1);
+				break;
+		case 1: while(usi != 0){
+			usi = usrscr(db);
+		}
+				break;
+		case 2: while(usi != 0){
+		}
+				break;
+		case 3: while(usi != 0){
+		}
+				break;
+		case 4: 
+				break;
+		default: system("CLS");
+				printf("Opcion Invalida\nHas logrado salir de una funcion de manera inadecuada...\nPresiona cualquier tecla para volver a acceder al menu principal\n");
+				getch();
+		}
+			
 		}
 	}
 	else{
 		sqlite3_close(db);
+		exit(0);
 	}
 	
 }
@@ -292,8 +315,8 @@ int usrscr(sqlite3* db){ //DB + int
 		flg2 = 1;
 		printf("Cliente de Admin. Local\n");
 		printf("[MENU USUARIOS]\n");
-		printf("[1] Visualizar\n"); //25 mas recientes
-		printf("[2] Imprimir\n"); //Lista entera de usuarios [id,nombre,email]
+		printf("[1] Visualizar\n");
+		printf("[2] Imprimir\n");
 		printf("[3] Anyadir\n");
 		printf("[4] Modificar\n");
 		printf("[5] Eliminar\n");

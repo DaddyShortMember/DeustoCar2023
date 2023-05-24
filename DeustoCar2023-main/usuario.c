@@ -332,16 +332,11 @@ Usuario creaUsuario(char nombre[30],char email[30],char contrasenya[30],int sald
 }
 
 void anyadirUsuario(sqlite3 *db,  Usuario usuario){
-	//char* sql1 = "insert into usuario (id, nombre, mail, contrasenya, saldo) values (NULL,?, ?, ?, ?)";
 	char* query = malloc(sizeof(char)*256);
 	sprintf(query, "insert into usuario (id, nombre, mail, contrasenya, saldo) values (NULL,%s, %s, %s, %d)", usuario.nombre, usuario.email, usuario.contrasenya, usuario.saldo);
 	sqlite3_stmt *stmt;
 	int result;
 	sqlite3_prepare_v2(db, query, strlen(query) + 1, &stmt, NULL);
-	//sqlite3_bind_text(stmt, 1, usuario.nombre, strlen(usuario.nombre), SQLITE_STATIC);
-	//sqlite3_bind_text(stmt, 2, usuario.email, strlen(usuario.email), SQLITE_STATIC);
-	//sqlite3_bind_text(stmt, 3, usuario.contrasenya, strlen(usuario.contrasenya), SQLITE_STATIC);
-	//sqlite3_bind_int(stmt, 4, usuario.saldo);
 	result = sqlite3_step(stmt);
 	if (result != SQLITE_DONE) {
 		printf("Error al introducir usuario\n");
@@ -368,7 +363,6 @@ void grantAdmin(sqlite3 *db, char* email){
 	}else{
 		printf("Usuario no existe.");
 	}
-	
 	sqlite3_finalize(stmt);
 }
 
