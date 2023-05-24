@@ -333,7 +333,6 @@ void anyadirUsuario(sqlite3 *db,  Usuario usuario){
 	sqlite3_stmt *stmt;
 	int result;
 	sprintf(query, "insert into usuario (id, nombre, mail, contrasenya, saldo) values (NULL,'%s','%s','%s',%d)", usuario.nombre, usuario.email, usuario.contrasenya, usuario.saldo);
-	printf("\n\nquery: %s\n\n", query);
 	result = sqlite3_prepare_v2(db, query, strlen(query), &stmt, NULL);
 	if (result != SQLITE_OK) {
 		printf("Error preparing statement (INSERT)\n");
