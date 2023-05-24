@@ -10,7 +10,7 @@ int usmodscr(sqlite3 *db){
 	char* qBuf = malloc(sizeof(char)*30);
 	char* buffer = malloc(sizeof(char)*3);
 	char* salB = malloc(sizeof(int)*10);
-	int* qSal = malloc(sizeof(int));
+	int qSal;
 	int choice;
 	while(flg < 1){
 		fflush(stdin);
@@ -84,7 +84,7 @@ int usmodscr(sqlite3 *db){
 					system("CLS");
 					printf("[Modificacion de Usuario]\n\nIntroduzca un saldo valido\n\n");
 					fgets(salB,11,stdin);
-					sscanf(salB, "%d", qSal);
+					sscanf(salB, "%d",&qSal);
 					if(qSal < 0){ 
 						fflush(stdin);
 						printf("Saldo Invalido;\nPor favor, introduzca un saldo valido\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
@@ -95,7 +95,7 @@ int usmodscr(sqlite3 *db){
 						flg++;
 					}
 				}
-				modificarSaldo(db, qEma,(int)&qSal);
+				modificarSaldo(db, qEma,qSal);
 				break;
 		default: 
 				system("CLS");
@@ -122,7 +122,6 @@ int usmodscr(sqlite3 *db){
 	free(qBuf);
 	free(buffer);
 	free(salB);
-	free(qSal);
 	return res;
 } 
 int usrcrtscr(sqlite3 *db){
@@ -130,11 +129,10 @@ int usrcrtscr(sqlite3 *db){
 	char* qNom = malloc(sizeof(char)*30);
 	char* qEma = malloc(sizeof(char)*30);
 	char* qCon = malloc(sizeof(char)*30);
-	//char buffer[2];
 	char* buffer = malloc(sizeof(char)*2);
 	char* qBuf = malloc(sizeof(char)*30);
 	char* salB = malloc(sizeof(char)*10);
-	int* qSal = malloc(sizeof(int));
+	int qSal;
 	int res = 0;
 	Usuario qUsua;
 	int flg = 0;
@@ -192,8 +190,8 @@ int usrcrtscr(sqlite3 *db){
 	fflush(stdin);
 	system("CLS");
 	printf("[Creacion de Usuario]\n\nIntroduzca un saldo valido\n\n");
-	fgets(salB,11,stdin);
-	sscanf(salB, "%d", qSal);
+	fgets(salB,10,stdin);
+	sscanf(salB, "%d",&qSal);
 	if(qSal < 0){ 
 		fflush(stdin);
 		printf("Saldo Invalido;\nPor favor, introduzca un saldo valido\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
@@ -205,7 +203,7 @@ int usrcrtscr(sqlite3 *db){
 		flg--;
 	}
 	}
-	qUsua = creaUsuario(qNom,qEma,qCon,(int)&qSal);
+	qUsua = creaUsuario(qNom,qEma,qCon,qSal);
 	anyadirUsuario(db,qUsua);
 	printf("[Creacion de Usuario]\n\nFuncion Finalizada\nPulse cualquier tecla para continuar\n");
 	getch();
@@ -227,7 +225,6 @@ int usrcrtscr(sqlite3 *db){
 	free(buffer);
 	free(qBuf);
 	free(salB);
-	free(qSal);
 	return res;
 }
 
@@ -333,10 +330,14 @@ Usuario creaUsuario(char nombre[30],char email[30],char contrasenya[30],int sald
 
 void anyadirUsuario(sqlite3 *db,  Usuario usuario){
 	char* query = malloc(sizeof(char)*256);
-	sprintf(query, "insert into usuario (id, nombre, mail, contrasenya, saldo) values (NULL,%s, %s, %s, %d)", usuario.nombre, usuario.email, usuario.contrasenya, usuario.saldo);
 	sqlite3_stmt *stmt;
 	int result;
-	sqlite3_prepare_v2(db, query, strlen(query) + 1, &stmt, NULL);
+	sprintf(query, "insert into usuario (id, nombre, mail, contrasenya, saldo) values (NULL,'%s','%s','%s',%d)", usuario.nombre, usuario.email, usuario.contrasenya, usuario.saldo);
+	printf("\n\nquery: %s\n\n", query);
+	result = sqlite3_prepare_v2(db, query, strlen(query), &stmt, NULL);
+	if (result != SQLITE_OK) {
+		printf("Error preparing statement (INSERT)\n");
+	}
 	result = sqlite3_step(stmt);
 	if (result != SQLITE_DONE) {
 		printf("Error al introducir usuario\n");
