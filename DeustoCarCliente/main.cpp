@@ -97,6 +97,92 @@ void menuRegistrarse(SOCKET s)
 
 void menuComprarCoche(SOCKET s, int idUsuario)
 {
+	char sendBuff[512], recvBuff[512];
+	Venta *ventas = (Venta*)malloc(sizeof(Venta) * 50);
+	Venta v;
+	Coche *coches = (Coche*)malloc(sizeof(Coche) * 50);
+	Coche c;
+	strcpy(sendBuff, "GETVENTAS");
+	send(s, sendBuff, sizeof(sendBuff), 0);
+	strcpy(sendBuff, "GETVENTAS-END");
+	send(s, sendBuff, sizeof(sendBuff), 0);
+
+	// RECEIVING response from the server
+	int i = 0, tamanyoVentas = 0;
+	for (i = 0; i < 50; i++) {
+		recv(s, recvBuff, sizeof(recvBuff), 0);
+
+		if (strcmp(recvBuff, "FINBUCLE")) {
+			v.setId(atoi(recvBuff));
+			recv(s, recvBuff, sizeof(recvBuff), 0);
+			v.setPrecio(atoi(recvBuff));
+			recv(s, recvBuff, sizeof(recvBuff), 0);
+			//NO SE SI ESTÁ BIEN LA SIGUIENTE LINEA
+			v.setFechaVenta(recvBuff);
+			recv(s, recvBuff, sizeof(recvBuff), 0);
+			v.setIdVendedor(atoi(recvBuff));
+			recv(s, recvBuff, sizeof(recvBuff), 0);
+			v.setIdCoche(atoi(recvBuff));
+			if (v.getId() == idUsuario) {
+				ventas[tamanyoVentas] = v;
+				tamanyoVentas++;
+			}
+		} else {
+			i = 50;
+		}
+	}
+
+	strcpy(sendBuff, "GETCOCHES");
+	send(s, sendBuff, sizeof(sendBuff), 0);
+	strcpy(sendBuff, "GETCOCHES-END");
+	send(s, sendBuff, sizeof(sendBuff), 0);
+
+	// RECEIVING response from the server
+	int j = 0, tamanyoCoches = 0;
+	for (j = 0; j < 50; j++) {
+		recv(s, recvBuff, sizeof(recvBuff), 0);
+
+		if (strcmp(recvBuff, "FINBUCLE")) {
+			c.setId(atoi(recvBuff));
+			recv(s, recvBuff, sizeof(recvBuff), 0);
+			//NO SE SI ESTÁ BIEN LA SIGUIENTE LINEA
+			c.setMarca(recvBuff);
+			recv(s, recvBuff, sizeof(recvBuff), 0);
+			//NO SE SI ESTÁ BIEN LA SIGUIENTE LINEA
+			c.setModelo(recvBuff);
+
+			i = 0;
+			for (i = 0; i < tamanyoCoches; i++) {
+				coches[tamanyoCoches] = c;
+				tamanyoCoches++;
+			}
+
+		} else {
+			j = 50;
+		}
+	}
+
+	cout << "COCHES EN VENTA:\n" << endl;
+
+	i = 0, j = 0;
+	for (i = 0; i < tamanyoVentas; i++) {
+
+		cout << "Precio de venta: " << ventas[i].getPrecio() << " euros\n" << endl;
+		cout << "Fecha de venta: " << ventas[i].getFechaVenta() << endl;
+		cout << "Id del vendedor: " << ventas[i].getIdVendedor() << endl;
+		cout << "Id del coche: " << ventas[i].getIdCoche() << endl;
+
+		for (j = 0; j < tamanyoCoches; j++) {
+			if (coches[j].getId() == ventas[i].getIdCoche()) {
+				cout << "Marca: " << coches[j].getMarca() << endl;
+				cout << "Modelo: " << coches[j].getModelo() << endl;
+			}
+		}
+	}
+}
+
+void menuVenderCoche(SOCKET s, int idUsuario)
+{
 	int seleccion = 1, tamanyo = 0;
 	cout << "Coches a la venta:\n" << endl;
 
@@ -147,21 +233,7 @@ void menuComprarCoche(SOCKET s, int idUsuario)
 	}
 	cout << "\n";
 
-
-
-
-
-
-
-
-
-
 	cout << "Compra realizada con exito!\n" << endl;
-}
-
-void menuVenderCoche(SOCKET s, int idUsuario)
-{
-
 }
 
 void menuSusCochesEnVenta(SOCKET s, int idUsuario)
@@ -231,20 +303,21 @@ void menuSusCochesEnVenta(SOCKET s, int idUsuario)
 		}
 	}
 
-	cout << "VENTAS:\n" << endl;
+	cout << "SUS COCHES EN VENTA:\n" << endl;
 
 	i = 0, j = 0;
 	for (i = 0; i < tamanyoVentas; i++) {
+		if (ventas[i].getIdVendedor() == idUsuario) {
+			cout << "Precio de venta: " << ventas[i].getPrecio() << " euros\n" << endl;
+			cout << "Fecha de venta: " << ventas[i].getFechaVenta() << endl;
+			cout << "Id del vendedor: " << ventas[i].getIdVendedor() << endl;
+			cout << "Id del coche: " << ventas[i].getIdCoche() << endl;
 
-		cout << "Precio de venta: " << ventas[i].getPrecio() << " euros\n" << endl;
-		cout << "Fecha de venta: " << ventas[i].getFechaVenta() << endl;
-		cout << "Id del vendedor: " << ventas[i].getIdVendedor() << endl;
-		cout << "Id del coche: " << ventas[i].getIdCoche() << endl;
-
-		for (j = 0; j < tamanyoCoches; j++) {
-			if (coches[j].getId() == ventas[i].getIdCoche()) {
-				cout << "Marca: " << coches[j].getMarca() << endl;
-				cout << "Modelo: " << coches[j].getModelo() << endl;
+			for (j = 0; j < tamanyoCoches; j++) {
+				if (coches[j].getId() == ventas[i].getIdCoche()) {
+					cout << "Marca: " << coches[j].getMarca() << endl;
+					cout << "Modelo: " << coches[j].getModelo() << endl;
+				}
 			}
 		}
 	}
