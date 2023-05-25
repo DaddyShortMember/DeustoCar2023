@@ -44,12 +44,16 @@ int main(void)
 		}
 				break;
 		case 2: while(usi != 0){
+				usi = carscr(db);
 		}
 				break;
 		case 3: while(usi != 0){
+				usi = slsscr(db);
 		}
 				break;
-		case 4: 
+		case 4: while(usi != 0){
+				usi = prcscr(db);
+		}
 				break;
 		default: system("CLS");
 				printf("Opcion Invalida\nHas logrado salir de una funcion de manera inadecuada...\nPresiona cualquier tecla para volver a acceder al menu principal\n");
@@ -184,6 +188,7 @@ int mmenu(void){ //Int
 
 int carscr(sqlite3* db){ //DB + int
 	int flg = 0;
+	int flg2;
 	int usi;
 	int ret = 1;
 	char buffer[3];
@@ -201,22 +206,28 @@ int carscr(sqlite3* db){ //DB + int
 	printf("Introduzca su seleccion:\n");
 	fgets(buffer,3,stdin);
 	sscanf(buffer, "%d", &usi);
+	flg2 = 1;
 	switch(usi){
 		case 0: fflush(stdin);
 				system("CLS");
 				ret = usi;
 				flg++;
 				break;
-		case 1: 
-				
+		case 1: visualizarCoches(db);
 				break;
-		case 2: 
+		case 2: imprimirCoches(db);
 				break;
-		case 3: 
+		case 3: while(flg2 == 1){
+					flg2 = vhccrtscr(db);
+					}
 				break;
-		case 4: 
+		case 4: while(flg2 == 1){
+					flg2 = vhmodscr(db);
+					}
 				break;
-		case 5: 
+		case 5: while(flg2 == 1){
+					flg2 = vhcdltscr(db);
+					}
 				break;
 		default: system("CLS");
 				printf("Opcion Invalida;\nPor favor, introduzca un numero que aparezca en el menu\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
