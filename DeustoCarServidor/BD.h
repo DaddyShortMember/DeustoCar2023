@@ -2,7 +2,6 @@
 #include "sqlite3.h"
 #include "usuario.h"
 #include "coche.h"
-#include "admin.h"
 
 #ifndef BD_H_
 #define BD_H_
@@ -18,7 +17,7 @@ int deleteUsuario(sqlite3 *db, char codigo[50]);
 int deleteCoche(sqlite3 *db, char codigo[50]);
 int deleteAllUsuarios(sqlite3 *db);
 int deleteAllCoches(sqlite3 *db);
-int isAdmin(sqlite3 *db, Admin admin);
+//int isAdmin(sqlite3 *db, Admin admin);
 
 #endif /* BD_H_ */
 

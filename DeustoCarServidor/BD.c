@@ -3,7 +3,6 @@
 #include "BD.h"
 #include "usuario.h"
 #include "coche.h"
-#include "admin.h"
 #include <string.h>
 #include <stdlib.h>
 
@@ -492,7 +491,7 @@ int deleteAllCoches(sqlite3 *db) {
 
 	return SQLITE_OK;
 }
-
+/*
 int isAdmin(sqlite3 *db, Admin admin) {
 	sqlite3_stmt *stmt;
 
@@ -535,4 +534,4 @@ int isAdmin(sqlite3 *db, Admin admin) {
 
 	return 0;
 }
-
+*/
