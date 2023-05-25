@@ -274,17 +274,19 @@ int prcscr(sqlite3* db){ //DB + int
 
 int slsscr(sqlite3* db){ //DB + int
 	int flg = 0;
+	int flg2 = 1;
 	int ret = 1;
 	char buffer[3];
-	int usi;
+	int usi = 1;
 	while(flg == 0){
+	flg2 = 1;
 	fflush(stdin);
 	system("CLS");
 	printf("Cliente de Admin. Local\n");
 	printf("[MENU VENTAS]\n");
 	printf("[1] Visualizar\n"); //25 mas recientes
 	printf("[2] Imprimir\n"); //Lista entera de compras [id,idUC,idUV,idC,fecha,precio]
-	printf("[3] Importar\n");
+	printf("[3] Anyadir\n");
 	printf("[4] Modificar\n");
 	printf("[5] Eliminar\n");
 	printf("[0] Vuelta\n");
@@ -297,15 +299,21 @@ int slsscr(sqlite3* db){ //DB + int
 				ret = usi;
 				flg++;
 				break;
-		case 1: 
+		case 1: visualizarVentas(db);
 				break;
-		case 2: 
+		case 2: imprimirVentas(db);
 				break;
-		case 3: 
+		case 3: while(flg2 == 1){
+					flg2 = slscrtscr(db);
+					}
 				break;
-		case 4: 
+		case 4: while(flg2 == 1){
+					flg2 = slmodscr(db);
+					}
 				break;
-		case 5: 
+		case 5: while(flg2 == 1){
+					flg2 = slsdltscr(db);
+					}
 				break;
 		default: system("CLS");
 				printf("Opcion Invalida;\nPor favor, introduzca un numero que aparezca en el menu\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");

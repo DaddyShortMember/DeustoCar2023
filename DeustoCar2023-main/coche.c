@@ -178,7 +178,7 @@ int vhcdltscr(sqlite3 *db){
 	while(flg < 1){
 		fflush(stdin);
 		system("CLS");
-		printf("[Modificacion de Coche]\n\nIntroduzca un numero identificador valido\n\n");
+		printf("[Eliminacion de Coche]\n\nIntroduzca un numero identificador valido\n\n");
 		fgets(qBuf,10,stdin);
 		sscanf(qBuf,"%d",&qId);
 		if(qId < 1 || existsCoche(db,qId) == 0){
@@ -195,13 +195,13 @@ int vhcdltscr(sqlite3 *db){
 	flg--;
 	while(flg == 0){
 		system("CLS");
-		printf("Quiere anyadir otro coche? (1/0)\n");
+		printf("Quiere eliminar otro coche? (1/0)\n");
 		fgets(buffer,2,stdin);
 		sscanf(buffer, "%d", &res);
 		if(res == 1 || res == 0)
 			flg++;
 		else{
-			printf("[Creacion de Coche]\n\nFuncion Finalizada\nPulse cualquier tecla para continuar\n");
+			printf("[Eliminacion de Coche]\n\nFuncion Finalizada\nPulse cualquier tecla para continuar\n");
 			getch();
 		}
 	}
@@ -267,6 +267,7 @@ void anyadirCoche(sqlite3 *db, Coche coche){
 	}else{
 		printf("coche %s introducido\n", coche.modelo);
 	}
+	free(query);
 	sqlite3_finalize(stmt);
 }
 
