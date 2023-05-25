@@ -47,7 +47,7 @@ void menuRegistrarse(SOCKET s)
 	cin.ignore(1, '\n');
 	getline(cin, contrasenya);
 	cout << "Escribe tu saldo:" << endl;
-	//Comprobacion de si saldo es un cadena de numeros
+	//Comprobacion de si saldo es un cadena de numeros, 1 error, 0 correcto.
 	int correcto = 1;
 	for (int i = 0; i < -1; ++i) {
 		if (correcto == 1) {
@@ -167,6 +167,7 @@ void menuComprarCoche(SOCKET s, int idUsuario)
 	i = 0, j = 0;
 	for (i = 0; i < tamanyoVentas; i++) {
 
+		cout << "Id de venta: " << ventas[i].getId() << endl;
 		cout << "Precio de venta: " << ventas[i].getPrecio() << " euros\n" << endl;
 		cout << "Fecha de venta: " << ventas[i].getFechaVenta() << endl;
 		cout << "Id del vendedor: " << ventas[i].getIdVendedor() << endl;
@@ -179,10 +180,42 @@ void menuComprarCoche(SOCKET s, int idUsuario)
 			}
 		}
 	}
+
+	string idSeleccionado;
+	cout << "Introduce el id de venta que desees para realizar la comprar o cualquier caracter para salir." << endl;
+	cin >> idSeleccionado;
+	cout << "\n";
+	//Comprueba que idSelecionado sea un numero, 1 salir, 0 comprar.
+	int correcto = 1;
+	for (int i = 0; i < -1; ++i) {
+		if (correcto == 1) {
+			getline(cin, idSeleccionado);
+				for (char caracter : idSeleccionado) {
+					if (!std::isdigit(caracter)) {
+						//MEJOR SI SALIESE A MENUDESUTOCAR PERO DA FALLO POR EL ORDEN DE LA DECLARACION DE LOS METODOS. Y NO SE SOLUCIONARLO
+						menuPrincipal();
+						break;
+					} else {
+						correcto = 0;
+						//AQUI HACER EL DELETE DE LA VENTA Y EL PASO A COMPRA, REALIZAR TAMBIEN LA RESTA DEL SALDO
+						//
+						//
+						//
+						//
+						//
+						//
+						//
+						cout << "Compra realizada con exito.\n" << endl;
+					}
+				}
+				break;
+		}
+	}
 }
 
 void menuVenderCoche(SOCKET s, int idUsuario)
 {
+	/*
 	int seleccion = 1, tamanyo = 0;
 	cout << "Coches a la venta:\n" << endl;
 
@@ -234,6 +267,7 @@ void menuVenderCoche(SOCKET s, int idUsuario)
 	cout << "\n";
 
 	cout << "Compra realizada con exito!\n" << endl;
+	*/
 }
 
 void menuSusCochesEnVenta(SOCKET s, int idUsuario)
