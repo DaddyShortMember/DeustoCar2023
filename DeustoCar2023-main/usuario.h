@@ -28,6 +28,7 @@ void anyadirUsuario(sqlite3 *db, Usuario usuario);
 void grantAdmin(sqlite3 *db, char* email);
 int isAdmin(sqlite3 *db, char* email);
 int exists(sqlite3 *db, char* email);
+int exists2(sqlite3 *db, int id);
 int passCheck(sqlite3 *db, char* email, char* contrasenya);
 void modificarNombre(sqlite3 *db, char* email, char* nombre);
 void modificarSaldo(sqlite3 *db, char* email, int saldo);

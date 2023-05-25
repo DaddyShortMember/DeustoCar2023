@@ -12,10 +12,4 @@ typedef struct{
 }Compra; //40 Bytes, Malloc necesario para arrays
 
 
-void anyadirCompra(sqlite3 *db, int result, Compra compra);
-void modificarCompra(sqlite3 *db, int result, Compra compra);
-void eliminarCompra(sqlite3 *db, int result);
-void imprimirCompra(Compra compra);
-
-
 #endif /* COMPRA_H_ */

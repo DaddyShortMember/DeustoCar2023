@@ -245,7 +245,7 @@ int usrdltscr(sqlite3 *db){
 	while(flg < 1){
 		fflush(stdin);
 		system("CLS");
-		printf("[Modificacion de Usuario]\n\nIntroduzca un correo electronico valido\n\n");
+		printf("[Eliminacion de Usuario]\n\nIntroduzca un correo electronico valido\n\n");
 		fgets(qBuf,30,stdin);
 		sscanf(qBuf, "%s", qEma);
 		if(strlen(qEma) > 30 || exists(db, qEma) == 0){
@@ -262,13 +262,13 @@ int usrdltscr(sqlite3 *db){
 	flg--;
 	while(flg == 0){
 		system("CLS");
-		printf("Quiere anyadir otro usuario? (1/0)\n");
+		printf("Quiere eliminar otro usuario? (1/0)\n");
 		fgets(buffer,2,stdin);
 		sscanf(buffer, "%d", &res);
 		if(res == 1 || res == 0)
 			flg++;
 		else{
-			printf("[Creacion de Usuario]\n\nFuncion Finalizada\nPulse cualquier tecla para continuar\n");
+			printf("[Eliminacion de Usuario]\n\nFuncion Finalizada\nPulse cualquier tecla para continuar\n");
 			getch();
 		}
 	}
@@ -351,6 +351,7 @@ void anyadirUsuario(sqlite3 *db,  Usuario usuario){
 	}else{
 		printf("Usuario %s introducido\n", usuario.email);
 	}
+	free(query);
 	sqlite3_finalize(stmt);
 }
 void grantAdmin(sqlite3 *db, char* email){
@@ -415,16 +416,34 @@ int exists(sqlite3 *db, char* email){
 	return ret;
 }
 
+int exists2(sqlite3 *db, int id){
+	int result;
+	int ret;
+	sqlite3_stmt *stmt;
+	char* geid = "select id from Usuario where id=?";
+	sqlite3_prepare_v2(db, geid, strlen(geid), &stmt, NULL);
+	sqlite3_bind_int(stmt, 1, id);
+	result = sqlite3_step(stmt);
+	if(result == SQLITE_ROW){
+		ret = 1;
+	}else{
+		ret = 0;
+	}
+	sqlite3_finalize(stmt);
+	return ret;
+}
+
 int passCheck(sqlite3 *db, char* email, char* contrasenya){
 	int result;
 	int ret;
+	char* qCon = malloc(sizeof(char)*30);
 	sqlite3_stmt *stmt;
 	char* geid = "select contrasenya from Usuario where mail=?";
 	sqlite3_prepare_v2(db, geid, strlen(geid), &stmt, NULL);
 	sqlite3_bind_text(stmt, 1, email, strlen(email), SQLITE_STATIC);
 	result = sqlite3_step(stmt);
 	if(result == SQLITE_ROW){
-		char* qCon = sqlite3_column_text(stmt, 0);
+		  strcpy(qCon,sqlite3_column_text(stmt, 0));
 		if(strcmp(qCon,contrasenya) == 0)
 			ret = 1;
 		else
@@ -432,6 +451,7 @@ int passCheck(sqlite3 *db, char* email, char* contrasenya){
 	}else{
 		ret = 0;
 	}
+	free(qCon);
 	sqlite3_finalize(stmt);
 	return ret;
 }
