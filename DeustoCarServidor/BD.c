@@ -64,7 +64,7 @@ int insertUsuario(sqlite3 *db, char nombre[], char email[], char contrasenya[], 
 int insertCoche(sqlite3 *db, char marca[], char modelo[]) {
 	sqlite3_stmt *stmt;
 
-	char sql[] = "insert into coche (id, marca, modelo values (NULL, ?, ?)";
+	char sql[] = "insert into coche (id, marca, modelo values) (NULL, ?, ?)";
 	int result = sqlite3_prepare_v2(db, sql, strlen(sql) + 1, &stmt, NULL) ;
 	if (result != SQLITE_OK) {
 		printf("Error preparing statement (INSERT)\n");
@@ -152,7 +152,7 @@ Usuario getUsuario(sqlite3 *db, char codigo[50]) {
 	sqlite3_stmt *stmt;
 	Usuario u;
 
-	char sql[] = "select id, nombre, email, contrasenya, saldoo from usuario";
+	char sql[] = "select id, nombre, email, contrasenya, saldo from usuario";
 
 	int result = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
 	if (result != SQLITE_OK) {
@@ -162,7 +162,7 @@ Usuario getUsuario(sqlite3 *db, char codigo[50]) {
 
 	printf("SQL query prepared (SELECT)\n");
 
-	//Los atributos de Usuario que se recibirán
+	//Los atributos de Usuario que se recibirï¿½n
 	char cUsuario[100];
 	char email[100];
 	char dni[100];
@@ -187,7 +187,7 @@ Usuario getUsuario(sqlite3 *db, char codigo[50]) {
 					strcpy(u.nombre, nombre);
 					strcpy(u.email, email);
 					strcpy(u.contrasenya, password);
-					u.saldo = (int) saldo;
+					u.saldo = atoi(saldo);
 				}
 			}
 		} while (result == SQLITE_ROW);
@@ -220,7 +220,7 @@ Coche getCoche(sqlite3 *db, char codigo[50]) {
 
 	printf("SQL query prepared (SELECT)\n");
 
-	//Los atributos de Coche que se recibirán
+	//Los atributos de Coche que se recibirï¿½n
 	char id[100];
 	char marca[100];
 	char modelo[100];
@@ -293,7 +293,7 @@ int imprimirUsuarios(sqlite3 *db) {
 			strcpy(email, (char *) sqlite3_column_text(stmt, 2));
 			strcpy(contrasenya, (char *) sqlite3_column_text(stmt, 3));
 			saldo = sqlite3_column_int(stmt, 4);
-			printf("ID: %i NOMBRE: %s EMAIL: %s CONTRASENYA: %s SALDO: %f\n", id, nombre, email, contrasenya, saldo);
+			printf("ID: %i NOMBRE: %s EMAIL: %s CONTRASENYA: %s SALDO: %d\n", id, nombre, email, contrasenya, saldo);
 		}
 	} while (result == SQLITE_ROW);
 
@@ -506,7 +506,7 @@ int isAdmin(sqlite3 *db, Admin admin) {
 
 	printf("SQL query prepared (SELECT)\n");
 
-	//Los atributos de Admin que se recibirán
+	//Los atributos de Admin que se recibirï¿½n
 	char nombre[100];
 	char contrasenya[100];
 
