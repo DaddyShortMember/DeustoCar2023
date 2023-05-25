@@ -74,7 +74,6 @@ namespace ven
 		cout << "Id del vendedor: " << v.getIdVendedor() << endl;
 		cout << "Id del coche: " << v.getIdCoche() << endl;
 	};
-
 }
 
 
