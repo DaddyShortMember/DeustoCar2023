@@ -491,11 +491,10 @@ int deleteAllCoches(sqlite3 *db) {
 
 	return SQLITE_OK;
 }
-/*
 int isAdmin(sqlite3 *db, Admin admin) {
 	sqlite3_stmt *stmt;
 
-	char sql[] = "select id, nombre, contrasenya from admin";
+	char sql[] = "select cAdmin, nUsuario, password from admin";
 
 	int result = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
 	if (result != SQLITE_OK) {
@@ -503,18 +502,16 @@ int isAdmin(sqlite3 *db, Admin admin) {
 		printf("%s\n", sqlite3_errmsg(db));
 	}
 
-	printf("SQL query prepared (SELECT)\n");
-
-	//Los atributos de Admin que se recibir�n
-	char nombre[100];
-	char contrasenya[100];
+	//Los atributos de Admin que se recibirán
+	char nUsuario[500];
+	char password[500];
 
 	do {
 		result = sqlite3_step(stmt) ;
 		if (result == SQLITE_ROW) {
-			strcpy(nombre, (char *) sqlite3_column_text(stmt, 1));
-			strcpy(contrasenya, (char *) sqlite3_column_text(stmt, 2));
-			if (!strcmp(admin.nombre, nombre) && !strcmp(admin.contrasenya, contrasenya)) {
+			strcpy(nUsuario, (char *) sqlite3_column_text(stmt, 1));
+			strcpy(password, (char *) sqlite3_column_text(stmt, 2));
+			if (!strcmp(admin.nUsuario, nUsuario) && !strcmp(admin.password, password)) {
 				//1 = Es admin
 				return 1;
 			}
@@ -530,8 +527,5 @@ int isAdmin(sqlite3 *db, Admin admin) {
 		printf("%s\n", sqlite3_errmsg(db));
 	}
 
-	printf("Prepared statement finalized (SELECT)\n");
-
 	return 0;
 }
-*/
