@@ -86,7 +86,7 @@ void menuRegistrarse(SOCKET s)
 	send(s, sendBuff, sizeof(sendBuff), 0);
 	strcpy(sendBuff, u.getContrasenya().c_str());
 	send(s, sendBuff, sizeof(sendBuff), 0);
-	//NO SE SI ESTÁ BIEN LA SIGUIENTE LINEA
+	//NO SE SI ESTï¿½ BIEN LA SIGUIENTE LINEA
 	sprintf(sendBuff, "%d", u.getSaldo());
 	send(s, sendBuff, sizeof(sendBuff), 0);
 	strcpy(sendBuff, "ANYADIRUSUARIO-END");
@@ -117,7 +117,7 @@ void menuComprarCoche(SOCKET s, int idUsuario)
 			recv(s, recvBuff, sizeof(recvBuff), 0);
 			v.setPrecio(atoi(recvBuff));
 			recv(s, recvBuff, sizeof(recvBuff), 0);
-			//NO SE SI ESTÁ BIEN LA SIGUIENTE LINEA
+			//NO SE SI ESTï¿½ BIEN LA SIGUIENTE LINEA
 			v.setFechaVenta(recvBuff);
 			recv(s, recvBuff, sizeof(recvBuff), 0);
 			v.setIdVendedor(atoi(recvBuff));
@@ -145,10 +145,10 @@ void menuComprarCoche(SOCKET s, int idUsuario)
 		if (strcmp(recvBuff, "FINBUCLE")) {
 			c.setId(atoi(recvBuff));
 			recv(s, recvBuff, sizeof(recvBuff), 0);
-			//NO SE SI ESTÁ BIEN LA SIGUIENTE LINEA
+			//NO SE SI ESTï¿½ BIEN LA SIGUIENTE LINEA
 			c.setMarca(recvBuff);
 			recv(s, recvBuff, sizeof(recvBuff), 0);
-			//NO SE SI ESTÁ BIEN LA SIGUIENTE LINEA
+			//NO SE SI ESTï¿½ BIEN LA SIGUIENTE LINEA
 			c.setModelo(recvBuff);
 
 			i = 0;
@@ -197,15 +197,46 @@ void menuComprarCoche(SOCKET s, int idUsuario)
 						break;
 					} else {
 						correcto = 0;
-						//AQUI HACER EL DELETE DE LA VENTA Y EL PASO A COMPRA, REALIZAR TAMBIEN LA RESTA DEL SALDO
-						//
-						//
-						//
-						//
-						//
-						//
-						//
-						cout << "Compra realizada con exito.\n" << endl;
+						// BÃºsqueda de la venta seleccionada
+						    int ventaSeleccionada = std::stoi(idSeleccionado);
+						    bool ventaEncontrada = false;
+
+						    for (int i = 0; i < tamanyoVentas; i++) {
+						        if (ventas[i].getId() == ventaSeleccionada) {
+						            ventaEncontrada = true;
+
+						            // Realizar la compra
+
+						            // Restar el saldo
+						            Usuario usuario(idUsuario, "", "", "", 0);
+						                       int precioVenta = ventas[ventaSeleccionada].getPrecio();
+						                       if (usuario.getSaldo() >= precioVenta) {
+						                           usuario.setSaldo(usuario.getSaldo() - precioVenta);
+						                           // AquÃ­ puedes realizar las operaciones necesarias para actualizar el saldo del usuario en la base de datos o donde corresponda
+						                           cout << "Compra realizada con Ã©xito." << endl;
+						                       } else {
+						                           cout << "No tienes suficiente saldo para realizar la compra." << endl;
+						                       }
+						            // Eliminar la venta
+
+
+						            for (int j = i; j < tamanyoVentas - 1; j++) {
+						                ventas[j] = ventas[j + 1];
+						            }
+
+						            tamanyoVentas--;
+
+						            cout << "Compra realizada con Ã©xito.\n" << endl;
+
+						            break;
+						        }
+						    }
+
+						    if (!ventaEncontrada) {
+						        cout << "El id de venta seleccionado no es vÃ¡lido.\n" << endl;
+						    }
+
+
 					}
 				}
 				break;
@@ -255,7 +286,7 @@ void menuVenderCoche(SOCKET s, int idUsuario)
 	cout << "\n";
 
 	cout << "La venta seleccionada dispone de " << ", " << endl;
-	cout << "¿Está seguro? S/N" << endl;
+	cout << "ï¿½Estï¿½ seguro? S/N" << endl;
 	char yesNo;
 	cin >> yesNo;
 	if (yesNo == "S" || yesNo == "s") {
@@ -292,7 +323,7 @@ void menuSusCochesEnVenta(SOCKET s, int idUsuario)
 			recv(s, recvBuff, sizeof(recvBuff), 0);
 			v.setPrecio(atoi(recvBuff));
 			recv(s, recvBuff, sizeof(recvBuff), 0);
-			//NO SE SI ESTÁ BIEN LA SIGUIENTE LINEA
+			//NO SE SI ESTï¿½ BIEN LA SIGUIENTE LINEA
 			v.setFechaVenta(recvBuff);
 			recv(s, recvBuff, sizeof(recvBuff), 0);
 			v.setIdVendedor(atoi(recvBuff));
@@ -320,10 +351,10 @@ void menuSusCochesEnVenta(SOCKET s, int idUsuario)
 		if (strcmp(recvBuff, "FINBUCLE")) {
 			c.setId(atoi(recvBuff));
 			recv(s, recvBuff, sizeof(recvBuff), 0);
-			//NO SE SI ESTÁ BIEN LA SIGUIENTE LINEA
+			//NO SE SI ESTï¿½ BIEN LA SIGUIENTE LINEA
 			c.setMarca(recvBuff);
 			recv(s, recvBuff, sizeof(recvBuff), 0);
-			//NO SE SI ESTÁ BIEN LA SIGUIENTE LINEA
+			//NO SE SI ESTï¿½ BIEN LA SIGUIENTE LINEA
 			c.setModelo(recvBuff);
 
 			i = 0;
