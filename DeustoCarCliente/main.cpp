@@ -8,6 +8,8 @@
 #include "venta.h"
 #include "compra.h"
 #include <winsock2.h>
+#include <chrono>
+#include <ctime>
 
 #define SERVER_IP "127.0.0.1"
 #define SERVER_PORT 6000
@@ -246,15 +248,14 @@ void menuComprarCoche(SOCKET s, int idUsuario)
 
 void menuVenderCoche(SOCKET s, int idUsuario)
 {
-	/*
-	int seleccion = 1, tamanyo = 0;
-	cout << "Coches a la venta:\n" << endl;
+
+	int tamanyo = 0;
 
 	char sendBuff[512], recvBuff[512];
-	Venta *ventas = (Venta*)malloc(sizeof(Venta) * 50);
-	strcpy(sendBuff, "GETVENTAS");
+	Coche *coches = (Coche*)malloc(sizeof(Coche) * 50);
+	strcpy(sendBuff, "GETCOCHES");
 	send(s, sendBuff, sizeof(sendBuff), 0);
-	strcpy(sendBuff, "GETVENTAS-END");
+	strcpy(sendBuff, "GETCOCHES-END");
 	send(s, sendBuff, sizeof(sendBuff), 0);// RECEIVING response from the server
 
 	// RECEIVING response from the server
@@ -263,42 +264,166 @@ void menuVenderCoche(SOCKET s, int idUsuario)
 		recv(s, recvBuff, sizeof(recvBuff), 0);
 
 		if (strcmp(recvBuff, "FINBUCLE")) {
-			ventas[i].setId(atoi(recvBuff));
-			recv(s, recvBuff, sizeof(recvBuff), 0);
-			ventas[i].setPrecio(atoi(recvBuff));
+			coches[i].setId(atoi(recvBuff));
 			recv(s, recvBuff, sizeof(recvBuff), 0);
 			string s1 = recvBuff;
-			ventas[i].setFechaVenta(s1);
+			coches[i].setMarca(s1);
 			recv(s, recvBuff, sizeof(recvBuff), 0);
-			ventas[i].setIdVendedor(atoi(recvBuff));
-			recv(s, recvBuff, sizeof(recvBuff), 0);
-			ventas[i].setIdCoche(atoi(recvBuff));
+			string s2 = recvBuff;
+			coches[i].setModelo(s2);
 		} else {
 			tamanyo = i;
 			i = 50;
 		}
 	}
 
-	//ventas[0].Venta::imprimirVentas(ventas, tamanyo);
+	string seleccionMarca;
+	string seleccionModelo;
 
-	cout << "Introduce el numero de venta que quieras comprar." << endl;
-	cin >> seleccion;
+	cout << "Introduce la marca del coche que quieres vender." << endl;
+	cin >> seleccionMarca;
 	cout << "\n";
 
-	cout << "La venta seleccionada dispone de " << ", " << endl;
-	cout << "ï¿½Estï¿½ seguro? S/N" << endl;
-	char yesNo;
-	cin >> yesNo;
-	if (yesNo == "S" || yesNo == "s") {
-
-	}
-	if (yesNo == "N" || yesNo == "n") {
-
-	}
+	cout << "Introduce el modelo del coche que quieres vender." << endl;
+	cin >> seleccionModelo;
 	cout << "\n";
 
-	cout << "Compra realizada con exito!\n" << endl;
+	Coche nuevoCoche;
+	nuevoCoche.setId(tamanyo+1);
+	nuevoCoche.setMarca(seleccionMarca);
+	nuevoCoche.setModelo(seleccionModelo);
+
+	char chars1[8], chars2[8], chars3[8];
+	sprintf(chars1, "%d", nuevoCoche.getId());
+	sprintf(chars2, "%d", nuevoCoche.getMarca);
+	sprintf(chars3, "%d", nuevoCoche.getModelo());
+
+	// SENDING command ANYADIRCOCHE and parameters to the server
+	strcpy(sendBuff, "ANYADIRCOCHE");
+	send(s, sendBuff, sizeof(sendBuff), 0);
+	strcpy(sendBuff, chars1);
+	send(s, sendBuff, sizeof(sendBuff), 0);
+	strcpy(sendBuff, chars2);
+	send(s, sendBuff, sizeof(sendBuff), 0);
+	strcpy(sendBuff, chars3);
+	send(s, sendBuff, sizeof(sendBuff), 0);
+	strcpy(sendBuff, "ANYADIRCOCHE-END");
+	send(s, sendBuff, sizeof(sendBuff), 0);
+
+	cout << "Coche anyadido\n" << endl;
+
+	/*
+	int id;
+	int precio;
+	string fechaVenta;
+	int idVendedor;
+	int idCoche;
 	*/
+
+	string seleccionPrecio;
+
+	cout << "Introduce el precio al que quieres vender el coche." << endl;
+	cin >> seleccionPrecio;
+	cout << "\n";
+	//Comprueba que seleccionPrecio sea un numero, 1 error, 0 correcto.
+	int correcto = 1;
+	for (int i = 0; i < -1; ++i) {
+		if (correcto == 1) {
+			getline(cin, seleccionPrecio);
+				for (char caracter : seleccionPrecio) {
+					if (!std::isdigit(caracter)) {
+						correcto = 1;
+						cout << "Error. Introduce el precio al que quieres vender el coche." << endl;
+						cin >> seleccionPrecio;
+						cout << "\n";
+						break;
+					} else {
+
+						correcto = 0;
+
+						char sendBuff[512], recvBuff[512];
+						Venta *ventas = (Venta*)malloc(sizeof(Venta) * 50);
+						Venta v;
+
+						strcpy(sendBuff, "GETVENTAS");
+						send(s, sendBuff, sizeof(sendBuff), 0);
+						strcpy(sendBuff, "GETVENTAS-END");
+						send(s, sendBuff, sizeof(sendBuff), 0);
+
+						// RECEIVING response from the server
+						int i = 0, tamanyoVentas = 0;
+						for (i = 0; i < 50; i++) {
+							recv(s, recvBuff, sizeof(recvBuff), 0);
+
+							if (strcmp(recvBuff, "FINBUCLE")) {
+								v.setId(atoi(recvBuff));
+								recv(s, recvBuff, sizeof(recvBuff), 0);
+								v.setPrecio(atoi(recvBuff));
+								recv(s, recvBuff, sizeof(recvBuff), 0);
+								//NO SE SI ESTÁ BIEN LA SIGUIENTE LINEA
+								v.setFechaVenta(recvBuff);
+								recv(s, recvBuff, sizeof(recvBuff), 0);
+								v.setIdVendedor(atoi(recvBuff));
+								recv(s, recvBuff, sizeof(recvBuff), 0);
+								v.setIdCoche(atoi(recvBuff));
+							} else {
+								tamanyoVentas = i;
+								i = 50;
+							}
+						}
+
+						Venta nuevaVenta;
+						int precio = std::stoi(seleccionPrecio);
+
+						nuevaVenta.setId(tamanyoVentas+1);
+						nuevaVenta.setPrecio(precio);
+					    // Obtener el tiempo actual
+					    std::chrono::system_clock::time_point ahora = std::chrono::system_clock::now();
+
+					    // Convertirlo a un formato de tiempo legible
+					    std::time_t tiempo_actual = std::chrono::system_clock::to_time_t(ahora);
+
+					    // Obtener la estructura de fecha y hora local
+					    std::tm* fecha_actual = std::localtime(&tiempo_actual);
+
+						int dia = fecha_actual->tm_mday;
+						int mes = fecha_actual->tm_mon + 1;
+						int anyo = fecha_actual->tm_year + 1900;
+
+						// Imprimir la fecha actual
+						string fecha = "Fecha actual: " + dia + "/" + mes + "/" + anyo;
+						nuevaVenta.setFechaVenta(fecha);
+						nuevaVenta.setIdVendedor(idUsuario);
+						nuevaVenta.setIdCoche(nuevoCoche.getId());
+
+						char chars1[8], chars2[8], chars3[8], chars4[8], chars5[8];
+						sprintf(chars1, "%d", nuevaVenta.getId());
+						sprintf(chars2, "%d", nuevaVenta.getPrecio());
+						sprintf(chars3, "%d", nuevaVenta.getFechaVenta());
+						sprintf(chars4, "%d", nuevaVenta.getIdVendedor());
+						sprintf(chars5, "%d", nuevaVenta.getIdCoche());
+
+						// SENDING command ANYADIRVENTA and parameters to the server
+						strcpy(sendBuff, "ANYADIRVENTA");
+						send(s, sendBuff, sizeof(sendBuff), 0);
+						strcpy(sendBuff, chars1);
+						send(s, sendBuff, sizeof(sendBuff), 0);
+						strcpy(sendBuff, chars2);
+						send(s, sendBuff, sizeof(sendBuff), 0);
+						strcpy(sendBuff, chars3);
+						send(s, sendBuff, sizeof(sendBuff), 0);
+						strcpy(sendBuff, chars4);
+						send(s, sendBuff, sizeof(sendBuff), 0);
+						strcpy(sendBuff, chars5);
+						send(s, sendBuff, sizeof(sendBuff), 0);
+						strcpy(sendBuff, "ANYADIRVENTA-END");
+						send(s, sendBuff, sizeof(sendBuff), 0);
+
+						cout << "Anuncio de venta realizado con exito.\n" << endl;
+					}
+				}
+		}
+	}
 }
 
 void menuSusCochesEnVenta(SOCKET s, int idUsuario)
