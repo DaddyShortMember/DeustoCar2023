@@ -99,152 +99,93 @@ void menuRegistrarse(SOCKET s)
 
 void menuComprarCoche(SOCKET s, int idUsuario)
 {
-	char sendBuff[512], recvBuff[512];
-	Venta *ventas = (Venta*)malloc(sizeof(Venta) * 50);
-	Venta v;
-	Coche *coches = (Coche*)malloc(sizeof(Coche) * 50);
-	Coche c;
-	strcpy(sendBuff, "GETVENTAS");
-	send(s, sendBuff, sizeof(sendBuff), 0);
-	strcpy(sendBuff, "GETVENTAS-END");
-	send(s, sendBuff, sizeof(sendBuff), 0);
+    int tamanyo = 0;
 
-	// RECEIVING response from the server
-	int i = 0, tamanyoVentas = 0;
-	for (i = 0; i < 50; i++) {
-		recv(s, recvBuff, sizeof(recvBuff), 0);
+    char sendBuff[512], recvBuff[512];
+    Coche *coches = (Coche*)malloc(sizeof(Coche) * 50);
+    strcpy(sendBuff, "GETCOCHES");
+    send(s, sendBuff, sizeof(sendBuff), 0);
+    strcpy(sendBuff, "GETCOCHES-END");
+    send(s, sendBuff, sizeof(sendBuff), 0);
 
-		if (strcmp(recvBuff, "FINBUCLE")) {
-			v.setId(atoi(recvBuff));
-			recv(s, recvBuff, sizeof(recvBuff), 0);
-			v.setPrecio(atoi(recvBuff));
-			recv(s, recvBuff, sizeof(recvBuff), 0);
-			//NO SE SI EST� BIEN LA SIGUIENTE LINEA
-			v.setFechaVenta(recvBuff);
-			recv(s, recvBuff, sizeof(recvBuff), 0);
-			v.setIdVendedor(atoi(recvBuff));
-			recv(s, recvBuff, sizeof(recvBuff), 0);
-			v.setIdCoche(atoi(recvBuff));
-			if (v.getId() == idUsuario) {
-				ventas[tamanyoVentas] = v;
-				tamanyoVentas++;
-			}
-		} else {
-			i = 50;
-		}
-	}
+    int i = 0;
+    for (i = 0; i < 50; i++) {
+        recv(s, recvBuff, sizeof(recvBuff), 0);
 
-	strcpy(sendBuff, "GETCOCHES");
-	send(s, sendBuff, sizeof(sendBuff), 0);
-	strcpy(sendBuff, "GETCOCHES-END");
-	send(s, sendBuff, sizeof(sendBuff), 0);
+        if (strcmp(recvBuff, "FINBUCLE")) {
+            coches[i].setId(atoi(recvBuff));
+            recv(s, recvBuff, sizeof(recvBuff), 0);
+            string s1 = recvBuff;
+            coches[i].setMarca(s1);
+            recv(s, recvBuff, sizeof(recvBuff), 0);
+            string s2 = recvBuff;
+            coches[i].setModelo(s2);
+        } else {
+            tamanyo = i;
+            i = 50;
+        }
+    }
 
-	// RECEIVING response from the server
-	int j = 0, tamanyoCoches = 0;
-	for (j = 0; j < 50; j++) {
-		recv(s, recvBuff, sizeof(recvBuff), 0);
+    cout << "Lista de coches disponibles:" << endl;
+    for (int j = 0; j < tamanyo; j++) {
+        cout << "ID: " << coches[j].getId() << ", Marca: " << coches[j].getMarca() << ", Modelo: " << coches[j].getModelo() << endl;
+    }
+    cout << endl;
 
-		if (strcmp(recvBuff, "FINBUCLE")) {
-			c.setId(atoi(recvBuff));
-			recv(s, recvBuff, sizeof(recvBuff), 0);
-			//NO SE SI EST� BIEN LA SIGUIENTE LINEA
-			c.setMarca(recvBuff);
-			recv(s, recvBuff, sizeof(recvBuff), 0);
-			//NO SE SI EST� BIEN LA SIGUIENTE LINEA
-			c.setModelo(recvBuff);
+    int seleccionId;
 
-			i = 0;
-			for (i = 0; i < tamanyoCoches; i++) {
-				coches[tamanyoCoches] = c;
-				tamanyoCoches++;
-			}
+    cout << "Introduce el ID del coche que quieres comprar." << endl;
+    cin >> seleccionId;
+    cout << endl;
 
-		} else {
-			j = 50;
-		}
-	}
+    bool cocheEncontrado = false;
+    for (int j = 0; j < tamanyo; j++) {
+        if (coches[j].getId() == seleccionId) {
+            cocheEncontrado = true;
+            break;
+        }
+    }
 
-	cout << "COCHES EN VENTA:\n" << endl;
+    if (cocheEncontrado) {
+        Compra nuevaCompra;
 
-	i = 0, j = 0;
-	for (i = 0; i < tamanyoVentas; i++) {
+        nuevaCompra.setId(tamanyo + 1);
+        nuevaCompra.setPrecio(0);  // Puedes ajustar el precio según tus necesidades
+        // Obtener la fecha actual
+        time_t tiempoActual = time(nullptr);
+        tm* fechaActual = localtime(&tiempoActual);
+        string fecha = to_string(fechaActual->tm_mday) + "/" + to_string(fechaActual->tm_mon + 1) + "/" + to_string(fechaActual->tm_year + 1900);
+        nuevaCompra.setFechaCompra(fecha);
+        nuevaCompra.setIdComprador(idUsuario);
+        nuevaCompra.setIdVendedor(coches[seleccionId - 1].getId());  // ID del vendedor del coche seleccionado
+        nuevaCompra.setIdCoche(seleccionId);
 
-		cout << "Id de venta: " << ventas[i].getId() << endl;
-		cout << "Precio de venta: " << ventas[i].getPrecio() << " euros\n" << endl;
-		cout << "Fecha de venta: " << ventas[i].getFechaVenta() << endl;
-		cout << "Id del vendedor: " << ventas[i].getIdVendedor() << endl;
-		cout << "Id del coche: " << ventas[i].getIdCoche() << endl;
+        char chars1[8], chars2[8], chars3[11], chars4[8], chars5[8];
+        sprintf(chars1, "%d", nuevaCompra.getId());
+        sprintf(chars2, "%d", nuevaCompra.getPrecio());
+        strcpy(chars3, nuevaCompra.getFechaCompra().c_str());
+        sprintf(chars4, "%d", nuevaCompra.getIdComprador());
+        sprintf(chars5, "%d", nuevaCompra.getIdVendedor());
 
-		for (j = 0; j < tamanyoCoches; j++) {
-			if (coches[j].getId() == ventas[i].getIdCoche()) {
-				cout << "Marca: " << coches[j].getMarca() << endl;
-				cout << "Modelo: " << coches[j].getModelo() << endl;
-			}
-		}
-	}
+        strcpy(sendBuff, "ANYADIRCOMPRA");
+        send(s, sendBuff, sizeof(sendBuff), 0);
+        strcpy(sendBuff, chars1);
+        send(s, sendBuff, sizeof(sendBuff), 0);
+        strcpy(sendBuff, chars2);
+        send(s, sendBuff, sizeof(sendBuff), 0);
+        strcpy(sendBuff, chars3);
+        send(s, sendBuff, sizeof(sendBuff), 0);
+        strcpy(sendBuff, chars4);
+        send(s, sendBuff, sizeof(sendBuff), 0);
+        strcpy(sendBuff, chars5);
+        send(s, sendBuff, sizeof(sendBuff), 0);
+        strcpy(sendBuff, "ANYADIRCOMPRA-END");
+        send(s, sendBuff, sizeof(sendBuff), 0);
 
-	string idSeleccionado;
-	cout << "Introduce el id de venta que desees para realizar la comprar o cualquier caracter para salir." << endl;
-	cin >> idSeleccionado;
-	cout << "\n";
-	//Comprueba que idSelecionado sea un numero, 1 salir, 0 comprar.
-	int correcto = 1;
-	for (int i = 0; i < -1; ++i) {
-		if (correcto == 1) {
-			getline(cin, idSeleccionado);
-				for (char caracter : idSeleccionado) {
-					if (!std::isdigit(caracter)) {
-						//MEJOR SI SALIESE A MENUDESUTOCAR PERO DA FALLO POR EL ORDEN DE LA DECLARACION DE LOS METODOS. Y NO SE SOLUCIONARLO
-						menuPrincipal();
-						break;
-					} else {
-						correcto = 0;
-						// Búsqueda de la venta seleccionada
-						    int ventaSeleccionada = std::stoi(idSeleccionado);
-						    bool ventaEncontrada = false;
-
-						    for (int i = 0; i < tamanyoVentas; i++) {
-						        if (ventas[i].getId() == ventaSeleccionada) {
-						            ventaEncontrada = true;
-
-						            // Realizar la compra
-
-						            // Restar el saldo
-						            Usuario usuario(idUsuario, "", "", "", 0);
-						                       int precioVenta = ventas[ventaSeleccionada].getPrecio();
-						                       if (usuario.getSaldo() >= precioVenta) {
-						                           usuario.setSaldo(usuario.getSaldo() - precioVenta);
-						                           // Aquí puedes realizar las operaciones necesarias para actualizar el saldo del usuario en la base de datos o donde corresponda
-						                           cout << "Compra realizada con éxito." << endl;
-						                       } else {
-						                           cout << "No tienes suficiente saldo para realizar la compra." << endl;
-						                       }
-						            // Eliminar la venta
-
-
-						            for (int j = i; j < tamanyoVentas - 1; j++) {
-						                ventas[j] = ventas[j + 1];
-						            }
-
-						            tamanyoVentas--;
-
-						            cout << "Compra realizada con éxito.\n" << endl;
-
-						            break;
-						        }
-						    }
-
-						    if (!ventaEncontrada) {
-						        cout << "El id de venta seleccionado no es válido.\n" << endl;
-						    }
-
-
-					}
-				}
-				break;
-		}
-	}
+        cout << "Compra realizada con éxito.\n" << endl;
+    }
 }
+
 
 void menuVenderCoche(SOCKET s, int idUsuario)
 {
@@ -360,7 +301,7 @@ void menuVenderCoche(SOCKET s, int idUsuario)
 								recv(s, recvBuff, sizeof(recvBuff), 0);
 								v.setPrecio(atoi(recvBuff));
 								recv(s, recvBuff, sizeof(recvBuff), 0);
-								//NO SE SI EST� BIEN LA SIGUIENTE LINEA
+								//NO SE SI EST� BIEN LA SIGUIENTE LINEA
 								v.setFechaVenta(recvBuff);
 								recv(s, recvBuff, sizeof(recvBuff), 0);
 								v.setIdVendedor(atoi(recvBuff));
