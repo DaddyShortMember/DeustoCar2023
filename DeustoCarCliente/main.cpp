@@ -350,7 +350,6 @@ void menuComprarCoche(SOCKET s, int idUsuario)
 		strcpy(sendBuff, chars);
 		send(s, sendBuff, sizeof(sendBuff), 0);
 
-
 	}
 
 	cout << "Compra realizada con exito.\n" << endl;
