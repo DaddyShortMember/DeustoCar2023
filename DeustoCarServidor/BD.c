@@ -63,7 +63,7 @@ int insertUsuario(sqlite3 *db, char nombre[], char email[], char contrasenya[], 
 int insertCoche(sqlite3 *db, char marca[], char modelo[]) {
 	sqlite3_stmt *stmt;
 
-	char sql[] = "insert into coche (id, marca, modelo values) (NULL, ?, ?)";
+	char sql[] = "insert into coche (id, marca, modelo) values (NULL, ?, ?)";
 	int result = sqlite3_prepare_v2(db, sql, strlen(sql) + 1, &stmt, NULL) ;
 	if (result != SQLITE_OK) {
 		printf("Error preparing statement (INSERT)\n");

@@ -13,7 +13,7 @@
 
 
 
-Admin readConfigFile();
+Admin leerFichero();
 
 
 
