@@ -299,6 +299,7 @@ void imprimirCompras(sqlite3 *db){
 	char* qFec;
 	int qIdUC;
 	int qIdUV;
+	int qIdV;
 	int qIdC;
 	int qPre;
 	int qId;
@@ -317,11 +318,12 @@ void imprimirCompras(sqlite3 *db){
 		if(result == SQLITE_ROW){
 			qId = sqlite3_column_int(stmt, 0);
 			qIdUC = sqlite3_column_int(stmt, 4);
-			qIdUC = sqlite3_column_int(stmt, 4);
-			qIdC = sqlite3_column_int(stmt, 3);
+			qIdUV = sqlite3_column_int(stmt, 5);
+			qIdV = sqlite3_column_int(stmt, 3);
+			qIdC = sqlite3_column_int(stmt, 6);
 			qPre = sqlite3_column_int(stmt, 1);
 			strcpy(qFec,sqlite3_column_text(stmt, 2));
-			fprintf(f, "[ID] %d [ID Comprador] %d [ID Vendedor] %d [ID Coche] %d [Precio] %d [Fecha] %s \n", qId, qIdUC, qIdUV, qIdC, qPre, qFec);
+			fprintf(f, "[ID] %d [ID Comprador] %d [ID Vendedor] %d [ID Venta] %d [ID Coche] %d [Precio] %d [Fecha] %s \n", qId, qIdUC, qIdUV, qIdV, qIdC, qPre, qFec);
 		}
 		free(qFec);
 		free(query2);
