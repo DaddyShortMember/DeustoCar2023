@@ -115,6 +115,14 @@ int main(void)
 									strcpy(coche3.marca, "audi");
 									strcpy(coche3.modelo, "tt");
 
+									Coche coche4;
+
+									coche4.id = codigoCochePorDefecto;
+									strcpy(coche4.marca, "bmw");
+									strcpy(coche4.modelo, "e46");
+
+
+
 
 
 									eliminarUsuarios(db, result);
