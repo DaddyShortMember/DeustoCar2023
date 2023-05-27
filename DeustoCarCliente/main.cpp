@@ -99,91 +99,260 @@ void menuRegistrarse(SOCKET s)
 
 void menuComprarCoche(SOCKET s, int idUsuario)
 {
-    int tamanyo = 0;
+	char sendBuff[512], recvBuff[512];
+	Venta *ventas = (Venta*)malloc(sizeof(Venta) * 50);
+	Venta v;
+	Coche *coches = (Coche*)malloc(sizeof(Coche) * 50);
+	Coche c;
+	strcpy(sendBuff, "GETVENTAS");
+	send(s, sendBuff, sizeof(sendBuff), 0);
+	strcpy(sendBuff, "GETVENTAS-END");
+	send(s, sendBuff, sizeof(sendBuff), 0);
 
-    char sendBuff[512], recvBuff[512];
-    Coche *coches = (Coche*)malloc(sizeof(Coche) * 50);
-    strcpy(sendBuff, "GETCOCHES");
-    send(s, sendBuff, sizeof(sendBuff), 0);
-    strcpy(sendBuff, "GETCOCHES-END");
-    send(s, sendBuff, sizeof(sendBuff), 0);
+	// RECEIVING response from the server
+	int i = 0, tamanyoVentas = 0;
+	for (i = 0; i < 50; i++) {
+		recv(s, recvBuff, sizeof(recvBuff), 0);
 
-    int i = 0;
-    for (i = 0; i < 50; i++) {
-        recv(s, recvBuff, sizeof(recvBuff), 0);
+		if (strcmp(recvBuff, "FINBUCLE")) {
+			v.setId(atoi(recvBuff));
+			recv(s, recvBuff, sizeof(recvBuff), 0);
+			v.setPrecio(atoi(recvBuff));
+			recv(s, recvBuff, sizeof(recvBuff), 0);
+			//NO SE SI ESTÁ BIEN LA SIGUIENTE LINEA
+			v.setFechaVenta(recvBuff);
+			recv(s, recvBuff, sizeof(recvBuff), 0);
+			v.setIdVendedor(atoi(recvBuff));
+			recv(s, recvBuff, sizeof(recvBuff), 0);
+			v.setIdCoche(atoi(recvBuff));
+			if (v.getId() == idUsuario) {
+				ventas[tamanyoVentas] = v;
+				tamanyoVentas++;
+			}
+		} else {
+			i = 50;
+		}
+	}
 
-        if (strcmp(recvBuff, "FINBUCLE")) {
-            coches[i].setId(atoi(recvBuff));
-            recv(s, recvBuff, sizeof(recvBuff), 0);
-            string s1 = recvBuff;
-            coches[i].setMarca(s1);
-            recv(s, recvBuff, sizeof(recvBuff), 0);
-            string s2 = recvBuff;
-            coches[i].setModelo(s2);
-        } else {
-            tamanyo = i;
-            i = 50;
-        }
-    }
+	strcpy(sendBuff, "GETCOCHES");
+	send(s, sendBuff, sizeof(sendBuff), 0);
+	strcpy(sendBuff, "GETCOCHES-END");
+	send(s, sendBuff, sizeof(sendBuff), 0);
 
-    cout << "Lista de coches disponibles:" << endl;
-    for (int j = 0; j < tamanyo; j++) {
-        cout << "ID: " << coches[j].getId() << ", Marca: " << coches[j].getMarca() << ", Modelo: " << coches[j].getModelo() << endl;
-    }
-    cout << endl;
+	// RECEIVING response from the server
+	int j = 0, tamanyoCoches = 0;
+	for (j = 0; j < 50; j++) {
+		recv(s, recvBuff, sizeof(recvBuff), 0);
 
-    int seleccionId;
+		if (strcmp(recvBuff, "FINBUCLE")) {
+			c.setId(atoi(recvBuff));
+			recv(s, recvBuff, sizeof(recvBuff), 0);
+			//NO SE SI ESTÁ BIEN LA SIGUIENTE LINEA
+			c.setMarca(recvBuff);
+			recv(s, recvBuff, sizeof(recvBuff), 0);
+			//NO SE SI ESTÁ BIEN LA SIGUIENTE LINEA
+			c.setModelo(recvBuff);
 
-    cout << "Introduce el ID del coche que quieres comprar." << endl;
-    cin >> seleccionId;
-    cout << endl;
+			i = 0;
+			for (i = 0; i < tamanyoCoches; i++) {
+				coches[tamanyoCoches] = c;
+				tamanyoCoches++;
+			}
 
-    bool cocheEncontrado = false;
-    for (int j = 0; j < tamanyo; j++) {
-        if (coches[j].getId() == seleccionId) {
-            cocheEncontrado = true;
-            break;
-        }
-    }
+		} else {
+			j = 50;
+		}
+	}
 
-    if (cocheEncontrado) {
-        Compra nuevaCompra;
+	cout << "COCHES EN VENTA:\n" << endl;
 
-        nuevaCompra.setId(tamanyo + 1);
-        nuevaCompra.setPrecio(0);  // Puedes ajustar el precio segÃºn tus necesidades
-        // Obtener la fecha actual
-        time_t tiempoActual = time(nullptr);
-        tm* fechaActual = localtime(&tiempoActual);
-        string fecha = to_string(fechaActual->tm_mday) + "/" + to_string(fechaActual->tm_mon + 1) + "/" + to_string(fechaActual->tm_year + 1900);
-        nuevaCompra.setFechaCompra(fecha);
-        nuevaCompra.setIdComprador(idUsuario);
-        nuevaCompra.setIdVendedor(coches[seleccionId - 1].getId());  // ID del vendedor del coche seleccionado
-        nuevaCompra.setIdCoche(seleccionId);
+	i = 0, j = 0;
+	for (i = 0; i < tamanyoVentas; i++) {
 
-        char chars1[8], chars2[8], chars3[11], chars4[8], chars5[8];
-        sprintf(chars1, "%d", nuevaCompra.getId());
-        sprintf(chars2, "%d", nuevaCompra.getPrecio());
-        strcpy(chars3, nuevaCompra.getFechaCompra().c_str());
-        sprintf(chars4, "%d", nuevaCompra.getIdComprador());
-        sprintf(chars5, "%d", nuevaCompra.getIdVendedor());
+		cout << "Id de venta: " << ventas[i].getId() << endl;
+		cout << "Precio de venta: " << ventas[i].getPrecio() << " euros\n" << endl;
+		cout << "Fecha de venta: " << ventas[i].getFechaVenta() << endl;
+		cout << "Id del vendedor: " << ventas[i].getIdVendedor() << endl;
+		cout << "Id del coche: " << ventas[i].getIdCoche() << endl;
 
-        strcpy(sendBuff, "ANYADIRCOMPRA");
-        send(s, sendBuff, sizeof(sendBuff), 0);
-        strcpy(sendBuff, chars1);
-        send(s, sendBuff, sizeof(sendBuff), 0);
-        strcpy(sendBuff, chars2);
-        send(s, sendBuff, sizeof(sendBuff), 0);
-        strcpy(sendBuff, chars3);
-        send(s, sendBuff, sizeof(sendBuff), 0);
-        strcpy(sendBuff, chars4);
-        send(s, sendBuff, sizeof(sendBuff), 0);
-        strcpy(sendBuff, chars5);
-        send(s, sendBuff, sizeof(sendBuff), 0);
-        strcpy(sendBuff, "ANYADIRCOMPRA-END");
-        send(s, sendBuff, sizeof(sendBuff), 0);
+		for (j = 0; j < tamanyoCoches; j++) {
+			if (coches[j].getId() == ventas[i].getIdCoche()) {
+				cout << "Marca: " << coches[j].getMarca() << endl;
+				cout << "Modelo: " << coches[j].getModelo() << endl;
+			}
+		}
+	}
 
-        cout << "Compra realizada con Ã©xito.\n" << endl;
-    }
+	string idSeleccionado;
+	cout << "Introduce el id de venta que desees para realizar la comprar o cualquier caracter para salir." << endl;
+	cin >> idSeleccionado;
+	cout << "\n";
+
+	//Comprueba que idSelecionado sea un numero, 1 error, 0 correcto.
+	int correcto = 1;
+	getline(cin, idSeleccionado);
+	for (char caracter : idSeleccionado) {
+		if (!std::isdigit(caracter)) {
+			correcto = 1;
+			//MEJOR SI SALIESE A MENUDESUTOCAR PERO DA FALLO POR EL ORDEN DE LA DECLARACION DE LOS METODOS. Y NO SE SOLUCIONARLO
+			cout << "Error. El id de venta no es correcto." << endl;
+			menuPrincipal();
+			break;
+		} else {
+			correcto = 0;
+		}
+	}
+
+	if (correcto == 0) {
+
+		int tamanyoCompra = 0;
+
+		//char sendBuff[512], recvBuff[512];
+		Compra *compras = (Compra*)malloc(sizeof(Compra) * 50);
+		strcpy(sendBuff, "GETCOMPRAS");
+		send(s, sendBuff, sizeof(sendBuff), 0);
+		strcpy(sendBuff, "GETCOMPRAS-END");
+		send(s, sendBuff, sizeof(sendBuff), 0);// RECEIVING response from the server
+
+		// RECEIVING response from the server
+		int i = 0;
+		for (i = 0; i < 50; i++) {
+			recv(s, recvBuff, sizeof(recvBuff), 0);
+
+			if (strcmp(recvBuff, "FINBUCLE")) {
+				compras[i].setId(atoi(recvBuff));
+				recv(s, recvBuff, sizeof(recvBuff), 0);
+				compras[i].setPrecio(atoi(recvBuff));
+				recv(s, recvBuff, sizeof(recvBuff), 0);
+				string s1 = recvBuff;
+				compras[i].setFechaCompra(s1);
+				recv(s, recvBuff, sizeof(recvBuff), 0);
+				compras[i].setIdComprador(atoi(recvBuff));
+				recv(s, recvBuff, sizeof(recvBuff), 0);
+				compras[i].setIdVendedor(atoi(recvBuff));
+				recv(s, recvBuff, sizeof(recvBuff), 0);
+				compras[i].setIdCoche(atoi(recvBuff));
+			} else {
+				tamanyoCompra = i;
+				i = 50;
+			}
+		}
+
+		Compra nuevoCompra;
+		nuevoCompra.setId(tamanyoCompra+1);
+		for (i = 0; i < tamanyoVentas; i++) {
+			if (ventas[i].getId() == idSeleccionado) {
+				nuevoCompra.setPrecio(ventas[i].getPrecio());
+			    // Obtener el tiempo actual
+			    std::chrono::system_clock::time_point ahora = std::chrono::system_clock::now();
+
+			    // Convertirlo a un formato de tiempo legible
+			    std::time_t tiempo_actual = std::chrono::system_clock::to_time_t(ahora);
+
+			    // Obtener la estructura de fecha y hora local
+			    std::tm* fecha_actual = std::localtime(&tiempo_actual);
+
+				int dia = fecha_actual->tm_mday;
+				int mes = fecha_actual->tm_mon + 1;
+				int anyo = fecha_actual->tm_year + 1900;
+
+				// Imprimir la fecha actual
+				string fecha = "Fecha actual: " + dia + "/" + mes + "/" + anyo;
+				nuevoCompra.setFechaCompra(fecha);
+				nuevoCompra.setIdComprador(idUsuario);
+				nuevoCompra.setIdVendedor(ventas[i].getIdVendedor());
+				nuevoCompra.setIdCoche(ventas[i].getIdCoche());
+			}
+		}
+
+		char chars1[3], chars2[8], chars3[20], chars4[3], chars5[3], chars6[3];
+		sprintf(chars1, "%d", nuevoCompra.getId());
+		sprintf(chars2, "%d", nuevoCompra.getPrecio());
+		sprintf(chars3, "%d", nuevoCompra.getFechaCompra());
+		sprintf(chars4, "%d", nuevoCompra.getIdComprador());
+		sprintf(chars5, "%d", nuevoCompra.getIdVendedor());
+		sprintf(chars6, "%d", nuevoCompra.getIdCoche());
+
+		// SENDING command ANYADIRCOCHE and parameters to the server
+		strcpy(sendBuff, "ANYADIRCOMPRA");
+		send(s, sendBuff, sizeof(sendBuff), 0);
+		strcpy(sendBuff, chars1);
+		send(s, sendBuff, sizeof(sendBuff), 0);
+		strcpy(sendBuff, chars2);
+		send(s, sendBuff, sizeof(sendBuff), 0);
+		strcpy(sendBuff, chars3);
+		send(s, sendBuff, sizeof(sendBuff), 0);
+		strcpy(sendBuff, chars4);
+		send(s, sendBuff, sizeof(sendBuff), 0);
+		strcpy(sendBuff, chars5);
+		send(s, sendBuff, sizeof(sendBuff), 0);
+		strcpy(sendBuff, chars6);
+		send(s, sendBuff, sizeof(sendBuff), 0);
+		strcpy(sendBuff, "ANYADIRCOMPRA-END");
+		send(s, sendBuff, sizeof(sendBuff), 0);
+
+		//char sendBuff[512], recvBuff[512];
+		Usuario *usuarios = (Usuario*)malloc(sizeof(Usuario) * 50);
+		strcpy(sendBuff, "GETUSUARIOS");
+		send(s, sendBuff, sizeof(sendBuff), 0);
+		strcpy(sendBuff, "GETUSUARIOS-END");
+		send(s, sendBuff, sizeof(sendBuff), 0);
+
+		// RECEIVING response from the server
+		int i = 0, tamanyoUsuario = 0;
+		for (i = 0; i < 50; i++) {
+			recv(s, recvBuff, sizeof(recvBuff), 0);
+
+			if (strcmp(recvBuff, "FINBUCLE")) {
+				usuarios[i].setId(atoi(recvBuff));
+				recv(s, recvBuff, sizeof(recvBuff), 0);
+				string s1 = recvBuff;
+				usuarios[i].setNombre(s1);
+				recv(s, recvBuff, sizeof(recvBuff), 0);
+				string s2 = recvBuff;
+				usuarios[i].setEmail(s2);
+				recv(s, recvBuff, sizeof(recvBuff), 0);
+				string s3 = recvBuff;
+				usuarios[i].setContrasenya(s3);
+				recv(s, recvBuff, sizeof(recvBuff), 0);
+				usuarios[i].setSaldo(atoi(recvBuff));
+				if (usuarios[i].getId() == nuevoCompra.getIdComprador()) {
+					j = 0;
+					for (j = 0; j < tamanyoVentas; ++j) {
+						if (ventas[j].getId() == idSeleccionado) {
+							usuarios[i].setSaldo(usuarios[i].getSaldo() + ventas[j].getPrecio());
+						}
+					}
+				}
+
+				if (usuarios[i].getId() == nuevoCompra.getIdVendedor()) {
+					j = 0;
+					for (j = 0; j < tamanyoVentas; ++j) {
+						if (ventas[j].getId() == idSeleccionado) {
+							usuarios[i].setSaldo(usuarios[i].getSaldo() - ventas[j].getPrecio());
+						}
+					}
+				}
+			}
+		}
+
+		strcpy(sendBuff, "DELETEVENTAS");
+		send(s, sendBuff, sizeof(sendBuff), 0);
+		char chars[8];
+		sprintf(chars, "%d", ventas[idSeleccionado + 1].getId());
+		strcpy(sendBuff, chars);
+		send(s, sendBuff, sizeof(sendBuff), 0);
+
+		strcpy(sendBuff, "DELETECOCHES");
+		send(s, sendBuff, sizeof(sendBuff), 0);
+		char chars[8];
+		sprintf(chars, "%d", coches[nuevoCompra.getIdCoche() + 1].getId());
+		strcpy(sendBuff, chars);
+		send(s, sendBuff, sizeof(sendBuff), 0);
+
+	}
+
+	cout << "Compra realizada con exito.\n" << endl;
 }
 
 
@@ -252,14 +421,6 @@ void menuVenderCoche(SOCKET s, int idUsuario)
 	send(s, sendBuff, sizeof(sendBuff), 0);
 
 	cout << "Coche anyadido\n" << endl;
-
-	/*
-	int id;
-	int precio;
-	string fechaVenta;
-	int idVendedor;
-	int idCoche;
-	*/
 
 	string seleccionPrecio;
 
