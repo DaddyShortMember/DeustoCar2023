@@ -6,8 +6,6 @@ int prccrtscr(sqlite3 *db){
 	char* buffer = malloc(sizeof(char)*2);
 	char* idB = malloc(sizeof(char)*10);
 	char* query = malloc(sizeof(char)*128);
-	char* query2 = malloc(sizeof(char)*128);
-	char* query3 = malloc(sizeof(char)*128);
 	int result;
 	int qIdUC;
 	int qIdUV;
@@ -17,17 +15,15 @@ int prccrtscr(sqlite3 *db){
 	int res = 0;
 	Compra qCom;
 	int flg = 0;
-	int flg2 = 0;
-	int flg3 = 0;
 	while(flg < 1){ //ID de venta
 	fflush(stdin);
 	system("CLS");
 	printf("[Creacion de Compra]\n\nIntroduzca un ID de Venta valido\n\n"); //Obtiene una qIdV y pilla datos de la venta existente; si existe ya la venta en la tabla de compras, no se crea la compra
 	fgets(idB,10,stdin);
-	sscanf(idB, "%d",&qIdV);
-	sprintf(query2, "SELECT * FROM compra where idVenta = %d", qIdV);
+	sscanf(idB,"%d",&qIdV);
+	sprintf(query, "SELECT id FROM compra where idVenta = %d", qIdV);
 	result = sqlite3_step(stmt);
-	if(qIdV < 1 || existsVenta(db,qIdV) || result == SQLITE_ROW){ 
+	if(qIdV < 1 || existsVenta(db,qIdV) == 0 || (result == SQLITE_ROW)){ 
 		fflush(stdin);
 		printf("ID de venta Invalido, repetido, o no existente;\nPor favor, introduzca un ID de venta valido\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
 		getch();
@@ -37,45 +33,28 @@ int prccrtscr(sqlite3 *db){
 		flg++;
 	}
 	}
-	while(flg2 < 1){ //ID de Usuario Comprador
+	flg--;
+	sprintf(query, "SELECT * FROM venta where id = %d", qIdV); //Obtencion de datos de venta
+	result = sqlite3_step(stmt);
+	qIdUV = sqlite3_column_int(stmt, 4);
+	qPre = sqlite3_column_int(stmt, 1);
+	while(flg < 1){ //ID de Usuario Comprador
 	fflush(stdin);
 	system("CLS");
 	printf("[Creacion de Compra]\n\nIntroduzca un ID de comprador (usuario) valido\n\n");
 	fgets(idB,10,stdin);
 	sscanf(idB, "%d",&qIdUC);
-	if(qIdUC < 1 || exists2(db, qIdC) == 0 ){
+	if(qIdUC < 1 || exists2(db, qIdUC) == 0 || (qIdUC == qIdUV)){
 		fflush(stdin);
-		printf("ID de Usuario Invalido, o no existente;\nPor favor, introduzca un ID de usuario valido\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
+		printf("ID de Usuario Invalido, igual que vendedor, o no existente;\nPor favor, introduzca un ID de usuario valido\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
 		getch();
 	}
 	else{
 		fflush(stdin);
-		flg2++;
+		flg++;
 	}
 	}
-	while(flg3 < 1){//ID Coche
-	fflush(stdin);
-	system("CLS");
-	printf("[Creacion de Compra]\n\nIntroduzca un ID de coche valido\n\n");
-	fgets(idB,10,stdin);
-	sscanf(idB, "%d",&qIdC);
-	sprintf(query, "SELECT idCoche FROM compra where idCoche = %d", qIdC);
-	sqlite3_prepare_v2(db, query, strlen(query), &stmt, NULL);
-	result = sqlite3_step(stmt);
-	if(qIdC < 1 || existsCoche(db, qIdC) == 0 || result == SQLITE_ROW){ 
-		fflush(stdin);
-		printf("ID de Coche Invalido o no existente;\nPor favor, introduzca una ID de coche valido\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
-		getch();
-	}else{
-		fflush(stdin);
-		flg3++;
-		flg--;
-	}
-	}
-	sprintf(query2, "SELECT * FROM venta where id = %d", qIdV); //Obtencion de datos de venta
-	result = sqlite3_step(stmt);
-	qIdUV = sqlite3_column_int(stmt, 4);
-	qPre = sqlite3_column_int(stmt, 1);
+	flg--;
 	qCom = creaCompra(db, qIdUC, qIdUV, qIdC, qIdV, qPre); //(sqlite3 *db, int idUC, int idUV, int idC, int idV, int precio)
 	anyadirCompra(db,qCom);
 	printf("[Creacion de Compra]\n\nFuncion Finalizada\nPulse cualquier tecla para continuar\n");
@@ -96,8 +75,6 @@ int prccrtscr(sqlite3 *db){
 	free(buffer);
 	sqlite3_finalize(stmt);
 	free(query);
-	free(query2);
-	free(query3);
 	return res;
 }
 
