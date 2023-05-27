@@ -121,6 +121,12 @@ int main(void)
 									strcpy(coche4.marca, "bmw");
 									strcpy(coche4.modelo, "e46");
 
+									Coche coche5;
+
+									coche5.id = codigoCochePorDefecto;
+									strcpy(coche5.marca, "seat");
+									strcpy(coche5.modelo, "leon");
+
 
 
 
