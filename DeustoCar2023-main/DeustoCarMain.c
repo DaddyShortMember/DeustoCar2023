@@ -31,7 +31,7 @@ int main(void)
 	sqlite3 *db;
 	sqlite3_open("DB.db", &db);
 	lg = lgscr(db);
-	if(lg = 1){
+	if(lg == 1){
 		while(mmn != 0){
 		mmn = mmenu();
 		usi = 1;
