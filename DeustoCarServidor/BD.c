@@ -5,6 +5,7 @@
 #include "coche.h"
 #include <string.h>
 #include <stdlib.h>
+#include "admin.h"
 
 int insertUsuario(sqlite3 *db, char nombre[], char email[], char contrasenya[], int saldo) {
 	sqlite3_stmt *stmt;
@@ -260,56 +261,54 @@ Coche getCoche(sqlite3 *db, char codigo[50]) {
 	return c;
 }
 
-int imprimirUsuarios(sqlite3 *db) {
-	sqlite3_stmt *stmt;
 
-	char sql[] = "select id, nombre, email, contrasenya, saldo from usuario";
 
-	int result = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
-	if (result != SQLITE_OK) {
-		printf("Error preparing statement (SELECT)\n");
-		printf("%s\n", sqlite3_errmsg(db));
-		return result;
-	}
+void imprimirUsuarios(sqlite3 *db) {
+    sqlite3_stmt *stmt;
 
-	printf("SQL query prepared (SELECT)\n");
+    const char *sql = "SELECT id, nombre, email, contrasenya, saldo FROM usuario";
 
-	//Los atributos de Usuario que se imprimiran
-	int id;
-	char nombre[100];
-	char email[100];
-	char contrasenya[100];
-	int saldo;
+    int result = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        printf("Error preparing statement (SELECT)\n");
+        printf("%s\n", sqlite3_errmsg(db));
+        return result;
+    }
 
-	printf("\n");
-	printf("\n");
-	printf("Mostrando usuarios:\n");
-	do {
-		result = sqlite3_step(stmt) ;
-		if (result == SQLITE_ROW) {
-			id = sqlite3_column_int(stmt, 0);
-			strcpy(nombre, (char *) sqlite3_column_text(stmt, 1));
-			strcpy(email, (char *) sqlite3_column_text(stmt, 2));
-			strcpy(contrasenya, (char *) sqlite3_column_text(stmt, 3));
-			saldo = sqlite3_column_int(stmt, 4);
-			printf("ID: %i NOMBRE: %s EMAIL: %s CONTRASENYA: %s SALDO: %d\n", id, nombre, email, contrasenya, saldo);
-		}
-	} while (result == SQLITE_ROW);
+    printf("SQL query prepared (SELECT)\n");
 
-	printf("\n");
-	printf("\n");
+    // Los atributos de Usuario que se imprimirán
+    int id;
+    char nombre[100];
+    char email[100];
+    char contrasenya[100];
+    int saldo;
 
-	result = sqlite3_finalize(stmt);
-	if (result != SQLITE_OK) {
-		printf("Error finalizing statement (SELECT)\n");
-		printf("%s\n", sqlite3_errmsg(db));
-		return result;
-	}
+    printf("\nMostrando usuarios:\n");
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        id = sqlite3_column_int(stmt, 0);
+        strcpy(nombre, (char *)sqlite3_column_text(stmt, 1));
+        strcpy(email, (char *)sqlite3_column_text(stmt, 2));
+        strcpy(contrasenya, (char *)sqlite3_column_text(stmt, 3));
+        saldo = sqlite3_column_int(stmt, 4);
+        printf("ID: %i, NOMBRE: %s, EMAIL: %s, CONTRASENYA: %s, SALDO: %d\n", id, nombre, email, contrasenya, saldo);
+    }
 
-	printf("Prepared statement finalized (SELECT)\n");
+    printf("\n");
 
-	return SQLITE_OK;
+    result = sqlite3_finalize(stmt);
+    if (result != SQLITE_OK) {
+        printf("Error finalizing statement (SELECT)\n");
+        printf("%s\n", sqlite3_errmsg(db));
+        return result;
+    }
+
+    printf("Prepared statement finalized (SELECT)\n");
+
+    return SQLITE_OK;
 }
+
+
 
 int imprimirCoches(sqlite3 *db) {
 	sqlite3_stmt *stmt;
