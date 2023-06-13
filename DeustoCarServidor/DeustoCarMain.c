@@ -355,3 +355,7 @@ int usrscr(sqlite3* db){ //DB + int
 	}
 	return ret;
 }
+
+//prueba
+
+
