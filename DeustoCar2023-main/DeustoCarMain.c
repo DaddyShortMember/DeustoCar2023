@@ -17,7 +17,7 @@ int carscr(sqlite3* db);//menu de visualizacion/modificacion sobre: coche
 int prcscr(sqlite3* db);//menu de visualizacion/modificacion sobre: compra
 int slsscr(sqlite3* db);//menu de visualizacion/modificacion sobre: venta
 int usrscr(sqlite3* db);//menu de visualizacion/modificacion sobre: usuario
- 
+
  
  //TODO:
  //*Realizar las funciones sobre la BD en la .h y la .c de su respectivo modulo
