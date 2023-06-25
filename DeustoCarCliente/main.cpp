@@ -241,7 +241,7 @@ void menuComprarCoche(SOCKET s, int idUsuario)
 		Compra nuevoCompra;
 		nuevoCompra.setId(tamanyoCompra+1);
 		for (i = 0; i < tamanyoVentas; i++) {
-			if (ventas[i].getId() == idSeleccionado) {
+			if (to_string(ventas[i].getId()) == idSeleccionado) {
 				nuevoCompra.setPrecio(ventas[i].getPrecio());
 			    // Obtener el tiempo actual
 			    std::chrono::system_clock::time_point ahora = std::chrono::system_clock::now();
@@ -257,7 +257,7 @@ void menuComprarCoche(SOCKET s, int idUsuario)
 				int anyo = fecha_actual->tm_year + 1900;
 
 				// Imprimir la fecha actual
-				string fecha = "Fecha actual: " + dia + "/" + mes + "/" + anyo;
+				string fecha = "Fecha actual: " + to_string(dia) + "/" + to_string(mes) + "/" + to_string(anyo);
 				nuevoCompra.setFechaCompra(fecha);
 				nuevoCompra.setIdComprador(idUsuario);
 				nuevoCompra.setIdVendedor(ventas[i].getIdVendedor());
@@ -299,7 +299,8 @@ void menuComprarCoche(SOCKET s, int idUsuario)
 		send(s, sendBuff, sizeof(sendBuff), 0);
 
 		// RECEIVING response from the server
-		int i = 0, tamanyoUsuario = 0;
+		i = 0;
+		int tamanyoUsuario = 0;
 		for (i = 0; i < 50; i++) {
 			recv(s, recvBuff, sizeof(recvBuff), 0);
 
@@ -319,7 +320,7 @@ void menuComprarCoche(SOCKET s, int idUsuario)
 				if (usuarios[i].getId() == nuevoCompra.getIdComprador()) {
 					j = 0;
 					for (j = 0; j < tamanyoVentas; ++j) {
-						if (ventas[j].getId() == idSeleccionado) {
+						if (to_string(ventas[j].getId()) == idSeleccionado) {
 							usuarios[i].setSaldo(usuarios[i].getSaldo() + ventas[j].getPrecio());
 						}
 					}
@@ -328,7 +329,7 @@ void menuComprarCoche(SOCKET s, int idUsuario)
 				if (usuarios[i].getId() == nuevoCompra.getIdVendedor()) {
 					j = 0;
 					for (j = 0; j < tamanyoVentas; ++j) {
-						if (ventas[j].getId() == idSeleccionado) {
+						if (to_string(ventas[j].getId()) == idSeleccionado) {
 							usuarios[i].setSaldo(usuarios[i].getSaldo() - ventas[j].getPrecio());
 						}
 					}
@@ -345,7 +346,7 @@ void menuComprarCoche(SOCKET s, int idUsuario)
 
 		strcpy(sendBuff, "DELETECOCHES");
 		send(s, sendBuff, sizeof(sendBuff), 0);
-		char chars[8];
+		//char chars[8];
 		sprintf(chars, "%d", coches[nuevoCompra.getIdCoche() + 1].getId());
 		strcpy(sendBuff, chars);
 		send(s, sendBuff, sizeof(sendBuff), 0);
@@ -405,7 +406,7 @@ void menuVenderCoche(SOCKET s, int idUsuario)
 
 	char chars1[8], chars2[8], chars3[8];
 	sprintf(chars1, "%d", nuevoCoche.getId());
-	sprintf(chars2, "%d", nuevoCoche.getMarca);
+	sprintf(chars2, "%d", nuevoCoche.getMarca());
 	sprintf(chars3, "%d", nuevoCoche.getModelo());
 
 	// SENDING command ANYADIRCOCHE and parameters to the server
@@ -493,7 +494,7 @@ void menuVenderCoche(SOCKET s, int idUsuario)
 						int anyo = fecha_actual->tm_year + 1900;
 
 						// Imprimir la fecha actual
-						string fecha = "Fecha actual: " + dia + "/" + mes + "/" + anyo;
+						string fecha = "Fecha actual: " + to_string(dia) + "/" + to_string(mes) + "/" + to_string(anyo);
 						nuevaVenta.setFechaVenta(fecha);
 						nuevaVenta.setIdVendedor(idUsuario);
 						nuevaVenta.setIdCoche(nuevoCoche.getId());
@@ -681,7 +682,7 @@ void menuIniciarSesion(SOCKET s)
 			string s3 = recvBuff;
 			usuarios[i].setContrasenya(s3);
 			recv(s, recvBuff, sizeof(recvBuff), 0);
-			int s4 = recvBuff;
+			int s4 = atoi(recvBuff);
 			usuarios[i].setSaldo(s4);
 		} else {
 			i = 50;
@@ -708,9 +709,9 @@ void menuIniciarSesion(SOCKET s)
 		cout << "Quiere volver a intentarlo?" << endl;
 		cout << "S/N" << endl;
 		cin >> yesNo;
-		if (yesNo == "S" || yesNo == "s") {
+		if (yesNo == 'S' || yesNo == 's') {
 			menuPrincipal();
-		} else if (yesNo == "N" || yesNo == "n") {
+		} else if (yesNo == 'N' || yesNo == 'n') {
 			menuIniciarSesion(s);
 		}
 	}

@@ -158,7 +158,7 @@ Usuario* Socket::SocketGetUsuarios(SOCKET s) {
 			string s3 = recvBuff;
 			usuarios[i].setContrasenya(s3);
 			recv(s, recvBuff, sizeof(recvBuff), 0);
-			int s4 = recvBuff;
+			int s4 = atoi(recvBuff);
 			usuarios[i].setSaldo(s4);
 		} else {
 			i = 50;
