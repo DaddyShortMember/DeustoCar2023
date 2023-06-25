@@ -340,7 +340,8 @@ void menuComprarCoche(SOCKET s, int idUsuario)
 		strcpy(sendBuff, "DELETEVENTAS");
 		send(s, sendBuff, sizeof(sendBuff), 0);
 		char chars[8];
-		sprintf(chars, "%d", ventas[idSeleccionado + 1].getId());
+		//ULTIMO ERROR QUE DABA EN LA SIGUIENTE LINEA ventas[idSeleccionado + 1].getId()
+		sprintf(chars, "%d", ventas[stoi(idSeleccionado) + 1].getId());
 		strcpy(sendBuff, chars);
 		send(s, sendBuff, sizeof(sendBuff), 0);
 
