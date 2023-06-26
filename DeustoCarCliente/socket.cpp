@@ -2,7 +2,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <winsock2.h>
-#include "Socket.h"
+#include "socket.h"
 #include "usuario.h"
 #include "coche.h"
 #include "venta.h"

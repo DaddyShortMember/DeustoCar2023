@@ -272,7 +272,7 @@ void imprimirUsuarios(sqlite3 *db) {
     if (result != SQLITE_OK) {
         printf("Error preparing statement (SELECT)\n");
         printf("%s\n", sqlite3_errmsg(db));
-        return result;
+        //return result;
     }
 
     printf("SQL query prepared (SELECT)\n");
@@ -300,12 +300,12 @@ void imprimirUsuarios(sqlite3 *db) {
     if (result != SQLITE_OK) {
         printf("Error finalizing statement (SELECT)\n");
         printf("%s\n", sqlite3_errmsg(db));
-        return result;
+        //return result;
     }
 
     printf("Prepared statement finalized (SELECT)\n");
 
-    return SQLITE_OK;
+    //return SQLITE_OK;
 }
 
 
@@ -490,6 +490,8 @@ int deleteAllCoches(sqlite3 *db) {
 
 	return SQLITE_OK;
 }
+
+/*
 int isAdmin(sqlite3 *db, Admin admin) {
 	sqlite3_stmt *stmt;
 
@@ -528,3 +530,4 @@ int isAdmin(sqlite3 *db, Admin admin) {
 
 	return 0;
 }
+*/
