@@ -527,40 +527,43 @@ void visualizarUsuarios(sqlite3 *db){
 }
 void imprimirUsuario(sqlite3 *db){
 	int numR; //Numero de filas. Truco: SELECT Count(*) FROM tblName
-	FILE* f;
-	f = fopen("usuarios.export", "w");
 	int result;
 	char* query = "SELECT MAX(id) FROM usuario";
 	char* query2;
 	//atrib. usuario
 	char* qNom;
 	char* qEma;
+	char* qCon;
 	int qSal;
+	int qId;
 	sqlite3_stmt *stmt;
 	sqlite3_prepare_v2(db, query, strlen(query), &stmt, NULL);
 	result = sqlite3_step(stmt);
 	numR = sqlite3_column_int(stmt, 0); //Numero de usuarios: perfecto
 	system("CLS");
-	printf("[IMPRIMIENDO USUARIOS]\n\n");
-	for(int i = numR; i > 0; i--){
+	printf("[LISTA DE USUARIOS]\n\n");
+	for(int i = 0; i <= numR; i++){
 		qEma = malloc(sizeof(char)*30);
 		qNom = malloc(sizeof(char)*30);
+		qCon = malloc(sizeof(char)*30);
 		query2 = malloc(sizeof(char)*128);
 		sprintf(query2, "SELECT * FROM usuario where id = %d", i);
 		sqlite3_prepare_v2(db, query2, strlen(query2), &stmt, NULL);
 		result = sqlite3_step(stmt);
 		if(result == SQLITE_ROW){
+			qId = sqlite3_column_int(stmt, 0);
 			strcpy(qNom,sqlite3_column_text(stmt, 1));
 			strcpy(qEma,sqlite3_column_text(stmt, 2));
+			strcpy(qCon,sqlite3_column_text(stmt, 3));
 			qSal = sqlite3_column_int(stmt, 4);
-			fprintf(f, "[Nombre] %s [E-Mail] %s [Saldo] %d \n", qNom, qEma, qSal);
+			printf("[ID] %d [Nombre] %s [E-Mail] %s [Contrasenya] %s [Saldo] %d \n", qId, qNom, qEma, qCon, qSal);
 		}
 		free(qEma);
 		free(qNom);
+		free(qCon);
 		free(query2);
 	}
-	fclose(f);
 	sqlite3_finalize(stmt);
-	printf("\n\n[USUARIOS IMPRESOS, PULSE CUALQUIER TECLA PARA CONTINUAR]");
+	printf("\n\n[PRESIONAR CUALQUIER TECLA PARA CONTINUAR]");
 	getch();
 }
