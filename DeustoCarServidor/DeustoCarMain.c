@@ -334,7 +334,7 @@ int usrscr(sqlite3* db){ //DB + int
 					break;
 			case 1: visualizarUsuarios(db);
 					break;
-			case 2: imprimirUsuarios(db);
+			case 2: imprimirUsuario(db);
 					break;
 			case 3: while(flg2 == 1){
 					flg2 = usrcrtscr(db);

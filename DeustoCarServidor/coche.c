@@ -1,5 +1,6 @@
-#include"coche.h"
-#include"sqlite3.h"
+#include "coche.h"
+#include "BD.h"
+#include "sqlite3.h"
 #include <stdio.h>
 
 void anyadirCoche(sqlite3 *db, int result, Coche coche){
