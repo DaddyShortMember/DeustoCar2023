@@ -17,7 +17,7 @@ int carscr(sqlite3* db);//menu de visualizacion/modificacion sobre: coche
 int prcscr(sqlite3* db);//menu de visualizacion/modificacion sobre: compra
 int slsscr(sqlite3* db);//menu de visualizacion/modificacion sobre: venta
 int usrscr(sqlite3* db);//menu de visualizacion/modificacion sobre: usuario
-
+ 
  
  //TODO:
  //*Realizar las funciones sobre la BD en la .h y la .c de su respectivo modulo
@@ -80,17 +80,18 @@ int lgscr(sqlite3* db){ //DB + return int?
 	int zz = 1;
 	while(flg < 1){
 	fflush(stdin);
-		if(sec == 3){
-			system("CLS");
-			flg++;
-			ret = 0;
-		}
 	system("CLS");
 	printf("Cliente de Admin. Local\n\n\n\n");
 	printf("Introduzca su email:\n");
 	fgets(buf,30,stdin);;
 	sscanf(buf, "%s", &usi);
 	if(isAdmin(db,usi) == 0){
+		if(sec == 2){
+			system("CLS");
+			flg++;
+			flg2--;
+			ret = 0;
+		}
 		sec++;
 		fflush(stdin);
 		if(sec < 3)
@@ -106,17 +107,17 @@ int lgscr(sqlite3* db){ //DB + return int?
 	}
 	}
 	while(flg2 > 0){
-		if(sec == 3){
-			system("CLS");
-			flg2--;
-			ret = 0;
-		}
 	system("CLS");
 	printf("Cliente de Admin. Local\n\n\n\n");
 	printf("Introduzca su contrasenya:\n");
 	fgets(buf,30,stdin);
 	sscanf(buf, "%s", &usi);
 	if(passCheck(db,mail,usi) == 0){
+		if(sec == 2){
+			system("CLS");
+			flg2--;
+			ret = 0;
+		}
 		sec++;
 		fflush(stdin);
 		if(sec < 3)
@@ -128,6 +129,7 @@ int lgscr(sqlite3* db){ //DB + return int?
 	else{
 		fflush(stdin);
 		flg2--;
+		ret = 1;
 	}
 	}
 	return ret;
