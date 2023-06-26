@@ -525,7 +525,7 @@ void visualizarUsuarios(sqlite3 *db){
 	getch();
 	
 }
-void imprimirUsuarios(sqlite3 *db){
+void imprimirUsuario(sqlite3 *db){
 	int numR; //Numero de filas. Truco: SELECT Count(*) FROM tblName
 	FILE* f;
 	f = fopen("usuarios.export", "w");

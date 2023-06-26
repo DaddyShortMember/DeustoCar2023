@@ -7,7 +7,6 @@
 #include "coche.h"
 #include "venta.h"
 #include "compra.h"
-#include <winsock2.h>
 #include <chrono>
 #include <ctime>
 
