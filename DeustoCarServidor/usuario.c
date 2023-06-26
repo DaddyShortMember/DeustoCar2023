@@ -115,7 +115,7 @@ int usmodscr(sqlite3 *db){
 	flg--;
 	while(flg == 0){
 		system("CLS");
-		printf("Quiere modificar otro usuario? (1/0)\n");
+		printf("¿Quiere modificar otro usuario? Si = 1, No = 0 (1/0)\n");
 		fgets(buffer,2,stdin);
 		sscanf(buffer, "%d", &res);
 		if(res == 1 || res == 0)
@@ -217,7 +217,7 @@ int usrcrtscr(sqlite3 *db){
 	getch();
 	while(flg == 0){
 		system("CLS");
-		printf("Quiere anyadir otro usuario? (1/0)\n");
+		printf("¿Quiere anyadir otro usuario? Si = 1, No = 0 (1/0)\n");
 		fgets(buffer,2,stdin);
 		sscanf(buffer, "%d", &res);
 		if(res == 1 || res == 0)
@@ -262,7 +262,7 @@ int usrdltscr(sqlite3 *db){
 	flg--;
 	while(flg == 0){
 		system("CLS");
-		printf("Quiere anyadir otro usuario? (1/0)\n");
+		printf("¿Quiere eliminar otro usuario? Si = 1, No = 0 (1/0)\n");
 		fgets(buffer,2,stdin);
 		sscanf(buffer, "%d", &res);
 		if(res == 1 || res == 0)
