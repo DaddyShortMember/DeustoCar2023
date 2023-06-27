@@ -17,7 +17,8 @@ int carscr(sqlite3* db);//menu de visualizacion/modificacion sobre: coche
 int prcscr(sqlite3* db);//menu de visualizacion/modificacion sobre: compra
 int slsscr(sqlite3* db);//menu de visualizacion/modificacion sobre: venta
 int usrscr(sqlite3* db);//menu de visualizacion/modificacion sobre: usuario
- 
+
+char* mailLogeado[31];
  
  //TODO:
  //*Realizar las funciones sobre la BD en la .h y la .c de su respectivo modulo
@@ -100,6 +101,7 @@ int lgscr(sqlite3* db){ //DB + return int?
 	else{
 		fflush(stdin);
 		strcpy(mail, usi);
+		strcpy(mailLogeado, usi);
 		flg++;
 	}
 	}
@@ -334,7 +336,7 @@ int usrscr(sqlite3* db){ //DB + int
 					break;
 			case 1: visualizarUsuarios(db);
 					break;
-			case 2: imprimirUsuario(db);
+			case 2: imprimirUsuario(db, mailLogeado);
 					break;
 			case 3: while(flg2 == 1){
 					flg2 = usrcrtscr(db);

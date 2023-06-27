@@ -1,4 +1,5 @@
 #include "usuario.h"
+#include <string.h>
 
 
 int usmodscr(sqlite3 *db){
@@ -525,7 +526,7 @@ void visualizarUsuarios(sqlite3 *db){
 	getch();
 	
 }
-void imprimirUsuario(sqlite3 *db){
+void imprimirUsuario(sqlite3 *db, char* mailLogeado){
 	int numR; //Numero de filas. Truco: SELECT Count(*) FROM tblName
 	int result;
 	char* query = "SELECT MAX(id) FROM usuario";
@@ -547,7 +548,7 @@ void imprimirUsuario(sqlite3 *db){
 		qNom = malloc(sizeof(char)*30);
 		qCon = malloc(sizeof(char)*30);
 		query2 = malloc(sizeof(char)*128);
-		sprintf(query2, "SELECT * FROM usuario where id = %d", i);
+		sprintf(query2, "SELECT * FROM usuario where mail = %s", mailLogeado);
 		sqlite3_prepare_v2(db, query2, strlen(query2), &stmt, NULL);
 		result = sqlite3_step(stmt);
 		if(result == SQLITE_ROW){

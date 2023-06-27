@@ -37,6 +37,6 @@ void eliminarUsuario(sqlite3 *db, char* email);
 //Funciones Visuales
 //Perfectas para malloc??:
 void visualizarUsuarios(sqlite3 *db); //Muestra en pantalla todos los usuarios, array de Usuuarios??
-void imprimirUsuario(sqlite3 *db); //Exporta todos los usuarios existentes en un .txt, array de Usuarios?
+void imprimirUsuario(sqlite3 *db, char* mailLogeado); //Exporta todos los usuarios existentes en un .txt, array de Usuarios?
 
 #endif /* USUARIO_H_ */
