@@ -140,6 +140,7 @@ int slscrtscr(sqlite3 *db){
 	sprintf(query, "SELECT * FROM venta where idCoche = %d", qIdC);
 	sqlite3_prepare_v2(db, query, strlen(query), &stmt, NULL);
 	result = sqlite3_step(stmt);
+	logAppendDB(db, query, result);
 	if(qIdC < 1 || existsCoche(db, qIdC) == 0 || result == SQLITE_ROW){
 		fflush(stdin);
 		printf("ID de coche Invalido, repetido, o no existente;\nPor favor, introduzca un ID de coche valido\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
@@ -281,9 +282,11 @@ void anyadirVenta(sqlite3 *db,  Venta venta){
 	sqlite3_stmt *stmt;
 	result = sqlite3_prepare_v2(db, query2, strlen(query2), &stmt, NULL);
 	result = sqlite3_step(stmt);
+	logAppendDB(db, query, result);
 	strcpy(qFec,sqlite3_column_text(stmt, 0));
 	sprintf(query, "insert into venta (id, precio, fechaVenta, idCoche, idVendedor) values (NULL,%d,'%s',%d,%d)", venta.precio, qFec, venta.idC, venta.idU);
 	result = sqlite3_prepare_v2(db, query, strlen(query), &stmt, NULL);
+	logAppendDB(db, query, result);
 	if (result != SQLITE_OK) {
 		printf("Error preparing statement (INSERT)\n");
 	}
@@ -312,6 +315,7 @@ int existsVenta(sqlite3 *db, int id){
 	}else{
 		ret = 0;
 	}
+	logAppendDB(db, geid, result);
 	sqlite3_finalize(stmt);
 	return ret;
 }
@@ -325,6 +329,7 @@ void modificarVCoche(sqlite3 *db, int idV, int idC){
 	sqlite3_bind_int(stmt, 1, idC);
 	sqlite3_bind_int(stmt, 2, idV);
 	result = sqlite3_step(stmt);
+	logAppendDB(db, query, result);
 	sqlite3_finalize(stmt);
 }
 
@@ -336,6 +341,7 @@ void modificarVUsuario(sqlite3 *db, int idV, int idU){
 	sqlite3_bind_int(stmt, 1, idU);
 	sqlite3_bind_int(stmt, 2, idV);
 	result = sqlite3_step(stmt);
+	logAppendDB(db, query, result);
 	sqlite3_finalize(stmt);
 }
 
@@ -347,6 +353,7 @@ void modificarVPrecio(sqlite3 *db, int idV, int precio){
 	sqlite3_bind_int(stmt, 1, precio);
 	sqlite3_bind_int(stmt, 2, idV);
 	result = sqlite3_step(stmt);
+	logAppendDB(db, query, result);
 	sqlite3_finalize(stmt);
 }
 
@@ -357,6 +364,7 @@ void eliminarVenta(sqlite3 *db, int idV){
 	sqlite3_prepare_v2(db, sql1, strlen(sql1), &stmt, NULL);
 	sqlite3_bind_int(stmt, 1, idV);
 	result = sqlite3_step(stmt);
+	logAppendDB(db, sql1, result);
 	sqlite3_finalize(stmt);
 }
 
@@ -387,6 +395,7 @@ void visualizarVentas(sqlite3 *db){
 		sqlite3_prepare_v2(db, query2, strlen(query2), &stmt, NULL);
 		result = sqlite3_step(stmt);
 		if(result == SQLITE_ROW){
+			logAppendDB(db, query2, SQLITE_DONE);
 			qId = sqlite3_column_int(stmt, 0);
 			qIdU = sqlite3_column_int(stmt, 4);
 			qIdC = sqlite3_column_int(stmt, 3);
@@ -428,6 +437,7 @@ void imprimirVentas(sqlite3 *db){
 		sqlite3_prepare_v2(db, query2, strlen(query2), &stmt, NULL);
 		result = sqlite3_step(stmt);
 		if(result == SQLITE_ROW){
+			logAppendDB(db, query2, SQLITE_DONE);
 			qId = sqlite3_column_int(stmt, 0);
 			qIdU = sqlite3_column_int(stmt, 4);
 			qIdC = sqlite3_column_int(stmt, 3);

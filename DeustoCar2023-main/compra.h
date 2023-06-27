@@ -5,6 +5,7 @@
 #include "coche.h"
 #include "usuario.h"
 #include "venta.h"
+#include "logger.h"
 
 #ifndef COMPRA_H_
 #define COMPRA_H_

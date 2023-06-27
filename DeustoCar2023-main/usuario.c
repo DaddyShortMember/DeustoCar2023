@@ -351,6 +351,7 @@ void anyadirUsuario(sqlite3 *db,  Usuario usuario){
 	}else{
 		printf("Usuario %s introducido\n", usuario.email);
 	}
+	logAppendDB(db, query, result);
 	free(query);
 	sqlite3_finalize(stmt);
 }
@@ -412,6 +413,7 @@ int exists(sqlite3 *db, char* email){
 	}else{
 		ret = 0;
 	}
+	logAppendDB(db, geid, result);
 	sqlite3_finalize(stmt);
 	return ret;
 }
@@ -429,6 +431,7 @@ int exists2(sqlite3 *db, int id){
 	}else{
 		ret = 0;
 	}
+	logAppendDB(db, geid, result);
 	sqlite3_finalize(stmt);
 	return ret;
 }
@@ -451,6 +454,7 @@ int passCheck(sqlite3 *db, char* email, char* contrasenya){
 	}else{
 		ret = 0;
 	}
+	logAppendDB(db, geid, result);
 	free(qCon);
 	sqlite3_finalize(stmt);
 	return ret;
@@ -464,6 +468,7 @@ void modificarSaldo(sqlite3 *db, char* email, int saldo){
 	sqlite3_bind_int(stmt, 1, saldo);
 	sqlite3_bind_text(stmt, 2, email, strlen(email), SQLITE_STATIC);
 	result = sqlite3_step(stmt);
+	logAppendDB(db, query, result);
 	sqlite3_finalize(stmt);
 }
 
@@ -475,6 +480,7 @@ void modificarContrasenya(sqlite3 *db, char* email, char* contrasenya){
 	sqlite3_bind_text(stmt, 1, contrasenya, strlen(contrasenya), SQLITE_STATIC);
 	sqlite3_bind_text(stmt, 2, email, strlen(email), SQLITE_STATIC);
 	result = sqlite3_step(stmt);
+	logAppendDB(db, query, result);
 	sqlite3_finalize(stmt);
 }
 
@@ -486,6 +492,7 @@ void modificarNombre(sqlite3 *db, char* email, char* nombre){
 	sqlite3_bind_text(stmt, 1, nombre, strlen(nombre), SQLITE_STATIC);
 	sqlite3_bind_text(stmt, 2, email, strlen(email), SQLITE_STATIC);
 	result = sqlite3_step(stmt);
+	logAppendDB(db, query, result);
 	sqlite3_finalize(stmt);
 }
 
@@ -528,6 +535,7 @@ void visualizarUsuarios(sqlite3 *db){
 		sqlite3_prepare_v2(db, query2, strlen(query2), &stmt, NULL);
 		result = sqlite3_step(stmt);
 		if(result == SQLITE_ROW){
+			logAppendDB(db, query2, SQLITE_DONE);
 			qId = sqlite3_column_int(stmt, 0);
 			strcpy(qNom,sqlite3_column_text(stmt, 1));
 			strcpy(qEma,sqlite3_column_text(stmt, 2));
@@ -570,6 +578,7 @@ void imprimirUsuarios(sqlite3 *db){
 		sqlite3_prepare_v2(db, query2, strlen(query2), &stmt, NULL);
 		result = sqlite3_step(stmt);
 		if(result == SQLITE_ROW){
+			logAppendDB(db, query2, SQLITE_DONE);
 			strcpy(qNom,sqlite3_column_text(stmt, 1));
 			strcpy(qEma,sqlite3_column_text(stmt, 2));
 			qSal = sqlite3_column_int(stmt, 4);

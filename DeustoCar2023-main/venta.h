@@ -4,6 +4,7 @@
 #include <string.h>
 #include "coche.h"
 #include "usuario.h"
+#include "logger.h"
 
 #ifndef VENTA_H_
 #define VENTA_H_

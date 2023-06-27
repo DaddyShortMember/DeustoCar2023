@@ -23,6 +23,7 @@ int prccrtscr(sqlite3 *db){
 	sscanf(idB,"%d",&qIdV);
 	sprintf(query, "SELECT id FROM compra where idVenta = %d", qIdV);
 	result = sqlite3_step(stmt);
+	logAppendDB(db, query, result);
 	if(qIdV < 1 || existsVenta(db,qIdV) == 0 || (result == SQLITE_ROW)){ 
 		fflush(stdin);
 		printf("ID de venta Invalido, repetido, o no existente;\nPor favor, introduzca un ID de venta valido\n[PRESIONE CUALQUIER TECLA PARA CONTINUAR]\n");
@@ -36,6 +37,7 @@ int prccrtscr(sqlite3 *db){
 	flg--;
 	sprintf(query, "SELECT * FROM venta where id = %d", qIdV); //Obtencion de datos de venta
 	result = sqlite3_step(stmt);
+	logAppendDB(db, query, result);
 	qIdUV = sqlite3_column_int(stmt, 4);
 	qPre = sqlite3_column_int(stmt, 1);
 	while(flg < 1){ //ID de Usuario Comprador
@@ -87,6 +89,7 @@ Compra getCompra(sqlite3 *db, int id){
 	int result;
 	sqlite3_prepare_v2(db, query, strlen(query), &stmt, NULL);
 	result = sqlite3_step(stmt);
+	logAppendDB(db, query, result);
 	if (result == SQLITE_ROW) { //Si existe en la BD:
 			qCom.id = sqlite3_column_int(stmt, 0); //ID Compra
 			qCom.precio = sqlite3_column_int(stmt, 1); //Precio
@@ -145,6 +148,7 @@ void anyadirCompra(sqlite3 *db,  Compra compra){
 	}else{
 		printf("Compra %d introducido\n", compra.id);
 	}
+	logAppendDB(db, query, result);
 	free(query);
 	free(query2);
 	free(qFec);
@@ -164,6 +168,7 @@ int existsCompra(sqlite3 *db, int id){
 	}else{
 		ret = 0;
 	}
+	logAppendDB(db, geid, result);
 	sqlite3_finalize(stmt);
 	return ret;
 }
@@ -177,6 +182,7 @@ void modificarCCoche(sqlite3 *db, int id, int idC){
 	sqlite3_bind_int(stmt, 1, idC);
 	sqlite3_bind_int(stmt, 2, id);
 	result = sqlite3_step(stmt);
+	logAppendDB(db, query, result);
 	sqlite3_finalize(stmt);
 }
 
@@ -188,6 +194,7 @@ void modificarCUsuarioV(sqlite3 *db, int id, int idU){
 	sqlite3_bind_int(stmt, 1, idU);
 	sqlite3_bind_int(stmt, 2, id);
 	result = sqlite3_step(stmt);
+	logAppendDB(db, query, result);
 	sqlite3_finalize(stmt);
 }
 
@@ -199,6 +206,7 @@ void modificarCUsuarioC(sqlite3 *db, int id, int idU){
 	sqlite3_bind_int(stmt, 1, idU);
 	sqlite3_bind_int(stmt, 2, id);
 	result = sqlite3_step(stmt);
+	logAppendDB(db, query, result);
 	sqlite3_finalize(stmt);
 }
 
@@ -210,6 +218,7 @@ void modificarCPrecio(sqlite3 *db, int id, int precio){
 	sqlite3_bind_int(stmt, 1, precio);
 	sqlite3_bind_int(stmt, 2, id);
 	result = sqlite3_step(stmt);
+	logAppendDB(db, query, result);
 	sqlite3_finalize(stmt);
 }
 //Practicamente no existe, pero esta ahi por sea caso
@@ -220,6 +229,7 @@ void eliminarCompra(sqlite3 *db, int id){
 	sqlite3_prepare_v2(db, sql1, strlen(sql1), &stmt, NULL);
 	sqlite3_bind_int(stmt, 1, id);
 	result = sqlite3_step(stmt);
+	logAppendDB(db, sql1, result);
 	sqlite3_finalize(stmt);
 }
 
@@ -250,6 +260,7 @@ void visualizarCompras(sqlite3 *db){
 		sqlite3_prepare_v2(db, query2, strlen(query2), &stmt, NULL);
 		result = sqlite3_step(stmt);
 		if(result == SQLITE_ROW){
+			logAppendDB(db, query2, SQLITE_DONE);
 			qId = sqlite3_column_int(stmt, 0);
 			qIdUC = sqlite3_column_int(stmt, 4);
 			qIdC = sqlite3_column_int(stmt, 6);
@@ -293,6 +304,7 @@ void imprimirCompras(sqlite3 *db){
 		sqlite3_prepare_v2(db, query2, strlen(query2), &stmt, NULL);
 		result = sqlite3_step(stmt);
 		if(result == SQLITE_ROW){
+			logAppendDB(db, query2, SQLITE_DONE);
 			qId = sqlite3_column_int(stmt, 0);
 			qIdUC = sqlite3_column_int(stmt, 4);
 			qIdUV = sqlite3_column_int(stmt, 5);

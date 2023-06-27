@@ -267,6 +267,7 @@ void anyadirCoche(sqlite3 *db, Coche coche){
 	}else{
 		printf("coche %s introducido\n", coche.modelo);
 	}
+	logAppendDB(db, query, result);
 	free(query);
 	sqlite3_finalize(stmt);
 }
@@ -279,6 +280,7 @@ int existsCoche(sqlite3 *db, int id){
 	sqlite3_prepare_v2(db, geid, strlen(geid), &stmt, NULL);
 	sqlite3_bind_int(stmt, 1, id);
 	result = sqlite3_step(stmt);
+	logAppendDB(db, geid, result);
 	if(result == SQLITE_ROW){
 		ret = 1;
 	}else{
@@ -296,6 +298,7 @@ void modificarMarca(sqlite3 *db, int id, char* marca){
 	sqlite3_bind_text(stmt, 1, marca, strlen(marca), SQLITE_STATIC);
 	sqlite3_bind_int(stmt, 2, id);
 	result = sqlite3_step(stmt);
+	logAppendDB(db, query, result);
 	sqlite3_finalize(stmt);
 }
 
@@ -307,6 +310,7 @@ void modificarModelo(sqlite3 *db, int id, char* modelo){
 	sqlite3_bind_text(stmt, 1, modelo, strlen(modelo), SQLITE_STATIC);
 	sqlite3_bind_int(stmt, 2, id);
 	result = sqlite3_step(stmt);
+	logAppendDB(db, query, result);
 	sqlite3_finalize(stmt);
 }
 
@@ -346,6 +350,7 @@ void visualizarCoches(sqlite3 *db){
 		sqlite3_prepare_v2(db, query2, strlen(query2), &stmt, NULL);
 		result = sqlite3_step(stmt);
 		if(result == SQLITE_ROW){
+			logAppendDB(db, query2, SQLITE_DONE);
 			qId = sqlite3_column_int(stmt, 0);
 			strcpy(qMar,sqlite3_column_text(stmt, 1));
 			strcpy(qMod,sqlite3_column_text(stmt, 2));
@@ -385,6 +390,7 @@ void imprimirCoches(sqlite3 *db){
 		sqlite3_prepare_v2(db, query2, strlen(query2), &stmt, NULL);
 		result = sqlite3_step(stmt);
 		if(result == SQLITE_ROW){
+			logAppendDB(db, query2, SQLITE_DONE);
 			strcpy(qMar,sqlite3_column_text(stmt, 1));
 			strcpy(qMod,sqlite3_column_text(stmt, 2));
 			qId = sqlite3_column_int(stmt, 0);

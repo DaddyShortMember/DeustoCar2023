@@ -7,8 +7,7 @@
 #include "venta.h"
 #include "compra.h"
 #include "sqlite3.h"
-
-
+#include "logger.h"
 
 //sqlite3 *db
 int lgscr(sqlite3* db); //menu de inicio de sesion
@@ -30,6 +29,7 @@ int main(void)
 	int usi; //User Input
 	sqlite3 *db;
 	sqlite3_open("DB.db", &db);
+	logOpen(db);
 	lg = lgscr(db);
 	if(lg == 1){
 		while(mmn != 0){
@@ -37,7 +37,7 @@ int main(void)
 		usi = 1;
 		switch(mmn){
 		case 0: system("CLS");
-				exit(1);
+				logExit(db);
 				break;
 		case 1: while(usi != 0){
 			usi = usrscr(db);
@@ -130,6 +130,7 @@ int lgscr(sqlite3* db){ //DB + return int?
 		fflush(stdin);
 		flg2--;
 		ret = 1;
+		logStart(db, mail);
 	}
 	}
 	return ret;
